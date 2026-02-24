@@ -1,7 +1,4 @@
 from django.db import models
-from core.models import Category
-from seller.models import Product, SellerProfile
-from customer.models import OrderItem
 
 class Offer(models.Model):
     title = models.CharField(max_length=255)
@@ -28,24 +25,24 @@ class OfferDiscountBridge(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
 
 class ProductOfferBridge(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey("seller.Product", on_delete=models.CASCADE)
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
 
 class CategoryOfferBridge(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey("core.Category", on_delete=models.CASCADE)
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
 
 class ProductDiscountBridge(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey("seller.Product", on_delete=models.CASCADE)
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
 
 class CategoryDiscountBridge(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey("core.Category", on_delete=models.CASCADE)
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
 
 class PlatformCommission(models.Model):
-    seller = models.ForeignKey(SellerProfile, on_delete=models.CASCADE)
-    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    seller = models.ForeignKey("seller.SellerProfile", on_delete=models.CASCADE)
+    order_item = models.ForeignKey("customer.OrderItem", on_delete=models.CASCADE)
     commission_percentage = models.FloatField()
     commission_amount = models.DecimalField(max_digits=10, decimal_places=2)
     settlement_status = models.CharField(max_length=20, default='UNSETTLED')
