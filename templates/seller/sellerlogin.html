@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Login | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .bg-beach-work {
+            background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Mobile height fix */
+        @media (max-width: 1024px) {
+            .main-card { height: auto; min-height: 600px; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <div class="main-card w-full max-w-4xl lg:h-[620px] flex flex-col lg:flex-row overflow-hidden rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-[#3E2723]/10 bg-white">
+        
+        <div class="w-full lg:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
+            
+            <div class="mb-8 md:mb-10 text-center lg:text-left">
+                <div class="flex items-center justify-center lg:justify-start gap-2 mb-6">
+                    <div class="bg-[#3E2723] p-1.5 rounded-lg text-white"><i class="fa-solid fa-anchor text-sm"></i></div>
+                    <span class="text-lg font-black tracking-tighter uppercase">Seller<span class="text-[#00796B]">Portal</span></span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black text-[#3E2723] italic uppercase tracking-tighter leading-none">Welcome <br><span class="text-[#00796B]">Aboard.</span></h1>
+                <p class="text-[#3E2723]/50 text-[10px] font-black uppercase tracking-widest mt-3">Manage your shop & logistics</p>
+            </div>
+                    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+            <form class="space-y-4 md:space-y-5" method="POST">
+                {% csrf_token %}
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Username</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-5 top-1/2 -translate-y-1/2 text-[#3E2723]/30 text-xs"></i>
+                        <input type="text" placeholder="seller_username" name="username" class="w-full bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-xl px-11 py-3.5 text-xs font-black text-[#3E2723] outline-none focus:border-[#00796B] transition placeholder:text-[#3E2723]/20">
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center px-1">
+                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40">Password</label>
+                        <a href="#" class="text-[8px] font-black text-[#00796B] uppercase tracking-widest hover:underline">Forgot?</a>
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-[#3E2723]/30 text-xs"></i>
+                        <input type="password" placeholder="••••••••" name="password" class="w-full bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-xl px-11 py-3.5 text-xs font-black text-[#3E2723] outline-none focus:border-[#00796B] transition">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 px-1">
+                    <input type="checkbox" id="remember" class="accent-[#00796B] w-3.5 h-3.5 rounded border-[#3E2723]/10">
+                    <label for="remember" class="text-[10px] font-black text-[#3E2723]/60 uppercase tracking-tight">Keep me logged in</label>
+                </div>
+
+                <button type="submit" class="w-full bg-[#3E2723] text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#00796B] transition-all active:scale-95 shadow-lg shadow-[#3E2723]/10 mt-2">
+                    Enter Dashboard
+                </button>
+            </form>
+
+            <footer class="mt-8 md:mt-10 text-center">
+                <p class="text-[10px] font-black text-[#3E2723]/40 uppercase tracking-tight">
+                    Not a seller yet? <a href="" class="text-[#00796B] hover:text-[#3E2723] underline decoration-2">Apply to Join</a>
+                </p>
+            </footer>
+        </div>
+
+        <div class="hidden lg:block lg:w-1/2 bg-beach-work relative">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#3E2723]/80 via-[#3E2723]/20 to-transparent flex flex-col justify-end p-12">
+                <div class="glass p-6 rounded-2xl border-white/10">
+                    <p class="text-white text-xs font-black uppercase tracking-widest mb-2 italic">Tip of the Day</p>
+                    <p class="text-white/80 text-[11px] font-bold leading-relaxed">Early bird logistics get the smoothest tides. Check your dispatch queue before noon to avoid the coastal rush.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

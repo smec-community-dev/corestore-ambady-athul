@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Inventory | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; scroll-behavior: smooth; }
+        
+        /* Modern Glassmorphism */
+        .glass { 
+            background: rgba(255, 255, 255, 0.6); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(62, 39, 35, 0.05); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Floating Animation for Hover */
+        .product-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover { 
+            transform: translateY(-5px) scale(1.01); 
+            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.08);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Smooth Button Transitions */
+        .btn-modern { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .btn-modern::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255,255,255,0.1);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s;
+            border-radius: 50%;
+        }
+        .btn-modern:active::after { transform: translate(-50%, -50%) scale(1); }
+
+        /* Status Glows */
+        .status-glow-active { box-shadow: 0 0 10px rgba(0, 121, 107, 0.2); }
+        .status-glow-inactive { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+
+        /* Custom Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Gradient Orbs for background depth */
+        .orb {
+            position: fixed; width: 400px; height: 400px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 121, 107, 0.03) 0%, transparent 70%);
+            z-index: -1; filter: blur(60px);
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+    <div class="orb top-[-100px] left-[-100px]"></div>
+    <div class="orb bottom-[-100px] right-[-100px]"></div>
+
+    <aside class="w-full md:w-20 lg:w-64 bg-[#3E2723] flex md:flex-col sticky top-0 z-50 h-auto md:h-screen text-white border-b md:border-b-0 border-white/5">
+        <div class="p-6 flex items-center gap-3">
+            <div class="bg-[#00796B] p-2 rounded-xl text-white shadow-lg shadow-[#00796B]/20">
+                <i class="fa-solid fa-anchor text-sm"></i>
+            </div>
+            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase italic">Studio<span class="text-[#00796B]">Pro</span></span>
+        </div>
+        
+        <nav class="flex-1 flex md:flex-col p-3 md:p-4 gap-2 overflow-x-auto no-scrollbar whitespace-nowrap md:mt-4">
+            <a href="sellerhome.html" class="flex items-center gap-3 px-5 py-4 bg-[#00796B] text-white rounded-2xl font-black text-[10px] uppercase shadow-xl shadow-[#00796B]/20 transition-all hover:scale-105">
+                <i class="fa-solid fa-boxes-stacked"></i> <span class="hidden lg:block">Inventory</span>
+            </a>
+            <a href="sellerodermanagement.html" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-chart-line"></i> <span class="hidden lg:block">Order Mgmt</span>
+            </a>
+            <a href="sellerdiscount.html" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-truck-ramp-box"></i> <span class="hidden lg:block">Discount</span>
+            </a>
+        </nav>
+        
+
+        <div class="mt-auto p-4 border-t border-white/5 hidden md:block">
+            <a href="/sellerprofile/" class="group flex items-center gap-3 p-3 rounded-2xl hover:bg-white/5 transition-all">
+                <div class="relative shrink-0">
+                    <img src="{{ seller.user.profile_image.url }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/10 group-hover:ring-[#00796B] transition-all">
+                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#00796B] border-2 border-[#3E2723] rounded-full"></div>
+                </div>
+                <div class="hidden lg:block overflow-hidden">
+                    <p class="text-[10px] font-black uppercase tracking-tight text-white/90 truncate">{{seller.user.username}}</p>
+                    <p class="text-[8px] font-bold text-white/30 uppercase tracking-[0.2em]">Profile</p>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-10 lg:p-14 overflow-y-auto">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-[#3E2723]">
+                    Product <span class="text-[#00796B]">Control</span>
+                </h1>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="w-8 h-[2px] bg-[#00796B]"></span>
+                    <p class="text-[#3E2723]/40 text-[9px] font-black uppercase tracking-[0.3em]">Master Inventory Node</p>
+                </div>
+            </div>
+            <a href="/sellerproduct/" class="w-full sm:w-auto">
+                <button class="w-full group bg-[#3E2723] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#00796B] transition-all active:scale-95 shadow-2xl shadow-[#3E2723]/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i> New Listing
+                </button>
+            </a>
+        </header>
+
+        <div class="space-y-6">
+            <div class="flex items-center justify-between px-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-black text-[#00796B]">{{products|length}}</span>
+                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/30">Live Entries</span>
+                </div>
+                <button class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 hover:text-[#00796B] transition">
+                    Sort: <span class="text-[#3E2723] italic">Recent</span> <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i>
+                </button>
+            </div>
+
+            {% for i in products %}
+            <div class="product-card glass rounded-[2.5rem] p-5 md:p-7 flex flex-col md:flex-row items-center gap-6 md:gap-10 border border-[#3E2723]/5 shadow-sm">
+                
+                {% with i.variants.first as variant %}
+                <div class="relative group/img shrink-0">
+                    <div class="w-28 h-28 md:w-32 md:h-32 rounded-[2rem] bg-white border border-[#3E2723]/5 overflow-hidden shadow-inner transition-transform group-hover:scale-105 duration-500 relative">
+                        {% if variant %}
+                            {% for img in variant.images.all %}
+                                {% if img.is_primary %}
+                                    <img src="{{ img.images.url }}" class="w-full h-full object-cover">
+                                {% endif %}
+                            {% empty %}
+                                <div class="w-full h-full flex items-center justify-center bg-[#3E2723]/5 text-[#3E2723]/20"><i class="fa-solid fa-image text-2xl"></i></div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-[#3E2723]/5 text-[#3E2723]/20"><i class="fa-solid fa-box-open text-2xl"></i></div>
+                        {% endif %}
+
+                        <a href="/sellerproductview/{{i.slug}}" 
+                           class="absolute inset-0 bg-[#3E2723]/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all duration-300">
+                            <div class="bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-xl transform translate-y-4 group-hover/img:translate-y-0 transition-transform duration-300 hover:bg-[#00796B] hover:text-white text-[#3E2723]">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endwith %}
+                
+                <div class="flex-1 space-y-3 text-center md:text-left">
+                    <div>
+                        <a href="/sellerproductview/{{i.slug}}" class="block group/title">
+                            <h2 class="text-xl font-black text-[#3E2723] tracking-tight group-hover/title:text-[#00796B] transition-colors">
+                                {{i.name}}
+                            </h2>
+                        </a>
+                        <div class="flex items-center justify-center md:justify-start gap-3 mt-1">
+                            <span class="text-[9px] font-black text-[#3E2723]/30 uppercase tracking-[0.2em]">#{{i.model_number}}</span>
+                            <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
+                            <span class="text-[9px] font-black text-[#00796B] uppercase italic">{{i.subcategory.name}}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                        {% if i.is_active %}
+                            <span class="bg-[#00796B]/5 text-[#00796B] text-[8px] px-3 py-1.5 rounded-full font-black uppercase tracking-widest status-glow-active flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#00796B] animate-pulse"></span> Active
+                            </span>
+                        {% else %}
+                            <span class="bg-red-50 text-red-500 text-[8px] px-3 py-1.5 rounded-full font-black uppercase tracking-widest status-glow-inactive flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Inactive
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-64">
+                    <div class="flex items-center gap-2 p-2 bg-[#3E2723]/[0.02] border border-[#3E2723]/5 rounded-2xl">
+                        
+                        <a href="/sellerproductupdate/{{i.id}}"
+                           class="btn-modern group flex-1 flex items-center justify-center gap-2 bg-[#3E2723] text-white 
+                                  py-3 px-4 rounded-xl shadow-lg shadow-[#3E2723]/10 hover:bg-[#00796B]">
+                            <i class="fa-solid fa-pen-nib text-[10px] opacity-60 group-hover:rotate-12 transition-transform"></i>
+                            <span class="text-[9px] font-black uppercase tracking-widest">Edit</span>
+                        </a>
+
+                        <a href="/sellerimage/{{i.id}}"
+                           class="btn-modern group flex-1 flex items-center justify-center gap-2 bg-white border border-[#3E2723]/10 
+                                  text-[#3E2723] py-3 px-4 rounded-xl hover:border-[#3E2723] hover:shadow-xl shadow-sm">
+                            <i class="fa-solid fa-camera text-[10px] text-[#00796B] group-hover:scale-110 transition-transform"></i>
+                            <span class="text-[9px] font-black uppercase tracking-widest">Media</span>
+                        </a>
+
+                    </div>
+                </div>
+                
+            </div>
+            {% endfor %}
+        </div>
+        
+        <footer class="mt-20 py-10 border-t border-[#3E2723]/5 flex justify-center">
+            <p class="text-[9px] font-black uppercase tracking-[0.4em] text-[#3E2723]/20">Core Store Operations Hub &copy; 2026</p>
+        </footer>
+    </main>
+
+    <script>
+        // Smooth reveal on scroll
+        const cards = document.querySelectorAll('.product-card');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Merchant Profile | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        
+        .input-field { 
+            background-color: rgba(62, 39, 35, 0.05); 
+            border: 1px solid rgba(62, 39, 35, 0.1); 
+            border-radius: 0.85rem; 
+            padding: 0.65rem 1rem; 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            width: 100%; 
+            transition: all 0.3s ease; 
+        }
+        .input-field:focus { outline: none; border-color: #00796B; background-color: white; box-shadow: 0 0 0 4px rgba(0, 121, 107, 0.05); }
+        
+        .label-text { 
+            font-size: 8px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em; 
+            color: rgba(62, 39, 35, 0.6); 
+            margin-bottom: 0.4rem; 
+            display: block; 
+        }
+        #profile-preview { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 md:py-12">
+
+    <div class="max-w-5xl mx-auto">
+        <a href="sellerprofile.html" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40 hover:text-[#00796B] mb-8 transition">
+            <i class="fa-solid fa-arrow-left"></i> Cancel & Return
+        </a>
+
+        <header class="mb-10">
+            <h1 class="text-3xl font-black italic uppercase tracking-tighter text-[#3E2723]">Modify <span class="text-[#00796B]">Identity</span></h1>
+            <p class="text-[#3E2723]/50 text-[9px] font-black uppercase tracking-widest mt-1">Update your merchant credentials and payout settings</p>
+        </header>
+
+        <form class="grid grid-cols-1 lg:grid-cols-12 gap-8" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass rounded-[2.5rem] p-8 text-center shadow-sm">
+                    <span class="label-text">Merchant Avatar</span>
+                    <div class="relative w-32 h-32 mx-auto mt-4 group">
+                        <div class="w-full h-full rounded-[2rem] bg-[#3E2723]/5 border-2 border-dashed border-[#3E2723]/20 flex items-center justify-center overflow-hidden transition group-hover:border-[#00796B]">
+                            <img id="profile-preview" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" alt="Profile">
+                            <input type="file" name="profile_image" id="image-input" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*">
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 bg-[#00796B] text-white w-10 h-10 rounded-xl shadow-lg flex items-center justify-center border-4 border-[#FAF9F6]">
+                            <i class="fa-solid fa-camera text-xs"></i>
+                        </div>
+                    </div>
+                    <p class="text-[8px] font-black text-[#3E2723]/40 mt-6 uppercase tracking-widest leading-relaxed">Click image to upload new branding</p>
+                </div>
+
+                <div class="glass rounded-[2rem] p-6 border-l-4 border-[#00796B]">
+                    <h4 class="text-[9px] font-black text-[#3E2723] uppercase mb-1.5 tracking-wider">Verification Status</h4>
+                    <p class="text-[10px] text-[#3E2723]/60 font-black leading-relaxed">Changing <span class="text-[#00796B]">GST/PAN</span> details may trigger a temporary re-verification of your account.</p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8">
+                <div class="glass rounded-[2.5rem] p-8 md:p-10 shadow-sm space-y-10">
+                    
+                    <div>
+                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-6">Store Branding</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">Store Name</label>
+                                <input type="text" name="store_name" value="Coastal Gear Co." class="input-field">
+                            </div>
+                            <div>
+                                <label class="label-text">Store Slug (URL)</label>
+                                <input type="text" name="store_slug" value="pacific-surf-studio" class="input-field" readonly>
+                                <p class="text-[7px] mt-1 text-red-800 font-bold uppercase tracking-tighter">* Permanent Link Identifier</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-6">Personal Information</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">First Name</label>
+                                <input type="text" name="first_name" value="James" class="input-field">
+                            </div>
+                            <div>
+                                <label class="label-text">Last Name</label>
+                                <input type="text" name="last_name" value="Carter" class="input-field">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="label-text">Email Address</label>
+                                <input type="email" name="email" value="hello@coastalgear.com" class="input-field">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-6">Tax & Legal</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">GST Number</label>
+                                <input type="text" name="gst_number" value="22AAAAA0000A1Z5" class="input-field">
+                            </div>
+                            <div>
+                                <label class="label-text">PAN Number</label>
+                                <input type="text" name="pan_number" value="ABCDE1234F" class="input-field">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-6">Banking & Payouts</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">Bank Account Number</label>
+                                <input type="text" name="bank_account_number" value="0000982133421102" class="input-field">
+                            </div>
+                            <div>
+                                <label class="label-text">IFSC Code</label>
+                                <input type="text" name="ifsc_code" value="HDFC0000123" class="input-field">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="label-text">Registered Business Address</label>
+                                <textarea name="business_address" rows="3" class="input-field resize-none">Suite 402, Coastal Business Park, Malibu Highway, California, 90265, USA</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="flex-1 bg-[#3E2723] text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#00796B] transition shadow-lg shadow-[#3E2723]/10">
+                            Save Changes
+                        </button>
+                        <a href="sellerprofile.html" class="flex-1">
+                            <button type="button" class="w-full bg-white border border-[#3E2723]/10 text-[#3E2723]/50 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-50 hover:text-red-700 transition">
+                                Discard
+                            </button>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Image Preview Logic
+        const imageInput = document.getElementById('image-input');
+        const profilePreview = document.getElementById('profile-preview');
+
+        imageInput.onchange = evt => {
+            const [file] = imageInput.files;
+            if (file) {
+                profilePreview.src = URL.createObjectURL(file);
+            }
+        }
+    </script>
+
+</body>
+</html>

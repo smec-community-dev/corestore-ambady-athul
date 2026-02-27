@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Listing: {{ product.name }} | StudioPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; scroll-behavior: smooth; }
+        
+        .glass { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(62, 39, 35, 0.05); 
+        }
+
+        .product-gradient {
+            background: radial-gradient(circle at top right, rgba(0, 121, 107, 0.05), transparent);
+        }
+
+        .orb {
+            position: fixed; width: 500px; height: 500px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 121, 107, 0.04) 0%, transparent 70%);
+            z-index: -1; filter: blur(80px);
+        }
+    </style>
+</head>
+<body class="bg-[#FAF9F6]">
+    <div class="orb -top-20 -left-20"></div>
+    <div class="orb -bottom-20 -right-20"></div>
+
+    <header class="sticky top-0 z-50 glass border-b border-[#3E2723]/5 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <a href="javascript:history.back()" class="w-10 h-10 rounded-xl flex items-center justify-center bg-[#3E2723]/5 hover:bg-[#3E2723] hover:text-white transition-all">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                </a>
+                <span class="font-black tracking-tighter text-xl uppercase italic">Studio<span class="text-[#00796B]">Pro</span> <span class="text-[10px] not-italic font-bold opacity-30 ml-2 tracking-widest uppercase">Inventory Node</span></span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40">Status:</span>
+                <span class="bg-[#3E2723] text-white text-[10px] font-black px-4 py-1.5 rounded-lg uppercase italic tracking-widest">
+                    {{ product.approval_status|default:"Pending" }}
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass rounded-[2.5rem] p-4 product-gradient">
+                    <div class="aspect-square rounded-[2rem] overflow-hidden bg-white border border-[#3E2723]/5 relative">
+                        {% if images %}
+                            <img id="mainPreview" src="{{ images.0.images.url }}" class="w-full h-full object-cover transition-opacity duration-300">
+                        {% else %}
+                            <div class="w-full h-full flex flex-col items-center justify-center text-[#3E2723]/10">
+                                <i class="fa-solid fa-image text-8xl mb-4"></i>
+                                <p class="text-[10px] font-black uppercase tracking-[0.3em]">No Assets Found</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-4 px-2">
+                    {% for img in images %}
+                    <div onclick="updatePreview('{{ img.images.url }}')" class="aspect-square rounded-2xl border border-[#3E2723]/5 glass p-1 overflow-hidden cursor-pointer hover:border-[#00796B]/30 transition-colors">
+                        <img src="{{ img.images.url }}" class="w-full h-full object-cover rounded-xl">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="glass rounded-[2rem] p-8 space-y-6">
+                    <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.3em]">Lifecycle Control</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#3E2723]/5 pb-4">
+                            <span class="text-xs font-bold text-[#3E2723]/60 uppercase italic">Cancellable</span>
+                            <span class="{% if product.is_cancellable %}text-[#00796B]{% else %}text-red-800{% endif %} font-black text-xs uppercase tracking-widest">
+                                {% if product.is_cancellable %}Active{% else %}Disabled{% endif %}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-[#3E2723]/60 uppercase italic">Returnable</span>
+                            <span class="{% if product.is_returnable %}text-[#00796B]{% else %}text-red-800{% endif %} font-black text-xs uppercase tracking-widest">
+                                {% if product.is_returnable %}Active{% else %}Disabled{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 space-y-8">
+                
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] font-black text-[#00796B] uppercase tracking-[0.3em]">{{ product.subcategory.name }}</span>
+                        <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
+                        <span class="text-[10px] font-black text-[#3E2723]/40 uppercase tracking-widest">Brand: {{ product.brand }}</span>
+                    </div>
+                    <h1 class="text-4xl font-black text-[#3E2723] tracking-tighter uppercase italic leading-none">
+                        {{ product.name }}
+                    </h1>
+                    <p class="text-[10px] font-bold text-[#3E2723]/30 tracking-[0.4em] uppercase">{{ product.product_slug }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="glass rounded-[2rem] p-6 space-y-4">
+                        <h4 class="text-[9px] font-black text-[#00796B] uppercase tracking-[0.2em] flex items-center gap-2">
+                            <i class="fa-solid fa-coins"></i> Financials
+                        </h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-[8px] font-black opacity-30 uppercase">MRP</p>
+                                <p class="text-lg font-black italic">₹{{ data.mrp }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] font-black opacity-30 uppercase">Selling Price</p>
+                                <p class="text-lg font-black italic text-[#00796B]">₹{{ data.selling_price }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] font-black opacity-30 uppercase">Cost Price</p>
+                                <p class="text-sm font-bold opacity-60 italic">₹{{ data.cost_price }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[8px] font-black opacity-30 uppercase">Tax (%)</p>
+                                <p class="text-sm font-bold opacity-60 italic">{{ data.tax_percentage }}%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-[2rem] p-6 space-y-4">
+                        <h4 class="text-[9px] font-black text-[#00796B] uppercase tracking-[0.2em] flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked"></i> Inventory & Stock
+                        </h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-[8px] font-black opacity-30 uppercase">SKU Code</p>
+                                <p class="text-xs font-black tracking-widest">{{ data.sku_code }}</p>
+                            </div>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <p class="text-[8px] font-black opacity-30 uppercase">Stock Quantity</p>
+                                    <p class="text-2xl font-black italic text-[#3E2723]">{{ data.stock_quantity }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[8px] font-black opacity-30 uppercase">Model Number</p>
+                                    <p class="text-xs font-bold">{{ product.model_number }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-[2rem] p-6 space-y-4 md:col-span-2">
+                        <h4 class="text-[9px] font-black text-[#00796B] uppercase tracking-[0.2em] flex items-center gap-2">
+                            <i class="fa-solid fa-truck-ramp-box"></i> Logistics (Shipping)
+                        </h4>
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="bg-[#3E2723]/5 p-3 rounded-xl border border-[#3E2723]/5 text-center">
+                                <p class="text-[8px] font-black opacity-30 uppercase mb-1">Weight</p>
+                                <p class="text-xs font-black">{{ data.weight }} <span class="text-[8px] opacity-40">KG</span></p>
+                            </div>
+                            <div class="bg-[#3E2723]/5 p-3 rounded-xl border border-[#3E2723]/5 text-center">
+                                <p class="text-[8px] font-black opacity-30 uppercase mb-1">Length</p>
+                                <p class="text-xs font-black">{{ data.length }} <span class="text-[8px] opacity-40">CM</span></p>
+                            </div>
+                            <div class="bg-[#3E2723]/5 p-3 rounded-xl border border-[#3E2723]/5 text-center">
+                                <p class="text-[8px] font-black opacity-30 uppercase mb-1">Width</p>
+                                <p class="text-xs font-black">{{ data.width }} <span class="text-[8px] opacity-40">CM</span></p>
+                            </div>
+                            <div class="bg-[#3E2723]/5 p-3 rounded-xl border border-[#3E2723]/5 text-center">
+                                <p class="text-[8px] font-black opacity-30 uppercase mb-1">Height</p>
+                                <p class="text-xs font-black">{{ data.height }} <span class="text-[8px] opacity-40">CM</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-[2.5rem] p-8 space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.3em]">Technical Description</h4>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-[#00796B]/10 rounded-lg">
+                            <span class="text-[8px] font-black text-[#00796B] uppercase tracking-widest">Return Window: {{ product.return_days|default:"7" }} Days</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-[#3E2723]/60 leading-relaxed italic border-l-2 border-[#00796B] pl-6 py-2">
+                        {{ product.description }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-24 border-t border-[#3E2723]/5 py-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-[10px] font-black text-[#3E2723]/20 uppercase tracking-[0.5em]">StudioPro Seller Terminal &copy; 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gallery logic: swaps the main image src with a quick fade effect
+        function updatePreview(url) {
+            const main = document.getElementById('mainPreview');
+            main.style.opacity = '0';
+            setTimeout(() => {
+                main.src = url;
+                main.style.opacity = '1';
+            }, 150);
+        }
+
+        // Existing reveal animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.glass');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(15px)';
+                el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 80);
+            });
+        });
+    </script>
+</body>
+</html>

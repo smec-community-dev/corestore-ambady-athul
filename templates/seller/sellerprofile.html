@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Identity | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .detail-label { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: #00796B; margin-bottom: 4px; display: block; }
+        .detail-value { font-size: 12px; font-weight: 800; color: #3E2723; text-transform: uppercase; }
+        .section-title { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(62, 39, 35, 0.4); padding-bottom: 8px; border-bottom: 1px solid rgba(62, 39, 35, 0.05); margin-bottom: 20px; }
+    </style>
+</head>
+<body class="bg-[#FAF9F6]">
+
+    <main class="container mx-auto px-4 py-10 max-w-5xl">
+        <a href="/sellerhome/" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40 hover:text-[#00796B] mb-8 transition">
+            <i class="fa-solid fa-arrow-left"></i> Back to Inventory
+        </a>
+
+        <header class="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
+            <div>
+                <h1 class="text-3xl font-black italic uppercase tracking-tighter text-[#3E2723]">Merchant <span class="text-[#00796B]">Identity</span></h1>
+                <p class="text-[#3E2723]/50 text-[9px] font-black uppercase tracking-widest mt-1">Full Partner Profile & Regulatory Data</p>
+            </div>
+            
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <a href="" class="flex-1 md:flex-none">
+                    <button class="w-full bg-white border border-[#3E2723]/10 text-[#3E2723] px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#3E2723] hover:text-white transition shadow-sm flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-pen-to-square text-xs"></i> Edit Profile
+                    </button>
+                </a>
+                <a href="/logout/" class="flex-1 md:flex-none">
+                    <button class="w-full bg-[#3E2723] text-white px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-900 transition shadow-xl shadow-[#3E2723]/10 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-right-from-bracket text-xs"></i> Logout
+                    </button>
+                </a>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass p-8 rounded-[2.5rem] text-center border-[#00796B]/20 shadow-xl">
+                    <div class="w-32 h-32 mx-auto mb-6 rounded-[2rem] overflow-hidden border-4 border-white shadow-lg">
+                        <img src="{{ datas.user.profile_image.url }}" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-lg font-black uppercase tracking-tighter">{{datas.user.username}}</h3>
+                    <p class="text-[9px] font-bold text-[#3E2723]/40 mt-1">@{{datas.store_slug}}</p>
+                    <div class="flex items-center justify-center gap-2 mt-4">
+                        <span class="px-3 py-1 bg-[#00796B]/10 text-[#00796B] rounded-full text-[8px] font-black uppercase tracking-widest">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Verified Merchant
+                        </span>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-[2rem] bg-[#3E2723] text-white">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Store Rating</p>
+                            <div class="flex items-end gap-1">
+                                <span class="text-3xl font-black">4.8</span>
+                                <i class="fa-solid fa-star text-[#00796B] text-[10px] mb-2"></i>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Joined</p>
+                            <p class="text-[10px] font-bold">{{datas.created_at}}</p>
+                        </div>
+                    </div>
+                    <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-[#00796B] w-[92%]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8">
+                <div class="glass p-8 md:p-10 rounded-[3rem] shadow-sm space-y-12">
+                    
+                    <section>
+                        <h4 class="section-title">Brand & Representative</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div>
+                                <span class="detail-label">Store Legal Name</span>
+                                <p class="detail-value text-lg">{{datas.store_name}}</p>
+                            </div>
+                            <div>
+                                <span class="detail-label">Store URL Slug</span>
+                                <p class="detail-value">{{datas.store_slug}}</p>
+                            </div>
+                            <div>
+                                <span class="detail-label">Authorized Signatory</span>
+                                <p class="detail-value">{{datas.first_name}}</p>
+                            </div>
+                            <div>
+                                <span class="detail-label">Official Email</span>
+                                <p class="detail-value" style="text-transform: lowercase;">{{datas.email}}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h4 class="section-title">Tax & Legal Identifiers</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div>
+                                <span class="detail-label">GST Number</span>
+                                <p class="detail-value">{{datas.gst_number}}</p>
+                            </div>
+                            <div>
+                                <span class="detail-label">PAN Number</span>
+                                <p class="detail-value">{{datas.pan_number}}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h4 class="section-title">Payout & Banking</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div>
+                                <span class="detail-label">Account Number</span>
+                                <p class="detail-value">{{datas.bank_account_number}}</p>
+                            </div>
+                            <div>
+                                <span class="detail-label">IFSC Code</span>
+                                <p class="detail-value">{{datas.ifsc_code}}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h4 class="section-title">Registered Office</h4>
+                        <div>
+                            <span class="detail-label">Business Address</span>
+                            <p class="text-[11px] font-bold text-[#3E2723]/70 leading-relaxed uppercase">
+                                {{datas.business_address}}
+                            </p>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

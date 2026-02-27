@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Gallery | StudioPro Merchant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .input-box { background: rgba(62, 39, 35, 0.04); border: 1.5px solid rgba(62, 39, 35, 0.08); border-radius: 1rem; padding: 0.6rem 1rem; font-size: 11px; font-weight: 800; width: 100%; transition: all 0.2s ease; }
+        .input-box:focus { outline: none; border-color: #00796B; background: white; }
+        .label-sm { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(62, 39, 35, 0.5); margin-bottom: 4px; display: block; }
+        .primary-badge { background: #00796B; color: white; font-size: 8px; font-weight: 900; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Pulse animation for the upload icon */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+        .upload-icon { animation: pulse 2s infinite ease-in-out; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#FAF9F6]">
+
+    <nav class="sticky top-0 z-50 glass px-4 py-3 flex justify-between items-center border-b border-[#3E2723]/5">
+        <div class="flex items-center gap-2">
+            <div class="bg-[#3E2723] p-1.5 rounded-lg text-white text-[10px]"><i class="fa-solid fa-images"></i></div>
+            <span class="font-extrabold tracking-tighter text-sm uppercase">Studio<span class="text-[#00796B]">Pro</span></span>
+        </div>
+        <a href="sellerhome.html" class="text-[10px] font-black uppercase text-[#3E2723]/40 hover:text-[#00796B] transition">Exit Gallery</a>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 lg:p-10">
+        <header class="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
+            <div>
+                <h1 class="text-2xl font-black italic uppercase tracking-tighter text-[#3E2723]">Visual <span class="text-[#00796B]">Assets.</span></h1>
+                <p class="text-[10px] font-black text-[#3E2723]/40 uppercase tracking-widest mt-1">Manage images for Variant: <span class="text-[#3E2723]">{{ variant.sku_code }}</span></p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4">
+                <div class="glass rounded-[2.5rem] p-8 sticky top-24 shadow-sm border-[#3E2723]/5">
+                    <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-4 mb-6">Upload Asset</h3>
+                    
+                    <form method="POST" enctype="multipart/form-data" class="space-y-5">
+                        {% csrf_token %}
+                        
+                        <div>
+                            <label class="label-sm">Image Selection</label>
+                            <div class="relative group">
+                                <div id="drop-zone" class="w-full h-48 rounded-2xl border-2 border-dashed border-[#3E2723]/10 bg-[#3E2723]/5 flex flex-col items-center justify-center gap-2 group-hover:border-[#00796B] transition cursor-pointer overflow-hidden">
+                                    
+                                    <div id="upload-placeholder" class="flex flex-col items-center">
+                                        <i class="fa-solid fa-camera-retro text-[#3E2723]/20 text-2xl upload-icon mb-2"></i>
+                                        <span class="text-[9px] font-black text-[#3E2723]/30 uppercase tracking-widest">Select Product Photo</span>
+                                    </div>
+
+                                    <img id="preview-img" class="absolute inset-0 w-full h-full object-cover hidden z-10">
+                                    
+                                    <div id="change-overlay" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition z-20 flex items-center justify-center hidden">
+                                        <span class="text-white text-[8px] font-black uppercase tracking-widest border border-white/40 px-3 py-2 rounded-lg">Change Photo</span>
+                                    </div>
+                                </div>
+                                <input type="file" name="images" id="file-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-sm">Alt Text (SEO Description)</label>
+                            <input type="text" name="alt_text" placeholder="e.g. Side profile of wood board" class="input-box">
+                        </div>
+
+                        <div class="flex items-center gap-3 py-2">
+                            <input type="checkbox" name="is_primary" id="is_primary" class="w-4 h-4 rounded border-[#3E2723]/20 accent-[#00796B] cursor-pointer">
+                            <label for="is_primary" class="text-[10px] font-black uppercase text-[#3E2723]/60 cursor-pointer hover:text-[#00796B] transition">Set as Primary Display</label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-[#3E2723] text-white py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#00796B] transition shadow-lg mt-4">
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Add to Gallery
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for img in images %}
+                    <div class="glass rounded-[2rem] overflow-hidden group shadow-sm border-[#3E2723]/5">
+                        <div class="aspect-video relative overflow-hidden">
+                            <img src="{{ img.images.url }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            {% if img.is_primary %}
+                            <div class="absolute top-4 left-4">
+                                <span class="primary-badge"><i class="fa-solid fa-star mr-1 text-[7px]"></i> Primary Asset</span>
+                            </div>
+                            {% endif %}
+                            
+                            <form action="" method="POST" class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition translate-y-2 group-hover:translate-y-0">
+                                {% csrf_token %}
+                                <a href="/imagedelete/{{img.id}}">
+                                <button type="submit" class="w-8 h-8 bg-white/90 text-red-600 rounded-lg flex items-center justify-center hover:bg-red-600 hover:text-white transition shadow-xl">
+                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                </button>
+                                </a>
+                            </form>
+                        </div>
+                        
+                        <div class="p-5 flex justify-between items-center">
+                            <div class="max-w-[70%]">
+                                <p class="label-sm mb-0">Alt Label</p>
+                                <p class="text-[10px] font-extrabold text-[#3E2723] uppercase truncate">
+                                    {{ img.alt_text|default:"Undefined Description" }}
+                                </p>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full py-24 text-center glass rounded-[3rem] border-dashed border-2 border-[#3E2723]/5">
+                        <i class="fa-solid fa-images text-4xl text-[#3E2723]/5 mb-4"></i>
+                        <p class="text-[10px] font-black text-[#3E2723]/30 uppercase tracking-widest">No visual assets detected for this variant</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const previewImg = document.getElementById('preview-img');
+        const placeholder = document.getElementById('upload-placeholder');
+        const changeOverlay = document.getElementById('change-overlay');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    changeOverlay.classList.remove('hidden');
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

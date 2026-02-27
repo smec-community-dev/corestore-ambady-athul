@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
-from seller.models import *
+# from seller.models import *
 
 class User(AbstractUser):
     ROLE_CHOICES = (

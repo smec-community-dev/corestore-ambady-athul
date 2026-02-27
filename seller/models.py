@@ -32,7 +32,7 @@ class Product(models.Model):
 
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
-    slug = models.SlugField(unique=True, blank=True)   # 👈 Added slug
+    slug = models.SlugField(unique=True, blank=True)  
     sku_code = models.CharField(max_length=100, unique=True)
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -61,16 +61,16 @@ class ProductVariant(models.Model):
 
 class ProductImage(models.Model):
     variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name="images")
-    image_url = models.URLField()
-    alt_text = models.CharField(max_length=255, blank=True)
+    images = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    alt_text = models.CharField(max_length=255,null=True,blank=True)
     is_primary = models.BooleanField(default=False)
 
 class Attribute(models.Model):
-    name = models.CharField(max_length=100) # e.g., Color, Size
+    name = models.CharField(max_length=100) 
 
 class AttributeOption(models.Model):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, related_name="options")
-    value = models.CharField(max_length=100) # e.g., Red, XL
+    value = models.CharField(max_length=100) 
 
 class VariantAttributeBridge(models.Model):
     variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
