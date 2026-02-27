@@ -26,7 +26,7 @@ class WishlistItem(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
-    rating = models.IntegerField() # Use validation for 1-5
+    rating = models.IntegerField() 
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -35,7 +35,7 @@ class Order(models.Model):
     order_number = models.CharField(max_length=100, unique=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(max_length=20, default='PENDING')
-    order_status = models.CharField(max_length=20, default='PLACED')
+    order_status = models.CharField(max_length=50,default="placed")
     ordered_at = models.DateTimeField(auto_now_add=True)
 
 class OrderItem(models.Model):

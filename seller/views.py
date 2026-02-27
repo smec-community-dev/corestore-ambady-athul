@@ -27,14 +27,14 @@ def selleregis(request):
                                           )
             user.save()
             sellr=SellerProfile.objects.create( user=user,
-                store_name=request.POST.get("store_name"),
-                store_slug=slugify(request.POST.get("store_name")),
-                gst_number=request.POST.get("gst_number"),
-                pan_number=request.POST.get("pan_number"),
-                bank_account_number=request.POST.get("bank_account_number"),
-                ifsc_code=request.POST.get("ifsc_code"),
-                business_address=request.POST.get("business_address"),
-            )
+                                                store_name=request.POST.get("store_name"),
+                                                store_slug=slugify(request.POST.get("store_name")),
+                                                gst_number=request.POST.get("gst_number"),
+                                                pan_number=request.POST.get("pan_number"),
+                                                bank_account_number=request.POST.get("bank_account_number"),
+                                                ifsc_code=request.POST.get("ifsc_code"),
+                                                business_address=request.POST.get("business_address"),
+                                                )
             sellr.save()
             return redirect("/login/")
     return render(request,"seller/sellerregistration.html")
@@ -59,7 +59,6 @@ def sellerlogin(request):
 @seller_required
 def sellerhome(request):
     seller=SellerProfile.objects.get(user=request.user)
-
     products=(Product.objects.filter(seller=seller).prefetch_related("variants__images").order_by("-created_at"))
     return render(request, "seller/sellerhome.html", {"products": products,"seller":seller})
 
@@ -68,9 +67,6 @@ def sellerhome(request):
 def sellerprofile(request):
     data=request.user
     datas=SellerProfile.objects.get(user=data)
-    
-
-    
     return render(request,"seller/sellerprofile.html",{"datas":datas})
 
 def seller_logout(request):
@@ -117,14 +113,10 @@ def sellerproduct(request):
 @seller_required
 def sellerproduct_update(request, id):
     sub = SubCategory.objects.all()
-
     product = Product.objects.get(id=id)
     variant = ProductVariant.objects.get(product=product)
-
     if request.method == "POST":
-        
         product.seller = SellerProfile.objects.get(user=request.user)
-
         m = SubCategory.objects.get(id=request.POST.get("subcategory"))
         product.subcategory = m
         product.name = request.POST.get("name")
@@ -151,8 +143,9 @@ def sellerproduct_update(request, id):
         variant.save()
 
         return redirect("/sellerhome/")
-
     return render(request,"seller/sellerproductupdate.html",{"sub": sub,"product": product,"variant": variant})    
+
+
 @seller_required
 def sellerimage(request,id):
     product=Product.objects.get(id=id)
@@ -164,8 +157,6 @@ def sellerimage(request,id):
         data.alt_text=request.POST.get("alt_text")
         data.is_primary = bool(request.POST.get("is_primary"))
         data.save()
-        
-
     return render(request,"seller/sellerproductimages.html",{"images":images})
 
 
@@ -179,7 +170,6 @@ def imagedelete(request,id):
 def selleratribute(request):
     atr=AttributeOption()
     AT=Attribute.objects.all()
-
     if request.method=="POST":
         atr.attribute=Attribute.objects.get(id=request.POST.get('Atribute'))
         atr.value=request.POST.get('value')
@@ -208,6 +198,10 @@ def productsingle(request,slug):
     data=ProductVariant.objects.get(product=product)
     images=ProductImage.objects.filter(variant=data)
     return render(request,"seller/productsingleview.html",{"data":data,"product":product,"images":images})
+
+@seller_required
+def sellerorder(request):
+    return render(request,"seller/sellerordermanagement.html")
 
 
    
