@@ -49,39 +49,46 @@
             100% { transform: translate(40px, 60px) scale(1.1); }
         }
 
-        .status-select { 
-            background: rgba(62, 39, 35, 0.03); 
-            border: 1px solid rgba(62, 39, 35, 0.08); 
-            border-radius: 12px; 
-            padding: 0.5rem 0.8rem; 
-            font-size: 10px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            outline: none; 
-            transition: all 0.3s;
+        /* NEW STATUS BADGE DESIGN (Replaces Dropdown) */
+        .status-badge {
+            display: inline-flex;
+            items-center: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 1px solid rgba(62, 39, 35, 0.05);
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        .status-select:hover {
-            background: white;
-            border-color: #00796B;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
         }
+
+        /* Status Variants */
+        .badge-processing { color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+        .badge-shipped { color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+        .badge-delivered { color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+        .badge-cancelled { color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
 
         /* Table Row Micro-interaction */
-        tbody tr { transition: all 0.3s ease; border-radius: 12px; }
+        tbody tr { transition: all 0.3s ease; }
         tbody tr:hover { 
             background: rgba(255, 255, 255, 0.9) !important;
             transform: scale(1.005);
             box-shadow: 0 4px 20px -10px rgba(0,0,0,0.1);
-            z-index: 10;
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        .stat-icon {
-            transition: all 0.4s ease;
-        }
+        .stat-icon { transition: all 0.4s ease; }
         .glass-card:hover .stat-icon {
             transform: rotate(-10deg) scale(1.1);
             color: #00796B;
@@ -103,17 +110,7 @@
                     <span>SELLER<span class="text-[#00796B]">HUB</span></span>
                 </div>
             </div>
-            <div class="flex items-center gap-5">
-                <div class="hidden md:block text-right">
-                    <p class="text-[8px] font-black uppercase tracking-[0.3em] text-[#3E2723]/40">Partner Status</p>
-                    <p class="text-[11px] font-bold text-[#00796B]">Coastal Gear Co.</p>
-                </div>
-                <div class="relative group">
-                    <div class="absolute inset-0 bg-[#00796B] rounded-2xl blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                    <div class="relative w-11 h-11 rounded-2xl bg-white border-2 border-[#00796B]/20 p-0.5 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="w-full h-full object-cover rounded-xl">
-                    </div>
-                </div>
+            
             </div>
         </div>
     </nav>
@@ -126,7 +123,7 @@
                     <i class="fa-solid fa-box-open text-3xl text-[#3E2723]"></i>
                 </div>
                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Active Orders</p>
-                <h3 class="text-3xl font-black text-[#3E2723]">24</h3>
+                <h3 class="text-3xl font-black text-[#3E2723]">{{active_orders}}</h3>
             </div>
             
             <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
@@ -134,7 +131,7 @@
                     <i class="fa-solid fa-chart-line text-3xl text-[#00796B]"></i>
                 </div>
                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Revenue (Feb)</p>
-                <h3 class="text-3xl font-black text-[#00796B]">$12,450</h3>
+                <h3 class="text-3xl font-black text-[#00796B]">${{revenue}}</h3>
             </div>
             
             <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
@@ -142,7 +139,7 @@
                     <i class="fa-solid fa-truck-fast text-3xl text-[#3E2723]"></i>
                 </div>
                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Shipments Out</p>
-                <h3 class="text-3xl font-black text-[#3E2723]">18</h3>
+                <h3 class="text-3xl font-black text-[#3E2723]">{{shipments_out}}</h3>
             </div>
             
             <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
@@ -179,78 +176,38 @@
                             <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Customer</th>
                             <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Date</th>
                             <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Total</th>
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Status Update</th>
+                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Status</th>
                         </tr>
                     </thead>
+                    
                     <tbody class="divide-y divide-[#3E2723]/5">
+                        {% for i in order %}
                         <tr class="group">
-                            <td class="px-8 py-8 text-[11px] font-black text-[#3E2723] tracking-wider">#CS-9921</td>
+                            <td class="px-8 py-8 text-[11px] font-black text-[#3E2723] tracking-wider">{{i.order.order_number}}</td>
                             <td class="px-8 py-8">
                                 <div class="flex items-center gap-4">
+                                    {% for img in i.variant.images.all %}
+                                    {% if img.is_primary %}
                                     <div class="w-12 h-12 bg-white rounded-2xl overflow-hidden shrink-0 shadow-sm border border-[#3E2723]/5 group-hover:rotate-3 transition-transform">
-                                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100" class="w-full h-full object-cover">
+                                        <img src="{{ img.images.url }}" class="w-full h-full object-cover">
                                     </div>
-                                    <span class="text-[11px] font-black uppercase truncate max-w-[150px] tracking-tight text-[#3E2723]">Vortex Racer X1</span>
+                                    {% endif %}
+                                     {% endfor %}
+                                    <span class="text-[11px] font-black uppercase truncate max-w-[150px] tracking-tight text-[#3E2723]">{{i.variant.product.name}}</span>
                                 </div>
                             </td>
-                            <td class="px-8 py-8 text-[11px] font-bold text-[#3E2723]/80">James Carter</td>
-                            <td class="px-8 py-8 text-[10px] font-bold text-gray-400">Feb 15, 2026</td>
-                            <td class="px-8 py-8 text-sm font-black text-[#00796B]">$149.00</td>
+                            <td class="px-8 py-8 text-[11px] font-bold text-[#3E2723]/80">{{i.order.user.username}}</td>
+                            <td class="px-8 py-8 text-[10px] font-bold text-gray-400">{{i.order.ordered_at}}</td>
+                            <td class="px-8 py-8 text-sm font-black text-[#00796B]">${{i.order.total_amount}}</td>
                             <td class="px-8 py-8">
-                                <select class="status-select text-orange-600">
-                                    <option>Processing</option>
-                                    <option class="text-blue-600">Shipped</option>
-                                    <option class="text-green-600">Delivered</option>
-                                    <option class="text-red-600">Cancelled</option>
-                                </select>
+                                <span class="status-badge badge-processing">
+                                    <span class="dot bg-[#f59e0b]"></span>
+                                    {{i.order.order_status}}
+                                </span>
                             </td>
                         </tr>
-
-                        <tr class="group">
-                            <td class="px-8 py-8 text-[11px] font-black text-[#3E2723] tracking-wider">#CS-9918</td>
-                            <td class="px-8 py-8">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-white rounded-2xl overflow-hidden shrink-0 shadow-sm border border-[#3E2723]/5 group-hover:-rotate-3 transition-transform">
-                                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100" class="w-full h-full object-cover">
-                                    </div>
-                                    <span class="text-[11px] font-black uppercase truncate max-w-[150px] tracking-tight text-[#3E2723]">Onyx Stealth</span>
-                                </div>
-                            </td>
-                            <td class="px-8 py-8 text-[11px] font-bold text-[#3E2723]/80">Sarah Jenkins</td>
-                            <td class="px-8 py-8 text-[10px] font-bold text-gray-400">Feb 14, 2026</td>
-                            <td class="px-8 py-8 text-sm font-black text-[#00796B]">$450.00</td>
-                            <td class="px-8 py-8">
-                                <select class="status-select text-blue-600">
-                                    <option>Shipped</option>
-                                    <option>Processing</option>
-                                    <option class="text-green-600">Delivered</option>
-                                    <option class="text-red-600">Cancelled</option>
-                                </select>
-                            </td>
-                        </tr>
-
-                        <tr class="group">
-                            <td class="px-8 py-8 text-[11px] font-black text-[#3E2723] tracking-wider">#CS-9915</td>
-                            <td class="px-8 py-8">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-white rounded-2xl overflow-hidden shrink-0 shadow-sm border border-[#3E2723]/5 group-hover:scale-110 transition-transform">
-                                        <img src="https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=100" class="w-full h-full object-cover">
-                                    </div>
-                                    <span class="text-[11px] font-black uppercase truncate max-w-[150px] tracking-tight text-[#3E2723]">Ghost RGB</span>
-                                </div>
-                            </td>
-                            <td class="px-8 py-8 text-[11px] font-bold text-[#3E2723]/80">Marcus Vane</td>
-                            <td class="px-8 py-8 text-[10px] font-bold text-gray-400">Feb 12, 2026</td>
-                            <td class="px-8 py-8 text-sm font-black text-[#00796B]">$129.00</td>
-                            <td class="px-8 py-8">
-                                <select class="status-select text-green-600">
-                                    <option>Delivered</option>
-                                    <option>Processing</option>
-                                    <option>Shipped</option>
-                                    <option class="text-red-600">Cancelled</option>
-                                </select>
-                            </td>
-                        </tr>
+                    {% endfor %}
+                        
                     </tbody>
                 </table>
             </div>

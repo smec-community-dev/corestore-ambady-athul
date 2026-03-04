@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from core.models import User,Category,SubCategory
 from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge
+from customer.models import OrderItem,Order
 from django.utils.text import slugify
 from django.contrib.auth import authenticate, login ,logout
 from core.decorator import seller_required
@@ -201,7 +202,19 @@ def productsingle(request,slug):
 
 @seller_required
 def sellerorder(request):
-    return render(request,"seller/sellerordermanagement.html")
+    seller = SellerProfile.objects.get(user=request.user)
+    order=OrderItem.objects.filter(seller=seller)
+    
+    active_orders=0
+    shipments_out=0
+    revenue=0
+
+    for item in order:
+        if item.order.order_status=="placed":
+            active_orders += 1
+        if item.order.order_status=="shipped":
+            shipments_out += 1
+        revenue += item.order.total_amount
+    return render(request,"seller/sellerordermanagement.html",{"order":order,"active_orders":active_orders,"shipments_out":shipments_out,"revenue":revenue})
 
 
-   
