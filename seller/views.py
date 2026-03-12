@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from core.models import User,Category,SubCategory
-from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge
+from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge,ReturnRequest
 from customer.models import OrderItem,Order
 from django.utils.text import slugify
 from django.contrib.auth import authenticate, login ,logout
@@ -92,7 +92,7 @@ def sellerproduct(request):
             brand=request.POST.get("brand"),
             model_number=request.POST.get("model_number"),
             return_days=request.POST.get("return_days"),
-            approval_status=request.POST.get("approval_status"),
+            # approval_status=request.POST.get("approval_status"),
             is_cancellable=bool(request.POST.get("is_cancellable")) ,
             is_returnable=bool(request.POST.get("is_returnable")), 
             )
@@ -149,6 +149,25 @@ def sellerproduct_update(request, id):
 
         return redirect("/sellerhome/")
     return render(request,"seller/sellerproductupdate.html",{"sub": sub,"product": product,"variant": variant})    
+
+@seller_required
+def toggleproductstatus(request, slug):
+    seller=SellerProfile.objects.get(user=request.user)
+    product = Product.objects.get(slug=slug, seller=seller)
+
+    if product.is_active:
+        product.is_active = False
+    else:
+        product.is_active = True
+    product.save()
+    return redirect("/sellerhome/")
+
+
+@seller_required
+def sellerinactive(request):
+    seller=SellerProfile.objects.get(user=request.user)
+    products=(Product.objects.filter(seller=seller,is_active=False).prefetch_related("variants__images").order_by("-created_at"))
+    return render(request, "seller/inactiveproductdetails.html", {"products": products,"seller":seller})
 
 
 @seller_required
@@ -221,4 +240,49 @@ def sellerorder(request):
         revenue += item.order.total_amount
     return render(request,"seller/sellerordermanagement.html",{"order":order,"active_orders":active_orders,"shipments_out":shipments_out,"revenue":revenue})
 
+@seller_required
+def productdelete(request,id):
+    product=Product.objects.get(id=id)
+    product.delete()
+    return redirect("/sellerhome/")
 
+
+
+
+@seller_required
+def sellerreturns(request):
+    seller = SellerProfile.objects.get(user=request.user)
+    returns = ReturnRequest.objects.filter(seller=seller).order_by("-created_at")
+    return render(request,"seller/sellerreturn.html",{"returns": returns})
+
+
+
+
+
+@seller_required
+def sellerdashboard(request):
+
+    seller = SellerProfile.objects.get(user=request.user)
+
+    order_items = OrderItem.objects.filter(seller=seller)
+    return_requests = ReturnRequest.objects.filter(seller=seller)
+    products=Product.objects.filter(is_active=True)
+
+    total_revenue = 0
+    total_products = 0
+    total_returns = 0
+    active_orders=0
+    activelisting=len(products)
+
+    for item in order_items:
+        total_revenue += item.price_at_purchase * item.quantity
+        total_products += item.quantity
+
+    for r in return_requests:
+        total_returns += 1
+
+    for item in order_items:
+        if item.order.order_status=="placed":
+            active_orders += 1    
+
+    return render(request, "seller/sellerdashboard.html",{"total_revenue":total_revenue,"total_products":total_products,"total_returns":total_returns,"active_orders":active_orders,"activelisting":activelisting})

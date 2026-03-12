@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Returns Node | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; scroll-behavior: smooth; }
+        
+        .glass { 
+            background: rgba(255, 255, 255, 0.65); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(62, 39, 35, 0.04); 
+        }
+        
+        .return-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .return-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.05);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .orb {
+            position: fixed; width: 500px; height: 500px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+            z-index: -1; filter: blur(80px); animation: float 15s infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+    <div class="orb -top-20 -right-20"></div>
+
+    <aside class="w-full md:w-20 lg:w-64 bg-[#3E2723] flex md:flex-col sticky top-0 z-50 h-auto md:h-screen text-white border-b md:border-b-0 border-white/5">
+        <div class="p-6 flex items-center gap-3">
+            <div class="bg-indigo-500 p-2 rounded-xl text-white shadow-lg">
+                <i class="fa-solid fa-rotate-left text-sm"></i>
+            </div>
+            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase italic">Studio<span class="text-indigo-400">Pro</span></span>
+        </div>
+        
+        <nav class="flex-1 flex md:flex-col p-3 md:p-4 gap-2 overflow-x-auto no-scrollbar whitespace-nowrap md:mt-4">
+
+            <a href="/sellerdashboard/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-gauge-high"></i> <span class="hidden lg:block">Dashboard</span>
+            </a>
+             <a href="/sellerhome/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-boxes-stacked"></i> <span class="hidden lg:block">Inventory</span>
+            </a>
+            <a href="/sellerorder/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-chart-line"></i> <span class="hidden lg:block">Order Mgmt</span>
+            </a>
+
+             <a href="/sellerinactive/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-eye-slash"></i> <span class="hidden lg:block">Inactive products</span>
+                </a>
+            <a href="#" class="flex items-center gap-3 px-5 py-4 bg-indigo-500 text-white rounded-2xl font-black text-[10px] uppercase shadow-xl shadow-indigo-500/20">
+                <i class="fa-solid fa-truck-ramp-box"></i> <span class="hidden lg:block">Returned Products</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto p-4 border-t border-white/5 hidden md:block">
+            <div class="flex items-center gap-3 p-3">
+                <img src="{{ seller.user.profile_image.url }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-indigo-500/20">
+                <div class="hidden lg:block">
+                    <p class="text-[10px] font-black uppercase text-white/90">{{seller.user.username}}</p>
+                    <p class="text-[8px] font-bold text-indigo-400 uppercase tracking-widest italic">Returns Node</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-10 lg:p-14 overflow-y-auto">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-[#3E2723]">
+                    Returned <span class="text-indigo-500">Products</span>
+                </h2>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="w-8 h-[2px] bg-indigo-500"></span>
+                    <p class="text-[#3E2723]/40 text-[9px] font-black uppercase tracking-[0.3em]">Reverse Logistics Terminal</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-6xl space-y-6">
+            {% for r in returns %}
+            <div class="return-card glass rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden group">
+                <div class="absolute top-6 right-8">
+                    <span class="bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase px-4 py-1.5 rounded-full border border-indigo-100 tracking-widest shadow-sm">
+                        {{ r.status }}
+                    </span>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="w-full md:w-32 lg:w-40 shrink-0">
+                        <div class="aspect-square rounded-[2rem] bg-white border border-[#3E2723]/5 overflow-hidden shadow-inner group-hover:scale-105 transition-transform duration-500">
+                            {% for img in r.order_item.variant.images.all %}
+                                {% if img.is_primary %}
+                                    <img src="{{ img.image.url }}" class="w-full h-full object-cover">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="space-y-1">
+                            <h3 class="text-lg font-black text-[#3E2723] uppercase italic tracking-tighter">
+                                {{ r.order_item.variant.product.name }}
+                            </h3>
+                            <p class="text-[9px] font-black text-[#3E2723]/30 uppercase tracking-widest">Order ID: #{{ r.order_item.order.order_number }}</p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-black uppercase text-[#3E2723]/40 w-16">Quantity</span>
+                                <span class="text-xs font-black text-[#3E2723]">{{ r.order_item.quantity }} Units</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-black uppercase text-[#3E2723]/40 w-16">Price</span>
+                                <span class="text-xs font-black text-indigo-600">₹{{ r.order_item.price_at_purchase }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-black uppercase text-[#3E2723]/40">Requested On</span>
+                            </div>
+                            <span class="text-xs font-bold text-[#3E2723]/60">{{ r.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-[#3E2723]/5 bg-indigo-50/30 -mx-8 -mb-8 p-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-indigo-500 block mb-2">Customer Feedback</span>
+                            <p class="text-sm font-semibold text-[#3E2723]/80 leading-relaxed italic">
+                                "{{ r.reason }}"
+                            </p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="bg-[#3E2723] text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-lg active:scale-95">
+                                Process Refund
+                            </button>
+                            <button class="bg-white border border-[#3E2723]/10 text-[#3E2723] px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:border-[#3E2723] transition-all">
+                                Contact Buyer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            <div class="glass rounded-[2.5rem] p-20 text-center border-dashed border-2 border-[#3E2723]/10">
+                <i class="fa-solid fa-box-open text-4xl text-[#3E2723]/10 mb-4"></i>
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-[#3E2723]/30">No active return requests found in node</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <footer class="mt-20 py-10 opacity-20 text-center">
+            <p class="text-[9px] font-black uppercase tracking-

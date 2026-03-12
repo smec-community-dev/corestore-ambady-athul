@@ -70,15 +70,25 @@
             <span class="font-black tracking-tighter text-xl hidden lg:block uppercase italic">Studio<span class="text-[#00796B]">Pro</span></span>
         </div>
         
-        <nav class="flex-1 flex md:flex-col p-3 md:p-4 gap-2 overflow-x-auto no-scrollbar whitespace-nowrap md:mt-4">
-            <a href="sellerhome.html" class="flex items-center gap-3 px-5 py-4 bg-[#00796B] text-white rounded-2xl font-black text-[10px] uppercase shadow-xl shadow-[#00796B]/20 transition-all hover:scale-105">
+       <nav class="flex-1 flex md:flex-col p-3 md:p-4 gap-2 overflow-x-auto no-scrollbar whitespace-nowrap md:mt-4">
+            <a href="/sellerdashboard/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-gauge-high"></i> <span class="hidden lg:block">Dashboard</span>
+            </a>
+
+            <a href="/sellerhome/" class="flex items-center gap-3 px-5 py-4 bg-[#00796B] text-white rounded-2xl font-black text-[10px] uppercase shadow-xl shadow-[#00796B]/20 transition-all hover:scale-105">
                 <i class="fa-solid fa-boxes-stacked"></i> <span class="hidden lg:block">Inventory</span>
             </a>
+
             <a href="/sellerorder/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
                 <i class="fa-solid fa-chart-line"></i> <span class="hidden lg:block">Order Mgmt</span>
             </a>
-            <a href="sellerdiscount.html" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
-                <i class="fa-solid fa-truck-ramp-box"></i> <span class="hidden lg:block">Discount</span>
+           
+            <a href="/sellerinactive/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-eye-slash"></i> <span class="hidden lg:block">Inactive products</span>
+            </a>
+
+            <a href="/sellerreturn/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
+                <i class="fa-solid fa-truck-ramp-box"></i> <span class="hidden lg:block">Return details</span>
             </a>
         </nav>
         
@@ -97,41 +107,42 @@
         </div>
     </aside>
 
-    <main class="flex-1 p-6 md:p-10 lg:p-14 overflow-y-auto">
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
-            <div>
-                <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-[#3E2723]">
-                    Product <span class="text-[#00796B]">Control</span>
-                </h1>
-                <div class="flex items-center gap-2 mt-2">
-                    <span class="w-8 h-[2px] bg-[#00796B]"></span>
-                    <p class="text-[#3E2723]/40 text-[9px] font-black uppercase tracking-[0.3em]">Master Inventory Node</p>
-                </div>
+   <main class="flex-1 p-6 md:p-10 lg:p-14 overflow-y-auto">
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-[#3E2723]">
+                Product <span class="text-[#00796B]">Control</span>
+            </h1>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="w-8 h-[2px] bg-[#00796B]"></span>
+                <p class="text-[#3E2723]/40 text-[9px] font-black uppercase tracking-[0.3em]">Master Inventory Node</p>
             </div>
-            <a href="/sellerproduct/" class="w-full sm:w-auto">
-                <button class="w-full group bg-[#3E2723] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#00796B] transition-all active:scale-95 shadow-2xl shadow-[#3E2723]/20 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i> New Listing
-                </button>
-            </a>
-        </header>
+        </div>
+        <a href="/sellerproduct/" class="w-full sm:w-auto">
+            <button class="w-full group bg-[#3E2723] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#00796B] transition-all active:scale-95 shadow-2xl shadow-[#3E2723]/20 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i> New Listing
+            </button>
+        </a>
+    </header>
 
-        <div class="space-y-6">
-            <div class="flex items-center justify-between px-4">
-                <div class="flex items-center gap-2">
-                    <span class="text-[10px] font-black text-[#00796B]">{{products|length}}</span>
-                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/30">Live Entries</span>
-                </div>
-                <button class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 hover:text-[#00796B] transition">
-                    Sort: <span class="text-[#3E2723] italic">Recent</span> <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i>
-                </button>
+    <div class="space-y-6">
+        <div class="flex items-center justify-between px-4">
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black text-[#00796B]">{{products|length}}</span>
+                <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/30">Live Entries</span>
             </div>
+            <button class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 hover:text-[#00796B] transition">
+                Sort: <span class="text-[#3E2723] italic">Recent</span> <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i>
+            </button>
+        </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             {% for i in products %}
-            <div class="product-card glass rounded-[2.5rem] p-5 md:p-7 flex flex-col md:flex-row items-center gap-6 md:gap-10 border border-[#3E2723]/5 shadow-sm">
+            <div class="product-card glass rounded-[2.5rem] p-5 flex flex-col border border-[#3E2723]/5 shadow-sm h-full">
                 
                 {% with i.variants.first as variant %}
-                <div class="relative group/img shrink-0">
-                    <div class="w-28 h-28 md:w-32 md:h-32 rounded-[2rem] bg-white border border-[#3E2723]/5 overflow-hidden shadow-inner transition-transform group-hover:scale-105 duration-500 relative">
+                <div class="relative group/img w-full mb-4">
+                    <div class="aspect-square w-full rounded-[2rem] bg-white border border-[#3E2723]/5 overflow-hidden shadow-inner transition-transform group-hover:scale-105 duration-500 relative">
                         {% if variant %}
                             {% for img in variant.images.all %}
                                 {% if img.is_primary %}
@@ -154,61 +165,66 @@
                 </div>
                 {% endwith %}
                 
-                <div class="flex-1 space-y-3 text-center md:text-left">
-                    <div>
+                <div class="flex-1 flex flex-col space-y-3 text-center">
+                    <div class="flex-1">
                         <a href="/sellerproductview/{{i.slug}}" class="block group/title">
-                            <h2 class="text-xl font-black text-[#3E2723] tracking-tight group-hover/title:text-[#00796B] transition-colors">
+                            <h2 class="text-sm font-black text-[#3E2723] tracking-tight group-hover/title:text-[#00796B] transition-colors line-clamp-1">
                                 {{i.name}}
                             </h2>
                         </a>
-                        <div class="flex items-center justify-center md:justify-start gap-3 mt-1">
-                            <span class="text-[9px] font-black text-[#3E2723]/30 uppercase tracking-[0.2em]">#{{i.model_number}}</span>
-                            <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
-                            <span class="text-[9px] font-black text-[#00796B] uppercase italic">{{i.subcategory.name}}</span>
+                        <div class="flex flex-col items-center gap-1 mt-1">
+                            <span class="text-[8px] font-black text-[#3E2723]/30 uppercase tracking-[0.1em]">#{{i.model_number}}</span>
+                            <span class="text-[8px] font-black text-[#00796B] uppercase italic">{{i.subcategory.name}}</span>
                         </div>
                     </div>
                     
-                    <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                    <div class="flex justify-center py-2">
                         {% if i.is_active %}
-                            <span class="bg-[#00796B]/5 text-[#00796B] text-[8px] px-3 py-1.5 rounded-full font-black uppercase tracking-widest status-glow-active flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#00796B] animate-pulse"></span> Active
+                            <span class="bg-[#00796B]/5 text-[#00796B] text-[7px] px-2.5 py-1 rounded-full font-black uppercase tracking-widest status-glow-active flex items-center gap-1.5">
+                                <span class="w-1 h-1 rounded-full bg-[#00796B] animate-pulse"></span> Active
                             </span>
                         {% else %}
-                            <span class="bg-red-50 text-red-500 text-[8px] px-3 py-1.5 rounded-full font-black uppercase tracking-widest status-glow-inactive flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Inactive
+                            <span class="bg-red-50 text-red-500 text-[7px] px-2.5 py-1 rounded-full font-black uppercase tracking-widest status-glow-inactive flex items-center gap-1.5">
+                                <span class="w-1 h-1 rounded-full bg-red-500"></span> Inactive
                             </span>
                         {% endif %}
                     </div>
                 </div>
                 
-                <div class="w-full md:w-64">
-                    <div class="flex items-center gap-2 p-2 bg-[#3E2723]/[0.02] border border-[#3E2723]/5 rounded-2xl">
-                        
+                <div class="mt-4 pt-4 border-t border-[#3E2723]/5">
+                    <div class="grid grid-cols-2 gap-2">
                         <a href="/sellerproductupdate/{{i.id}}"
-                           class="btn-modern group flex-1 flex items-center justify-center gap-2 bg-[#3E2723] text-white 
-                                  py-3 px-4 rounded-xl shadow-lg shadow-[#3E2723]/10 hover:bg-[#00796B]">
-                            <i class="fa-solid fa-pen-nib text-[10px] opacity-60 group-hover:rotate-12 transition-transform"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest">Edit</span>
+                           class="btn-modern group flex items-center justify-center gap-1.5 bg-[#3E2723] text-white py-2.5 rounded-xl shadow-lg hover:bg-[#00796B]">
+                            <i class="fa-solid fa-pen-nib text-[8px] opacity-60"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest">Edit</span>
                         </a>
 
                         <a href="/sellerimage/{{i.id}}"
-                           class="btn-modern group flex-1 flex items-center justify-center gap-2 bg-white border border-[#3E2723]/10 
-                                  text-[#3E2723] py-3 px-4 rounded-xl hover:border-[#3E2723] hover:shadow-xl shadow-sm">
-                            <i class="fa-solid fa-camera text-[10px] text-[#00796B] group-hover:scale-110 transition-transform"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest">Media</span>
+                           class="btn-modern group flex items-center justify-center gap-1.5 bg-white border border-[#3E2723]/10 text-[#3E2723] py-2.5 rounded-xl">
+                            <i class="fa-solid fa-camera text-[8px] text-[#00796B]"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest">Media</span>
                         </a>
 
+                        <a href="/togglestatus/{{i.slug}}"
+                           class="btn-modern col-span-2 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[8px] font-black uppercase tracking-widest
+                           {% if i.is_active %} bg-green-50 text-green-700 border border-green-200 {% else %} bg-red-50 text-red-700 border border-red-200 {% endif %}">
+                            {% if i.is_active %}
+                                <i class="fa-solid fa-toggle-on"></i> Status: On
+                            {% else %}
+                                <i class="fa-solid fa-toggle-off"></i> Status: Off
+                            {% endif %}
+                        </a>
                     </div>
                 </div>
-                
             </div>
             {% endfor %}
         </div>
-        
-        <footer class="mt-20 py-10 border-t border-[#3E2723]/5 flex justify-center">
-            <p class="text-[9px] font-black uppercase tracking-[0.4em] text-[#3E2723]/20">Core Store Operations Hub &copy; 2026</p>
-        </footer>
-    </main>
+    </div>
+    
+    <footer class="mt-20 py-10 border-t border-[#3E2723]/5 flex justify-center">
+        <p class="text-[9px] font-black uppercase tracking-[0.4em] text-[#3E2723]/20">Core Store Operations Hub &copy; 2026</p>
+    </footer>
+</main>
 
     <script>
         // Smooth reveal on scroll

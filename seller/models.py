@@ -1,5 +1,6 @@
 from django.db import models
-from core.models import User, SubCategory
+from core.models import User, SubCategory 
+# from customer.models import OrderItem
 from django.utils.text import slugify
 
 class SellerProfile(models.Model):
@@ -90,9 +91,9 @@ class VariantAttributeBridge(models.Model):
     variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
     option = models.ForeignKey(AttributeOption, on_delete=models.CASCADE)
 
-class InventoryLog(models.Model):
-    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
-    change_amount = models.IntegerField()
-    reason = models.CharField(max_length=50)
-    performed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+class ReturnRequest(models.Model):
+    order_item = models.ForeignKey("customer.OrderItem", on_delete=models.CASCADE)
+    seller = models.ForeignKey("seller.SellerProfile", on_delete=models.CASCADE)
+    reason = models.TextField()
+    status = models.CharField(max_length=20, default="requested")
     created_at = models.DateTimeField(auto_now_add=True)
