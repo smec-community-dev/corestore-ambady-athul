@@ -230,7 +230,7 @@
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        {% for product in products %}
+        {% for product in products_page %}
         <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-xl p-2 group block cursor-pointer">
           <div class="relative aspect-square overflow-hidden rounded-lg bg-[#EFEBE9] mb-2">
             {% with product.images.all|first as img %}
@@ -254,8 +254,29 @@
           <h3 class="text-[8px] md:text-[9px] font-extrabold tracking-tight truncate px-1 text-[#3E2723] uppercase">{{ product.product.name }}</h3>
           <p class="text-xs md:text-sm font-black text-[#00796B] px-1 mt-1">${{ product.selling_price }}</p>
         </a>
+        {% empty %}
+        <p class="col-span-full text-center text-gray-400 py-10 uppercase font-black text-xs tracking-widest">No products found</p>
         {% endfor %}
       </div>
+
+      {% if products_page.has_other_pages %}
+      <div class="flex justify-center items-center gap-2 mt-12 p-4 glass rounded-2xl backdrop-blur-sm mx-auto max-w-md shadow-xl">
+        {% if products_page.has_previous %}
+          <a href="?page=1" class="px-4 py-2 bg-[#00796B]/90 hover:bg-[#00796B] text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 min-w-[60px]">First</a>
+          <a href="?page={{ products_page.previous_page_number }}" class="px-4 py-2 bg-white/80 border border-[#00796B]/50 text-[#00796B] rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 min-w-[56px]">Prev</a>
+        {% endif %}
+
+        <span class="px-6 py-2 bg-white border border-[#00796B]/30 text-[#3E2723] rounded-xl font-black text-sm uppercase tracking-wider shadow-md">
+          Page {{ products_page.number }} of {{ products_page.paginator.num_pages }}
+          <span class="text-[#00796B] font-black">({{ products_page.paginator.count }} products)</span>
+        </span>
+
+        {% if products_page.has_next %}
+          <a href="?page={{ products_page.next_page_number }}" class="px-4 py-2 bg-white/80 border border-[#00796B]/50 text-[#00796B] rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 min-w-[56px]">Next</a>
+          <a href="?page={{ products_page.paginator.num_pages }}" class="px-4 py-2 bg-[#00796B]/90 hover:bg-[#00796B] text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 min-w-[60px]">Last</a>
+        {% endif %}
+      </div>
+      {% endif %}
       {% else %}
       <div class="glass rounded-[2rem] p-12 text-center">
         <i class="fa-solid fa-box-open text-6xl text-gray-300 mb-6"></i>

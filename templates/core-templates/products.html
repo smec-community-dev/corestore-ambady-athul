@@ -238,9 +238,9 @@
           </div>
 
           <!-- Products Grid -->
-          {% if all_products %}
+          {% if all_products_page %}
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-            {% for product in all_products %}
+            {% for product in all_products_page %}
             <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block hover:shadow-2xl">
               <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
                 {% with product.images.all|first as img %}
@@ -262,8 +262,29 @@
               <h3 class="text-[10px] font-bold truncate px-1 text-[#3E2723] line-clamp-1 leading-tight">{{ product.product.name }}</h3>
               <p class="text-sm font-black text-[#00796B] px-1">${{ product.selling_price|floatformat:0 }}</p>
             </a>
+            {% empty %}
+            <p class="col-span-full text-center text-gray-400 py-10 uppercase font-black text-xs tracking-widest">No products found</p>
             {% endfor %}
           </div>
+
+          {% if all_products_page.has_other_pages %}
+          <div class="flex justify-center items-center gap-2 mt-12 p-4 glass rounded-2xl backdrop-blur-sm mx-auto max-w-lg shadow-xl">
+            {% if all_products_page.has_previous %}
+              <a href="?page=1{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" class="px-4 py-2 bg-[#00796B]/90 hover:bg-[#00796B] text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 min-w-[60px]">First</a>
+              <a href="?page={{ all_products_page.previous_page_number }}{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" class="px-4 py-2 bg-white/80 border border-[#00796B]/50 text-[#00796B] rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 min-w-[56px]">Prev</a>
+            {% endif %}
+
+            <span class="px-6 py-2 bg-white border border-[#00796B]/30 text-[#3E2723] rounded-xl font-black text-sm uppercase tracking-wider shadow-md">
+              Page {{ all_products_page.number }} of {{ all_products_page.paginator.num_pages }} 
+              <span class="text-[#00796B] font-black">({{ total_products }} products)</span>
+            </span>
+
+            {% if all_products_page.has_next %}
+              <a href="?page={{ all_products_page.next_page_number }}{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" class="px-4 py-2 bg-white/80 border border-[#00796B]/50 text-[#00796B] rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 min-w-[56px]">Next</a>
+              <a href="?page={{ all_products_page.paginator.num_pages }}{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" class="px-4 py-2 bg-[#00796B]/90 hover:bg-[#00796B] text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 min-w-[60px]">Last</a>
+            {% endif %}
+          </div>
+          {% endif %}
           {% else %}
           <div class="col-span-full text-center py-20">
             <i class="fa-solid fa-magnifying-glass text-6xl text-gray-300 mb-6"></i>

@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import *
 from core.models import *
 from seller.models import *
@@ -16,11 +17,15 @@ from datetime import timedelta
 def home(request):
     # .select_related('product') fetches the parent Product (name, etc.) in 1 query
     # .prefetch_related('images') fetches all related images in 1 separate query
-    products = ProductVariant.objects.all().select_related('product').prefetch_related('images')
+    products = ProductVariant.objects.filter(product__approval_status='APPROVED', product__is_active=True).select_related('product').prefetch_related('images')
     categories = Category.objects.all()
     
+    paginator = Paginator(products, 20)
+    page = request.GET.get('page')
+    products_page = paginator.get_page(page)
+    
     context = {
-        'products': products,
+        'products_page': products_page,
         'categories': categories
     }
     
@@ -30,24 +35,16 @@ def home(request):
     return render(request, 'core-templates/mainhome.html', context)
 
 def products(request):
-    """View to display products page with New Arrivals section and All Products section"""
     from django.db.models import Count
     
-    # Get filter/sort params
     category_id = request.GET.get('category_id')
     sort = request.GET.get('sort', 'newest')
     
-    # Base queryset for all approved/active products
-    base_qs = ProductVariant.objects.filter(
-        product__approval_status='APPROVED',
-        product__is_active=True
-    ).select_related('product', 'product__subcategory__category').prefetch_related('images')
+    base_qs = ProductVariant.objects.filter(product__approval_status='APPROVED',product__is_active=True).select_related('product', 'product__subcategory__category').prefetch_related('images')
     
-    # Apply category filter
     if category_id:
         base_qs = base_qs.filter(product__subcategory__category_id=category_id)
     
-    # Apply sorting
     if sort == 'price_asc':
         base_qs = base_qs.order_by('selling_price')
     elif sort == 'price_desc':
@@ -61,11 +58,16 @@ def products(request):
     elif sort == 'oldest':
         base_qs = base_qs.order_by('created_at')
     
-    all_products = base_qs
+    all_products_qs = base_qs
     
     # New arrivals (filtered/sorted same way, last 7 days)
     seven_days_ago = timezone.now() - timedelta(days=7)
-    new_arrivals = all_products.filter(created_at__gte=seven_days_ago)
+    new_arrivals = all_products_qs.filter(created_at__gte=seven_days_ago)[:12]  # Limit featured
+    
+    # Paginate all_products
+    paginator = Paginator(all_products_qs, 20)
+    page = request.GET.get('page')
+    all_products_page = paginator.get_page(page)
     
 # Categories with product counts for sidebar - ALL active categories
     categories_qs = Category.objects.filter(is_active=True).annotate(
@@ -82,12 +84,12 @@ def products(request):
     categories = categories_qs
     
     context = {
-        'all_products': all_products,
+        'all_products_page': all_products_page,
         'new_arrivals': new_arrivals,
         'categories': categories,
         'category_filter': category_id,
         'sort_filter': sort,
-        'total_products': all_products.count(),
+        'total_products': all_products_page.paginator.count,
     }
     
     if request.user.is_authenticated:
@@ -144,16 +146,20 @@ def subcategory_products(request, category_slug, subcategory_slug):
     subcategory = get_object_or_404(SubCategory, slug=subcategory_slug, category=category, is_active=True)
     
     # Get all approved and active products for this subcategory
-    products = ProductVariant.objects.filter(
+    products_qs = ProductVariant.objects.filter(
         product__subcategory=subcategory,
         product__approval_status='APPROVED',
         product__is_active=True
     ).select_related('product', 'product__subcategory', 'product__subcategory__category').prefetch_related('images')
     
+    paginator = Paginator(products_qs, 20)
+    page = request.GET.get('page')
+    products_page = paginator.get_page(page)
+    
     context = {
         'category': category,
         'subcategory': subcategory,
-        'products': products,
+        'products_page': products_page,
         'categories': Category.objects.filter(is_active=True)
     }
     

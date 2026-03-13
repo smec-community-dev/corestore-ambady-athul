@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from core.models import User,Category,SubCategory
-from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge,ReturnRequest
+from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge
+# from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge,ReturnRequest
 from customer.models import OrderItem,Order
 from django.utils.text import slugify
 from django.contrib.auth import authenticate, login ,logout
@@ -249,40 +250,40 @@ def productdelete(request,id):
 
 
 
-@seller_required
-def sellerreturns(request):
-    seller = SellerProfile.objects.get(user=request.user)
-    returns = ReturnRequest.objects.filter(seller=seller).order_by("-created_at")
-    return render(request,"seller/sellerreturn.html",{"returns": returns})
+# @seller_required
+# def sellerreturns(request):
+#     seller = SellerProfile.objects.get(user=request.user)
+#     returns = ReturnRequest.objects.filter(seller=seller).order_by("-created_at")
+#     return render(request,"seller/sellerreturn.html",{"returns": returns})
 
 
 
 
 
-@seller_required
-def sellerdashboard(request):
+# @seller_required
+# def sellerdashboard(request):
 
-    seller = SellerProfile.objects.get(user=request.user)
+#     seller = SellerProfile.objects.get(user=request.user)
 
-    order_items = OrderItem.objects.filter(seller=seller)
-    return_requests = ReturnRequest.objects.filter(seller=seller)
-    products=Product.objects.filter(is_active=True)
+#     order_items = OrderItem.objects.filter(seller=seller)
+#     return_requests = ReturnRequest.objects.filter(seller=seller)
+#     products=Product.objects.filter(is_active=True)
 
-    total_revenue = 0
-    total_products = 0
-    total_returns = 0
-    active_orders=0
-    activelisting=len(products)
+#     total_revenue = 0
+#     total_products = 0
+#     total_returns = 0
+#     active_orders=0
+#     activelisting=len(products)
 
-    for item in order_items:
-        total_revenue += item.price_at_purchase * item.quantity
-        total_products += item.quantity
+#     for item in order_items:
+#         total_revenue += item.price_at_purchase * item.quantity
+#         total_products += item.quantity
 
-    for r in return_requests:
-        total_returns += 1
+#     for r in return_requests:
+#         total_returns += 1
 
-    for item in order_items:
-        if item.order.order_status=="placed":
-            active_orders += 1    
+#     for item in order_items:
+#         if item.order.order_status=="placed":
+#             active_orders += 1    
 
-    return render(request, "seller/sellerdashboard.html",{"total_revenue":total_revenue,"total_products":total_products,"total_returns":total_returns,"active_orders":active_orders,"activelisting":activelisting})
+#     return render(request, "seller/sellerdashboard.html",{"total_revenue":total_revenue,"total_products":total_products,"total_returns":total_returns,"active_orders":active_orders,"activelisting":activelisting})

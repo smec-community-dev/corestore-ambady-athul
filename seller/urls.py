@@ -15,7 +15,7 @@ urlpatterns =[
     path("sellerorder/",views.sellerorder),
     path("togglestatus/<str:slug>",views.toggleproductstatus),
     path("sellerinactive/",views.sellerinactive),
-    path("sellerreturn/",views.sellerreturns),
-    path("sellerdashboard/",views.sellerdashboard),
+    # path("sellerreturn/",views.sellerreturns),
+    # path("sellerdashboard/",views.sellerdashboard),
 
 ]

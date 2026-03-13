@@ -1,11 +1,8 @@
-# Task: COMPLETED ✅ - Show ALL Categories in Products Filter (Even Empty Ones)
+# TODO: Fix images not showing in pages
 
-## Steps:
-- [x] Step 1: Updated customer/views.py ✅
-- [x] Step 2: Verified products.html displays all categories ✅ 
-- [x] Step 3: Tested - /products/ filter now shows ALL active categories (even 0 products) ✅
-- [x] Step 4: Complete ✅
-
-**Changes:** customer/views.py now uses `Category.objects.filter(is_active=True).annotate(product_count=Count(..., filter=Q(...)))` to include empty categories.
-
-Visit http://127.0.0.1:8000/products/ to see all categories in sidebar filter.
+- [x] Step 1: Update Croestore/Corestore/settings.py - Add STATIC_ROOT and STATICFILES_DIRS
+- [x] Step 2: Update Croestore/Corestore/urls.py - Add MEDIA_URL static serving
+- [x] Step 3: Restart development server
+- [x] Step 4: Run python manage.py collectstatic --noinput (if static files broken)
+- [ ] Step 5: Test by uploading an image via admin/seller and viewing product pages
+- [ ] Step 6: Verify images load from /media/ paths
