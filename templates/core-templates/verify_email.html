@@ -3,210 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Email | CORE STORE</title>
+    <title>Registry Authentication | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
         
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: linear-gradient(135deg, #FAF9F6 0%, #E8F4F8 50%, #FAF9F6 100%);
-            color: #3E2723; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main);
+            color: var(--primary); 
             min-height: 100vh;
         }
 
         .glass-panel { 
-            background: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(62, 39, 35, 0.08); 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; /* Sharp Edges */
+            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1);
         }
 
         .otp-input {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
             letter-spacing: 0.5rem;
             text-align: center;
-            border: 2px solid #E0E0E0;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            color: var(--primary);
         }
 
         .otp-input:focus {
-            border-color: #00796B;
-            box-shadow: 0 0 0 4px rgba(0, 121, 107, 0.15);
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
             outline: none;
         }
 
         .otp-input.error {
-            border-color: #EF4444;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+            color: #ef4444;
         }
 
-        .countdown {
-            background: linear-gradient(45deg, #00796B, #00A896);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .countdown-timer {
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
+            font-weight: 800;
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-md">
-        <!-- Header -->
-        <div class="text-center mb-10">
-            <a href="/" class="inline-flex items-center gap-2 text-2xl font-black tracking-tighter mb-4 cursor-pointer">
-                <div class="bg-gradient-to-r from-[#00796B] to-[#00A896] p-2 rounded-xl text-white shadow-lg">
-                    <i class="fa-solid fa-shield-check text-lg"></i>
+
+    <div class="fixed inset-0 z-[-1] bg-gradient-to-tr from-[#f1f5f9] via-white to-[#eff6ff]"></div>
+
+    <div class="w-full max-w-lg animate__animated animate__fadeIn">
+        
+        <div class="text-center mb-12">
+            <a href="/" class="inline-flex items-center gap-3 text-2xl font-black tracking-tighter mb-2">
+                <div class="bg-blue-600 p-1.5 rounded-sm text-white shadow-lg">
+                    <i class="fa-solid fa-shield-halved text-sm"></i>
                 </div>
-                <span class="text-[#3E2723]">CORE<span class="text-[#00796B]">SECURE</span></span>
+                <span class="text-slate-900 uppercase">CORE<span class="text-blue-600">SECURE</span></span>
             </a>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Multi-Factor Authorization Protocol</p>
         </div>
 
-        <div class="glass-panel rounded-3xl p-8 md:p-10">
-            <!-- Success/Error Messages -->
+        <div class="glass-panel p-8 md:p-12 relative overflow-hidden">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="mb-6 p-5 rounded-2xl flex items-start gap-4 animate-in slide-in-from-top-4 duration-500 {% if message.tags == 'error' %}bg-gradient-to-r from-rose-50 to-red-50 border-l-4 border-red-400 shadow-lg{% else %}bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-400 shadow-lg{% endif %}">
-                        <i class="fa-solid {% if message.tags == 'error' %}fa-exclamation-triangle text-red-500 mt-0.5{% else %}fa-check-circle text-emerald-500{% endif %} text-xl flex-shrink-0"></i>
-                        <div>
-                            <h4 class="font-black uppercase tracking-wide text-sm mb-1 {% if message.tags == 'error' %}text-red-800{% else %}text-emerald-800{% endif %}">{% if message.tags == 'error' %}Verification Failed{% else %}Success!{% endif %}</h4>
-                            <p class="text-sm font-semibold {% if message.tags == 'error' %}text-red-700{% else %}text-emerald-700{% endif %}">{{ message }}</p>
+                    <div class="mb-8 p-4 border-l-4 rounded-sm animate__animated animate__shakeX {% if message.tags == 'error' %}bg-red-50 border-red-500 text-red-700{% else %}bg-blue-50 border-blue-500 text-blue-700{% endif %}">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid {% if message.tags == 'error' %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                            <span class="text-[10px] font-black uppercase tracking-widest">{{ message }}</span>
                         </div>
                     </div>
                 {% endfor %}
             {% endif %}
 
-            <div class="text-center mb-8">
-                <div class="w-24 h-24 bg-gradient-to-r from-[#00796B] to-[#00A896] rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-2xl">
-                    <i class="fa-solid fa-envelope-open-text text-3xl text-white"></i>
+            <div class="text-center mb-10">
+                <div class="w-16 h-16 bg-slate-900 text-white rounded-sm mx-auto mb-6 flex items-center justify-center shadow-xl">
+                    <i class="fa-solid fa-unlock-keyhole text-xl"></i>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-[#3E2723] to-[#00796B] bg-clip-text text-transparent mb-3 leading-tight">
-                    Verify Your Email
+                <h1 class="text-3xl font-black text-slate-900 uppercase tracking-tighter mb-3">
+                    Identity <span class="text-blue-600">Verification</span>
                 </h1>
-                <p class="text-lg font-semibold text-[#3E2723]/70 max-w-sm mx-auto leading-relaxed">
-                    Enter the 6-digit code we sent to your email address
+                <p class="text-xs font-medium text-slate-500 max-w-xs mx-auto leading-relaxed">
+                    A security token has been transmitted to your registered electronic mail. Input the 6-digit credential to proceed.
                 </p>
             </div>
 
-            <form method="POST" class="space-y-6" novalidate>
+            <form method="POST" class="space-y-8" novalidate>
                 {% csrf_token %}
                 
-                <!-- OTP Input -->
-                <div class="space-y-3">
-                    <label class="block text-[11px] font-black uppercase tracking-[0.3em] text-[#3E2723]/60 text-center">
-                        Verification Code
+                <div class="space-y-4">
+                    <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">
+                        Credential Entry
                     </label>
                     <div class="flex justify-center">
                         <input 
                             type="text" 
                             name="otp" 
                             id="otp" 
-                            class="otp-input w-64 h-20 bg-white/70 backdrop-blur-sm rounded-2xl font-mono tracking-widest shadow-xl border-2 transition-all duration-300 focus:scale-[1.02] hover:border-[#00796B]/70" 
+                            class="otp-input w-full max-w-[280px] h-20" 
                             placeholder="000000"
                             maxlength="6"
-                            pattern="[0-9]{6}"
                             inputmode="numeric"
                             autocomplete="one-time-code"
                             required
                         >
                     </div>
-                    <p class="text-xs text-[#3E2723]/40 text-center font-medium">
-                        Code expires in <span class="countdown font-black" id="countdown">5:00</span>
-                    </p>
+                    <div class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        <i class="fa-solid fa-clock-rotate-left text-[8px]"></i>
+                        Session Expires In: <span class="countdown-timer" id="countdown">05:00</span>
+                    </div>
                 </div>
 
-                <!-- Submit Button -->
                 <button 
                     type="submit" 
-                    class="w-full bg-gradient-to-r from-[#3E2723] to-[#00796B] hover:from-[#00796B] hover:to-[#00A896] text-white py-4 px-8 rounded-2xl font-black text-lg uppercase tracking-widest transition-all duration-300 shadow-2xl hover:shadow-3xl hover:-translate-y-1 active:scale-[0.98] transform"
+                    class="w-full bg-slate-900 hover:bg-blue-600 text-white py-5 rounded-sm font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3"
                 >
-                    <i class="fa-solid fa-check-double mr-2"></i>
-                    Complete Verification
+                    Authorize Session <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
 
-            <div class="text-center space-y-4 pt-8 border-t border-[#3E2723]/10">
-                <p class="text-sm font-semibold text-[#3E2723]/50">
-                    Didn't receive the code?
+            <div class="mt-12 pt-8 border-t border-slate-100 text-center">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+                    No token received?
                 </p>
                 <button 
                     id="resendBtn" 
-                    class="inline-flex items-center gap-2 bg-white/50 backdrop-blur-sm hover:bg-white/70 border border-[#00796B]/30 text-[#00796B] px-6 py-3 rounded-xl font-black uppercase tracking-wider text-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 group"
+                    class="inline-flex items-center gap-2 border border-slate-200 text-slate-900 px-6 py-3 rounded-sm font-black uppercase tracking-widest text-[9px] transition-all hover:bg-slate-900 hover:text-white"
                 >
-                    <i class="fa-solid fa-clock-rotate-left group-hover:animate-spin"></i>
-                    Resend Code
+                    Request New Token
                 </button>
-            </div>
-
-            <!-- Back Link -->
-            <div class="text-center mt-8 pt-6">
-                <a href="{% url 'login' %}" class="inline-flex items-center gap-2 text-sm font-bold text-[#3E2723]/60 hover:text-[#00796B] transition-colors group">
-                    <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
-                    Back to Login
-                </a>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="mt-12 text-center text-xs text-[#3E2723]/30">
-            <p>&copy; 2026 CORE STORE. All shores secured.</p>
+        <div class="mt-10 flex flex-col items-center gap-4">
+            <a href="{% url 'login' %}" class="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors">
+                <i class="fa-solid fa-chevron-left text-[8px] mr-1"></i> Terminate and Return
+            </a>
+            <p class="text-[8px] font-bold text-slate-300 uppercase tracking-[0.5em]">System Core Secure v2.6</p>
         </div>
     </div>
 
     <script>
-        // OTP Input Enhancements
         const otpInput = document.getElementById('otp');
         
-        // Auto-focus and format
+        // Technical formatting for OTP
         otpInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
             if (value.length > 6) value = value.slice(0, 6);
             e.target.value = value;
             
-            // Move to next if 6 digits
             if (value.length === 6) {
                 e.target.classList.remove('error');
-                // Auto-submit after 1s (optional)
-                // setTimeout(() => e.target.form.submit(), 1000);
             }
         });
 
-        // Visual feedback on invalid input
         otpInput.addEventListener('blur', function(e) {
-            if (e.target.value.length !== 6) {
+            if (e.target.value.length > 0 && e.target.value.length !== 6) {
                 e.target.classList.add('error');
             }
         });
 
-        otpInput.addEventListener('focus', function() {
-            this.classList.remove('error');
-            this.select();
-        });
-
-        // Resend functionality (placeholder)
+        // Resend Simulation
         document.getElementById('resendBtn').addEventListener('click', function() {
-            this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Resending...';
-            // Add AJAX resend logic here
+            const originalText = this.innerHTML;
+            this.disabled = true;
+            this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Transmitting...';
+            
+            // Revert after 2s simulation
             setTimeout(() => {
-                this.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2"></i>Resend Code';
-            }, 2000);
+                this.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Token Sent';
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 3000);
+            }, 1500);
         });
 
-        // Countdown timer
-        let timeLeft = 300; // 5 minutes
+        // Precise countdown timer
+        let timeLeft = 300; 
         const countdownEl = document.getElementById('countdown');
         
         const timer = setInterval(() => {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
-            countdownEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                countdownEl.textContent = 'Expired';
-                countdownEl.classList.add('text-rose-500');
+                countdownEl.textContent = 'EXPIRED';
+                countdownEl.style.color = '#ef4444';
             }
             timeLeft--;
         }, 1000);

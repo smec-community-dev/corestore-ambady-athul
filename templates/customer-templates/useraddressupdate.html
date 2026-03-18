@@ -3,108 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Address | CORE STORE</title>
+    <title>Update Registry | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
-        input:focus, select:focus { border-color: #00796B !important; background: white !important; outline: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
+        }
+
+        .glass { 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; /* Sharp Edges */
+        }
+
+        /* Form Styling */
+        .input-field {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 1rem 1.25rem;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent);
+            ring: 2px var(--accent);
+            outline: none;
+            background: #fafafa;
+        }
+
+        .label-sm {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #64748b;
+            margin-left: 2px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        select.input-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+
+        .btn-action {
+            border-radius: 2px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-6 md:p-12">
 
-    <main class="max-w-2xl w-full animate__animated animate__fadeIn">
-        <div class="mb-8 flex justify-between items-end">
+    <div class="fixed inset-0 z-[-1] bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f8fafc]"></div>
+
+    <main class="max-w-3xl w-full animate__animated animate__fadeIn">
+        
+        <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-l-4 border-blue-600 pl-6">
             <div>
-                <a href="{% url 'user_addresses' %}" class="text-[10px] font-black uppercase tracking-widest text-[#00796B] hover:text-[#3E2723] mb-2 block">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> Back to Addresses
+                <a href="{% url 'user_addresses' %}" class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-blue-600 mb-2 flex items-center gap-2 transition-colors">
+                    <i class="fa-solid fa-chevron-left"></i> Return to Registry
                 </a>
-                <h1 class="text-3xl font-black text-[#3E2723] tracking-tighter uppercase italic">
-                    Edit <span class="text-[#00796B]">Location</span>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">
+                    Modify <span class="text-blue-600">Endpoint</span>
                 </h1>
+            </div>
+            <div class="hidden md:block text-right">
+                <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest leading-relaxed">Registry Record ID</p>
+                <p class="text-xs font-black text-slate-900 uppercase">#ADR-{{ address.id|default:"000" }}</p>
             </div>
         </div>
 
-        <div class="glass rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-            <form method="POST" class="space-y-6 relative z-10">
+        <div class="glass p-8 md:p-12 shadow-xl relative">
+            <form method="POST" class="space-y-8">
                 {% csrf_token %}
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Recipient Name</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div class="space-y-1">
+                        <label class="label-sm">Authorized Recipient</label>
                         <input type="text" name="full_name" value="{{ address.full_name }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="Full Legal Name">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Contact Number</label>
+                    <div class="space-y-1">
+                        <label class="label-sm">Primary Contact Line</label>
                         <input type="tel" name="phone_number" value="{{ address.phone_number }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="+1 (000) 000-0000">
                     </div>
 
-                    <div class="md:col-span-2 space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">House / Flat / Building</label>
+                    <div class="md:col-span-2 space-y-1">
+                        <label class="label-sm">Structural Information (Building / Flat)</label>
                         <input type="text" name="house_info" value="{{ address.house_info }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="Suite 404, Titan Tower">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Locality / Street</label>
+                    <div class="space-y-1">
+                        <label class="label-sm">Locality Index</label>
                         <input type="text" name="locality" value="{{ address.locality }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="Sector 7G">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Landmark</label>
+                    <div class="space-y-1">
+                        <label class="label-sm">Navigation Reference (Landmark)</label>
                         <input type="text" name="landmark" value="{{ address.landmark }}" 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="Adjacent to Main Hub">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Pincode</label>
+                    <div class="space-y-1">
+                        <label class="label-sm">Regional Code</label>
                         <input type="text" name="pincode" value="{{ address.pincode }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="000-000">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">City</label>
+                    <div class="space-y-1">
+                        <label class="label-sm">Metropolitan Area</label>
                         <input type="text" name="city" value="{{ address.city }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="Neo-Seoul">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">State</label>
+                    <div class="space-y-1">
+                        <label class="label-sm">Administrative State</label>
                         <input type="text" name="state" value="{{ address.state }}" required 
-                               class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723]">
+                               class="input-field" placeholder="Greater Metro">
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Address Type</label>
-                        <select name="address_type" class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723] appearance-none">
-                            <option value="HOME" {% if address.address_type == 'HOME' %}selected{% endif %}>HOME</option>
-                            <option value="WORK" {% if address.address_type == 'WORK' %}selected{% endif %}>WORK</option>
+                    <div class="space-y-1">
+                        <label class="label-sm">Destination Category</label>
+                        <select name="address_type" class="input-field">
+                            <option value="HOME" {% if address.address_type == 'HOME' %}selected{% endif %}>RESIDENTIAL (HOME)</option>
+                            <option value="WORK" {% if address.address_type == 'WORK' %}selected{% endif %}>COMMERCIAL (WORK)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 pt-4">
-                    <input type="checkbox" name="is_default" id="is_default" class="w-5 h-5 accent-[#00796B]" {% if address.is_default %}checked{% endif %}>
-                    <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]">Primary Address</label>
+                <div class="flex items-center gap-4 py-4 px-2 bg-slate-50 border border-slate-100 rounded-sm">
+                    <input type="checkbox" name="is_default" id="is_default" class="w-4 h-4 accent-blue-600 cursor-pointer" {% if address.is_default %}checked{% endif %}>
+                    <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-slate-900 cursor-pointer">
+                        Set as Primary Dispatch Endpoint
+                    </label>
                 </div>
 
-                <div class="pt-8 flex flex-col md:flex-row gap-4">
-                    <button type="submit" class="flex-1 bg-[#3E2723] text-white px-8 py-5 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest hover:bg-[#00796B] transition-all">
-                        Update Details
+                <div class="pt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button type="submit" class="btn-action bg-slate-900 text-white px-8 py-4 text-[10px] tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
+                        Commit Registry Update
                     </button>
-                    <a href="{% url 'user_addresses' %}" class="flex-1 bg-white text-[#3E2723]/40 px-8 py-5 rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest text-center border border-[#3E2723]/5">
-                        Cancel
+                    <a href="{% url 'user_addresses' %}" class="btn-action bg-white text-slate-400 border border-slate-200 px-8 py-4 text-[10px] tracking-widest text-center hover:text-slate-900 hover:border-slate-900 transition-all">
+                        Abort Changes
                     </a>
                 </div>
             </form>
         </div>
+        
+        <p class="text-center text-[8px] font-bold text-slate-300 uppercase tracking-[0.5em] mt-12">System Core Dispatch v2.6</p>
     </main>
+
 </body>
 </html>

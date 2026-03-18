@@ -1,6 +1,4 @@
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,63 +8,111 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
+            overflow-x: hidden; 
+        }
+
+        /* Sharp UI Elements */
+        .glass { 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px;
+        }
         
         /* Address Card Logic */
         .address-radio { display: none; }
-        .address-card { cursor: pointer; border: 2px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .address-card { 
+            cursor: pointer; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px;
+            transition: all 0.3s ease; 
+        }
         .address-radio:checked + .address-card { 
-            border-color: #00796B; 
-            background-color: rgba(0, 121, 107, 0.05); 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: var(--accent); 
+            background-color: #eff6ff; 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
         .address-radio:checked + .address-card .check-icon { display: block; }
 
-        .input-field { background: rgba(62, 39, 35, 0.04); border: 1.5px solid rgba(62, 39, 35, 0.08); border-radius: 1rem; padding: 0.8rem 1rem; font-size: 11px; font-weight: 800; width: 100%; transition: all 0.2s ease; }
-        .input-field:focus { outline: none; border-color: #00796B; background: white; transform: scale(1.01); }
-        .label-sm { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(62, 39, 35, 0.5); margin-bottom: 6px; display: block; }
+        .input-field { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; 
+            padding: 0.75rem 1rem; 
+            font-size: 12px; 
+            font-weight: 600; 
+            width: 100%; 
+            transition: all 0.2s ease; 
+        }
+        .input-field:focus { outline: none; border-color: var(--accent); ring: 2px var(--accent); }
+        
+        .label-sm { 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            color: #64748b; 
+            margin-bottom: 6px; 
+            display: block; 
+        }
+
+        .payment-fields { opacity: 0; visibility: hidden; height: 0; overflow: hidden; transition: all 0.3s ease; }
+        .payment-fields.visible { opacity: 1 !important; visibility: visible !important; height: auto !important; margin-top: 1.5rem; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .payment-fields { opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .payment-fields.visible { opacity: 1 !important; visibility: visible !important; }
-        .qty-btn { pointer-events: auto !important; }
-        .qty-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .loading { opacity: 0.7; pointer-events: none; }
     </style>
 </head>
-<body class="bg-[#FAF9F6] pb-20">
+<body class="bg-[#f8fafc] pb-20">
 
     {% include 'includes/message-toast.html' %}
 
-    <nav class="glass sticky top-0 z-[100] px-4 py-4 mb-8 animate__animated animate__fadeInDown">
-        <div class="container mx-auto flex items-center justify-between">
-            <div class="text-xl font-extrabold tracking-tighter flex items-center gap-2">
-                <div class="bg-[#00796B] p-1.5 rounded-lg text-white"><i class="fa-solid fa-bolt text-xs"></i></div>
-                <span>CORE<span class="text-[#00796B]">STORE</span></span>
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-4">
+        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
+            <div class="text-xl font-black tracking-tighter flex items-center gap-2 text-white">
+                <div class="bg-blue-600 p-1.5 rounded-sm"><i class="fa-solid fa-shield-halved text-xs"></i></div>
+                <span>CORE<span class="text-blue-400">STORE</span></span>
             </div>
-            <div class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 tracking-[0.3em]">Secure Checkout</div>
+            <div class="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-100/60 flex items-center gap-2">
+                <i class="fa-solid fa-lock text-blue-500"></i> Encrypted Terminal
+            </div>
         </div>
     </nav>
+
+    <div class="h-24"></div>
 
     <main class="container mx-auto px-4 lg:px-10">
         <form method="POST" action="{% url 'checkout_process' %}" class="grid grid-cols-1 lg:grid-cols-12 gap-10" id="checkout-form">
             {% csrf_token %}
+            <input type="hidden" name="cart_id" value="{{ cart.id }}">
             
-            <div class="lg:col-span-7 space-y-8 animate__animated animate__fadeInLeft">
+            <div class="lg:col-span-7 space-y-8 animate__animated animate__fadeIn">
                 <header>
-                    <h1 class="text-3xl font-black italic uppercase tracking-tighter text-[#3E2723]">Complete <span class="text-[#00796B]">Order.</span></h1>
+                    <h1 class="text-4xl font-black tracking-tighter uppercase text-slate-900">
+                        Checkout <span class="text-blue-600">Protocol</span>
+                    </h1>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 italic">Confirm destination and payment authorization</p>
                 </header>
 
-                <section class="glass rounded-[2.5rem] p-6 md:p-10 shadow-sm border border-white/50">
-                    <div class="flex items-center justify-between mb-8">
+                <section class="glass p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center justify-between mb-8 border-b border-slate-50 pb-4">
                         <div class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-[#3E2723] text-white flex items-center justify-center text-[10px] font-black">1</span>
-                            <h2 class="text-sm font-black uppercase tracking-widest text-[#3E2723]">Shipping Destination</h2>
+                            <span class="text-xs font-black text-blue-600">01</span>
+                            <h2 class="text-xs font-black uppercase tracking-widest text-slate-900">Shipping Registry</h2>
                         </div>
-                        <a href="{% url 'add_address' %}" class="text-[9px] font-black uppercase tracking-widest text-[#00796B] hover:scale-105 transition-transform inline-block">
-                            <i class="fa-solid fa-plus mr-1"></i> New Address
+                        <a href="{% url 'add_address' %}" class="text-[10px] font-black uppercase text-blue-600 hover:text-slate-900 transition-colors">
+                            <i class="fa-solid fa-plus-square mr-1"></i> Add New Entry
                         </a>
                     </div>
 
@@ -74,264 +120,159 @@
                         {% for addr in addresses %}
                         <label class="relative block group cursor-pointer">
                             <input type="radio" name="selected_address" value="{{ addr.id }}" class="address-radio" id="addr-{{ addr.id }}" {% if addr.is_default %}checked{% endif %} required>
-                            <div class="address-card glass p-6 rounded-2xl relative h-full">
-                                <div class="check-icon hidden absolute top-4 right-4 text-[#00796B] animate__animated animate__zoomIn">
+                            <div class="address-card p-5 relative h-full">
+                                <div class="check-icon hidden absolute top-4 right-4 text-blue-600">
                                     <i class="fa-solid fa-circle-check"></i>
                                 </div>
-                                <p class="text-[9px] font-black uppercase text-[#3E2723]/40 mb-2 tracking-widest group-hover:text-[#00796B] transition-colors">
-                                    {{ addr.address_type }}
-                                </p>
-                                <h4 class="text-xs font-black text-[#3E2723] uppercase">{{ addr.full_name }}</h4>
-                                <p class="text-[10px] font-bold text-[#3E2723]/60 mt-2 leading-relaxed">
+                                <p class="text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">{{ addr.address_type }}</p>
+                                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-tight">{{ addr.full_name }}</h4>
+                                <p class="text-[10px] font-medium text-slate-500 mt-2 leading-relaxed uppercase">
                                     {{ addr.house_info }}, {{ addr.locality }}<br>
                                     {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}
                                 </p>
-                                <p class="text-[10px] font-black text-[#3E2723] mt-3 tracking-tighter">
-                                    <i class="fa-solid fa-phone text-[8px] mr-1 opacity-30"></i> {{ addr.phone_number }}
-                                </p>
+                                <div class="mt-4 pt-3 border-t border-slate-50 flex items-center text-slate-900 text-[10px] font-bold">
+                                    <i class="fa-solid fa-phone-flip text-[8px] mr-2 text-blue-500"></i> {{ addr.phone_number }}
+                                </div>
                             </div>
                         </label>
                         {% empty %}
-                        <div class="col-span-2 py-10 text-center glass rounded-2xl border-dashed border-[#3E2723]/20">
-                            <i class="fa-solid fa-map-location-dot text-2xl text-[#3E2723]/20 mb-3 block"></i>
-                            <p class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40">No addresses found</p>
-                            <a href="{% url 'add_address' %}" class="mt-4 inline-block bg-[#3E2723] text-white px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Add First Address</a>
+                        <div class="col-span-2 py-12 text-center border-2 border-dashed border-slate-200 rounded-sm">
+                            <i class="fa-solid fa-map-location-dot text-3xl text-slate-100 mb-4 block"></i>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">No Shipping Records Found</p>
+                            <a href="{% url 'add_address' %}" class="mt-4 inline-block bg-slate-900 text-white px-8 py-3 rounded-sm text-[10px] font-black uppercase tracking-widest">Create Entry</a>
                         </div>
                         {% endfor %}
                     </div>
-                    {% if addresses %}
-                    <script>
-                        document.getElementById('addr-{{ addresses.0.id }}').checked = true;
-                    </script>
-                    {% endif %}
                 </section>
 
-                <section class="glass rounded-[2.5rem] p-6 md:p-10 shadow-sm border border-white/50 animate__animated animate__fadeInUp">
-                    <div class="flex items-center gap-3 mb-8">
-                        <span class="w-6 h-6 rounded-full bg-[#3E2723] text-white flex items-center justify-center text-[10px] font-black">2</span>
-                        <h2 class="text-sm font-black uppercase tracking-widest text-[#3E2723]">Payment Method</h2>
+                <section class="glass p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-8 border-b border-slate-50 pb-4">
+                        <span class="text-xs font-black text-blue-600">02</span>
+                        <h2 class="text-xs font-black uppercase tracking-widest text-slate-900">Payment Authorization</h2>
                     </div>
 
-                    <!-- Payment Method Selection -->
-                    <div class="space-y-4 mb-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label class="flex items-center p-5 glass rounded-2xl border-2 border-transparent hover:border-[#00796B]/50 transition-all cursor-pointer group relative" for="payment-online">
-                                <input type="radio" name="payment_method" value="online" id="payment-online" class="sr-only" required>
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-5 h-5 rounded-full border-2 border-[#00796B] flex items-center justify-center group-hover:bg-[#00796B]/20">
-                                        <i class="fa-solid fa-check text-[#00796B] text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-black uppercase text-[10px] tracking-widest text-[#3E2723]">Online Payment</h4>
-                                        <p class="text-[9px] text-[#3E2723]/50">Card/UPI/QR</p>
-                                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="flex items-center p-5 border-2 rounded-sm transition-all cursor-pointer group" id="label-cod" for="payment-cod">
+                            <input type="radio" name="payment_method" value="cod" id="payment-cod" class="sr-only" checked>
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-10 h-10 bg-slate-100 rounded-sm flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                                    <i class="fa-solid fa-hand-holding-dollar text-slate-400 group-hover:text-blue-600"></i>
                                 </div>
-                            </label>
-                            <!-- Online Payment Sub-options -->
-    <div id="online-sub-options" class="col-span-2 mt-4 space-y-3 payment-fields visible">
-                                <label class="flex items-center p-4 glass rounded-xl cursor-pointer group" data-subtype="card">
-                                    <input type="radio" name="online_method" value="card" id="online-card" class="sr-only">
-                                    <div class="flex items-center gap-3 flex-1">
-                                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                                            <i class="fa-solid fa-credit-card text-white text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="font-black text-xs uppercase text-[#3E2723]">Card</h5>
-                                            <p class="text-[8px] text-[#3E2723]/60">Visa/Mastercard</p>
-                                        </div>
-                                    </div>
-                                </label>
-                                <label class="flex items-center p-4 glass rounded-xl cursor-pointer group" data-subtype="upi">
-                                    <input type="radio" name="online_method" value="upi" id="online-upi" class="sr-only">
-                                    <div class="flex items-center gap-3 flex-1">
-                                        <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                                            <i class="fa-solid fa-mobile-retro text-white text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="font-black text-xs uppercase text-[#3E2723]">UPI</h5>
-                                            <p class="text-[8px] text-[#3E2723]/60">GPay/PhonePe</p>
-                                        </div>
-                                    </div>
-                                </label>
-                                <label class="flex items-center p-4 glass rounded-xl cursor-pointer group" data-subtype="qr">
-                                    <input type="radio" name="online_method" value="qr" id="online-qr" class="sr-only">
-                                    <div class="flex items-center gap-3 flex-1">
-                                        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                                            <i class="fa-solid fa-qrcode text-white text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="font-black text-xs uppercase text-[#3E2723]">QR Code</h5>
-                                            <p class="text-[8px] text-[#3E2723]/60">Scan & Pay</p>
-                                        </div>
-                                    </div>
-                                </label>
+                                <div>
+                                    <h4 class="font-black uppercase text-[10px] tracking-widest text-slate-900">Cash on Delivery</h4>
+                                    <p class="text-[9px] font-bold text-emerald-600">Pay at Destination</p>
+                                </div>
                             </div>
+                        </label>
 
-                            <!-- Online Payment Fields -->
-                            <div id="online-payment-fields" class="mt-6 space-y-4 opacity-0 invisible transition-all duration-300">
-                                <!-- Card Fields -->
-                                <div id="card-fields" class="online-fields space-y-3 hidden">
-                                    <div>
-                                        <label class="label-sm">Card Number</label>
-                                        <input type="text" name="card_number" class="input-field" placeholder="1234 5678 9012 3456" maxlength="19" pattern="\d{4} \d{4} \d{4} \d{4}">
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <label class="label-sm">Expiry (MM/YY)</label>
-                                            <input type="text" name="card_expiry" class="input-field" placeholder="12/25" maxlength="5" pattern="\d{2}/\d{2}">
-                                        </div>
-                                        <div>
-                                            <label class="label-sm">CVV</label>
-                                            <input type="text" name="card_cvv" class="input-field" placeholder="123" maxlength="3" pattern="\d{3}">
-                                        </div>
-                                    </div>
+                        <label class="flex items-center p-5 border-2 rounded-sm transition-all cursor-pointer group" id="label-online" for="payment-online">
+                            <input type="radio" name="payment_method" value="online" id="payment-online" class="sr-only">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-10 h-10 bg-slate-100 rounded-sm flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                                    <i class="fa-solid fa-globe text-slate-400 group-hover:text-blue-600"></i>
                                 </div>
-                                <!-- UPI Fields -->
-                                <div id="upi-fields" class="online-fields space-y-3 hidden">
-                                    <div>
-                                        <label class="label-sm">UPI ID</label>
-                                        <input type="text" name="upi_id" class="input-field" placeholder="username@paytm">
-                                    </div>
-                                </div>
-                                <!-- QR Fields -->
-                                <div id="qr-fields" class="online-fields space-y-3 hidden">
-                                    <div class="text-center p-6 glass rounded-xl border-2 border-dashed border-[#3E2723]/30">
-                                        <i class="fa-solid fa-qrcode text-3xl text-[#3E2723]/40 mb-3 block"></i>
-                                        <p class="text-[10px] font-bold text-[#3E2723]/60 mb-2">QR Code will appear here</p>
-                                        <p class="text-[8px] text-[#3E2723]/40">Open your UPI app to scan payment QR</p>
-                                    </div>
+                                <div>
+                                    <h4 class="font-black uppercase text-[10px] tracking-widest text-slate-900">Online Gateway</h4>
+                                    <p class="text-[9px] font-bold text-blue-600">Cards / UPI / NetBanking</p>
                                 </div>
                             </div>
-                            <label class="flex items-center p-5 glass rounded-2xl border-2 border-green-400 ring-2 ring-green-400/20 bg-green-50/50 cursor-pointer group" for="payment-cod">
-<input type="radio" name="payment_method" value="cod" id="payment-cod" class="sr-only" checked>
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-5 h-5 rounded-full border-2 border-green-400 flex items-center justify-center">
-                                        <i class="fa-solid fa-check text-green-500 text-xs"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-black uppercase text-[10px] tracking-widest text-[#3E2723]">Cash on Delivery</h4>
-                                        <p class="text-[9px] font-bold text-green-600">Recommended • Pay at Doorstep</p>
-                                    </div>
+                        </label>
+                    </div>
+
+                    <div id="online-payment-fields" class="payment-fields">
+                        <div class="p-6 bg-slate-50 border border-slate-200 rounded-sm">
+                            <div class="flex gap-4 mb-6">
+                                <div class="flex-1 p-4 bg-white border border-slate-200 rounded-sm text-center cursor-pointer hover:border-blue-600 transition-all" data-subtype="card">
+                                    <i class="fa-solid fa-credit-card text-blue-600 mb-2"></i>
+                                    <p class="text-[9px] font-black uppercase">Card</p>
                                 </div>
-                            </label>
+                                <div class="flex-1 p-4 bg-white border border-slate-200 rounded-sm text-center cursor-pointer hover:border-blue-600 transition-all" data-subtype="upi">
+                                    <i class="fa-solid fa-mobile-screen text-blue-600 mb-2"></i>
+                                    <p class="text-[9px] font-black uppercase">UPI</p>
+                                </div>
+                            </div>
+                            <div id="card-fields" class="online-fields space-y-4">
+                                <div>
+                                    <label class="label-sm">Card Number</label>
+                                    <input type="text" class="input-field" placeholder="0000 0000 0000 0000">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" class="input-field" placeholder="MM/YY">
+                                    <input type="text" class="input-field" placeholder="CVV">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <div class="lg:col-span-5 animate__animated animate__fadeInRight">
-                <div class="glass rounded-[3rem] p-8 lg:p-10 sticky top-28 shadow-2xl shadow-[#3E2723]/5 border-t border-white">
-                    <h3 class="text-sm font-black uppercase tracking-widest text-[#3E2723] mb-8 pb-4 border-b border-[#3E2723]/5">Order Review</h3>
+            <div class="lg:col-span-5">
+                <div class="glass p-8 sticky top-28 shadow-lg border-t-4 border-t-blue-600">
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 border-b border-slate-50 pb-4">Manifest Review</h3>
                     
-                    <div class="space-y-6 mb-8 max-h-[200px] overflow-y-auto no-scrollbar">
+                    <div class="space-y-4 mb-8 max-h-[300px] overflow-y-auto no-scrollbar">
                         {% for item in cart_data %}
-                        <div class="flex items-center gap-4 group p-3 glass rounded-xl hover:shadow-md transition-all" data-item-id="{{ item.id }}">
-                            {% with item.variant.images.first as image %}
-                                {% if image %}
-                                <div class="w-14 h-14 rounded-xl overflow-hidden bg-[#EFEBE9] flex-shrink-0">
-                                    <img src="{{ image.image.url }}" alt="{{ item.variant.product.name }}" class="w-full h-full object-cover">
-                                </div>
-                                {% else %}
-                                <div class="w-14 h-14 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="fa-solid fa-image text-lg text-gray-400"></i>
-                                </div>
-                                {% endif %}
-                            {% endwith %}
+                        <div class="flex items-center gap-4 p-3 border border-slate-100 rounded-sm bg-slate-50/50" data-item-id="{{ item.id }}">
+                            <div class="w-16 h-16 rounded-sm overflow-hidden bg-white border border-slate-200 flex-shrink-0">
+                                {% with item.variant.images.first as image %}
+                                    <img src="{{ image.image.url }}" class="w-full h-full object-cover">
+                                {% endwith %}
+                            </div>
                             <div class="flex-1 min-w-0">
-                                <h4 class="text-[10px] font-black text-[#3E2723] uppercase truncate">{{ item.variant.product.name }}</h4>
-                                <p class="text-[9px] font-bold text-[#3E2723]/40 capitalize">SKU: {{ item.variant.sku_code }}</p>
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-800" data-stock="{{ item.variant.stock_quantity }}">
-                                    {{ item.variant.stock_quantity }} left
-                                </span>
-                            </div>
-                            <div class="flex items-center gap-2 ml-auto">
-                                {% if not is_single_checkout %}
-                                <span class="w-6 text-center font-black text-sm" id="qty-{{ item.id }}">{{ item.quantity }}</span>
-                                <button type="button" class="qty-btn decrease-btn w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center text-sm font-black transition-all hover:scale-110" data-item="{{ item.id }}" data-action="decrease" title="Remove">
-                                    <i class="fa-solid fa-minus text-xs"></i>
-                                </button>
-                                <button type="button" class="qty-btn increase-btn w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 flex items-center justify-center text-sm font-black transition-all hover:scale-110" data-item="{{ item.id }}" data-action="increase" title="Add">
-                                    <i class="fa-solid fa-plus text-xs"></i>
-                                </button>
-                                {% else %}
-                                <span class="w-12 text-center font-black text-lg bg-[#00796B]/20 px-3 py-1 rounded-full text-[#00796B]">{{ item.quantity }}</span>
-                                {% endif %}
-                                <div class="text-right">
-                                    <span data-price="{{ item.price_at_time|floatformat:0 }}" class="block text-[10px] font-bold text-[#3E2723]" id="item-price-{{ item.id }}">${{ item.price_at_time|floatformat:0 }}</span>
-                                    <p id="item-total-{{ item.id }}" class="text-[9px] font-bold text-[#3E2723]/60">${{ item.item_total|floatformat:0 }}</p>
+                                <h4 class="text-[10px] font-black text-slate-900 uppercase truncate">{{ item.variant.product.name }}</h4>
+                                <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Units: <span class="text-slate-900" id="qty-{{ item.id }}">{{ item.quantity }}</span></p>
+                                <div class="flex items-center gap-2 mt-2">
+                                    {% if not is_single_checkout %}
+                                    <button type="button" class="qty-btn w-6 h-6 bg-white border border-slate-200 text-slate-900 rounded-sm flex items-center justify-center text-[8px] hover:bg-red-50" data-item="{{ item.id }}" data-action="decrease"><i class="fa-solid fa-minus"></i></button>
+                                    <button type="button" class="qty-btn w-6 h-6 bg-white border border-slate-200 text-slate-900 rounded-sm flex items-center justify-center text-[8px] hover:bg-green-50" data-item="{{ item.id }}" data-action="increase"><i class="fa-solid fa-plus"></i></button>
+                                    {% endif %}
                                 </div>
                             </div>
-                        </div>
-                        {% empty %}
-
-                        <div class="text-center py-8 opacity-50">
-                            <i class="fa-solid fa-shopping-cart text-3xl text-[#3E2723]/30 mb-2 block"></i>
-                            <p class="text-sm font-bold text-[#3E2723]/50">No items in cart</p>
-                            <a href="{% url 'products' %}" class="mt-4 inline-block bg-[#3E2723] text-white px-8 py-3 rounded-xl text-sm font-black uppercase tracking-wider">Start Shopping</a>
+                            <div class="text-right">
+                                <p class="text-xs font-black text-slate-900" id="item-total-{{ item.id }}">${{ item.item_total|floatformat:0 }}</p>
+                                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Valuation</p>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <div class="space-y-3 pt-6 border-t border-[#3E2723]/5">
-                        <div class="flex justify-between text-[10px] font-bold uppercase text-[#3E2723]/40">
-                        <span>Subtotal</span>
-                            <span id="subtotal-amount">${{ total_amount|floatformat:2 }}</span>
+                    <div class="space-y-3 pt-6 border-t border-slate-100">
+                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                            <span>Manifest Subtotal</span>
+                            <span class="text-slate-900" id="subtotal-amount">${{ total_amount|floatformat:2 }}</span>
                         </div>
-                        <div class="flex justify-between text-[10px] font-bold uppercase text-[#00796B]">
-                            <span>Shipping</span>
-                            <span>FREE</span>
+                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-blue-600">
+                            <span>Logistics</span>
+                            <span>COMPLIMENTARY</span>
                         </div>
-                        <div class="flex justify-between text-xl font-black uppercase italic tracking-tighter text-[#3E2723] pt-4">
-                        <span>Grand Total</span>
+                        <div class="flex justify-between text-2xl font-black tracking-tighter text-slate-900 pt-6">
+                            <span class="uppercase text-xs self-center">Grand Total</span>
                             <span id="grand-total">${{ total_amount|floatformat:2 }}</span>
                         </div>
                     </div>
 
-
-                    <div class="flex gap-3 mb-6">
-                        <a href="{% if is_single_checkout %}{% url 'product_single' request.session.single_product_slug %}{% else %}{% url 'cart' %}{% endif %}" 
-                           class="flex-1 glass h-12 rounded-2xl flex items-center justify-center font-black text-sm uppercase tracking-wider hover:bg-white transition-all">
-                            <i class="fa-solid fa-arrow-left mr-2"></i>
-                            {% if is_single_checkout %}Back to Product{% else %}Back to Cart{% endif %}
-                        </a>
-                        <button type="submit" class="flex-1 bg-[#3E2723] text-white h-12 py-3 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-[#00796B] transition shadow-xl shadow-[#3E2723]/20 active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed" id="submit-btn" disabled>
-                            Select Address First
-                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    <div class="mt-10 space-y-3">
+                        <button type="submit" class="w-full bg-slate-900 text-white py-5 rounded-sm font-black uppercase text-[11px] tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl disabled:opacity-50" id="submit-btn" disabled>
+                            Authorize Transaction
                         </button>
-                    </div>
-                    
-                    <div class="flex items-center justify-center gap-2 mt-6 text-[#3E2723]/30">
-                        <i class="fa-solid fa-lock text-[10px]"></i>
-                        <span class="text-[8px] font-black uppercase tracking-widest">Encrypted Checkout • 256-bit SSL</span>
+                        <p class="text-[8px] font-bold text-slate-400 uppercase text-center tracking-widest">
+                            <i class="fa-solid fa-shield-check text-blue-500 mr-1"></i> Data Encryption Active
+                        </p>
                     </div>
                 </div>
             </div>
         </form>
-
     </main>
 
-    <footer class="mt-20 text-center py-10 opacity-30 animate__animated animate__fadeIn">
-        <p class="text-[9px] font-black uppercase tracking-[0.3em]">Core Store • Malibu • 2026</p>
-    </footer>
-
     <script>
-        // Prevent form submit on quantity button clicks
         document.addEventListener('DOMContentLoaded', function() {
-            // Quantity button handlers - prevent form submit + AJAX update
+            // Quantity AJAX logic
             document.querySelectorAll('.qty-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    
                     const itemId = this.dataset.item;
                     const action = this.dataset.action;
-                    const btn = this;
                     
-                    // Visual feedback
-                    btn.style.transform = 'scale(0.95)';
-                    setTimeout(() => { btn.style.transform = ''; }, 150);
-                    
-                    // AJAX update cart
                     fetch(`/customer/cart/update/${itemId}/${action}/`, {
                         method: 'POST',
                         headers: {
@@ -342,85 +283,59 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            // Update quantity display
-                            const qtySpan = document.getElementById(`qty-${itemId}`);
-                            const itemTotal = document.getElementById(`item-total-${itemId}`);
-                            const itemPriceSpan = document.querySelector(`#item-price-${itemId}`);
-                            
-                            if (data.new_quantity) {
-                                qtySpan.textContent = data.new_quantity;
-                                itemTotal.textContent = `$${data.item_total}`;
+                            if (data.item_deleted) {
+                                location.reload(); // Reload if item is removed
+                            } else {
+                                document.getElementById(`qty-${itemId}`).textContent = data.new_quantity;
+                                document.getElementById(`item-total-${itemId}`).textContent = `$${data.item_total}`;
+                                document.getElementById('subtotal-amount').textContent = `$${data.total_amount}`;
+                                document.getElementById('grand-total').textContent = `$${data.total_amount}`;
                             }
-                            
-                            // Update totals
-                            document.getElementById('subtotal-amount').textContent = `$${data.total_amount}`;
-                            document.getElementById('grand-total').textContent = `$${data.total_amount}`;
                         }
-                    })
-                    .catch(error => console.error('Cart update failed:', error));
+                    });
                 });
             });
 
-            // Enhanced Payment handling
-            // Visual feedback only for main payment radios (always show sub-options)
-            document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    // Visual feedback for main payment
-                    document.querySelectorAll('input[name="payment_method"]').forEach(r => {
-                        const label = document.querySelector(`label[for="${r.id}"]`);
-                        if (r.checked) {
-                            label.classList.add('ring-4', 'ring-green-400/30', 'scale-[1.02]');
-                            label.querySelector('i.fa-check').style.opacity = '1';
+            // Payment Selection Logic
+            const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+            const onlineFields = document.getElementById('online-payment-fields');
+
+            function updatePaymentVisuals() {
+                paymentRadios.forEach(radio => {
+                    const label = document.getElementById(`label-${radio.value}`);
+                    if (radio.checked) {
+                        label.style.borderColor = '#2563eb';
+                        label.style.backgroundColor = '#eff6ff';
+                        if (radio.value === 'online') {
+                            onlineFields.classList.add('visible');
                         } else {
-                            label.classList.remove('ring-4', 'ring-green-400/30', 'scale-[1.02]');
-                            label.querySelector('i.fa-check').style.opacity = '0';
+                            onlineFields.classList.remove('visible');
                         }
-                    });
-                    checkFormReady();
+                    } else {
+                        label.style.borderColor = '#e2e8f0';
+                        label.style.backgroundColor = 'transparent';
+                    }
                 });
-            });
+                checkFormReady();
+            }
 
-            // Online sub-method handlers
-            document.querySelectorAll('[data-subtype]').forEach(subLabel => {
-                subLabel.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const subtype = this.dataset.subtype;
-                    
-                    // Visual feedback
-                    document.querySelectorAll('[data-subtype]').forEach(l => {
-                        l.classList.remove('ring-2', 'ring-blue-400/50', 'bg-blue-50/50');
-                    });
-                    this.classList.add('ring-2', 'ring-blue-400/50', 'bg-blue-50/50');
-                    
-                    // Show specific fields
-                    document.querySelectorAll('.online-fields').forEach(field => field.classList.add('hidden'));
-                    document.getElementById(`${subtype}-fields`).classList.remove('hidden');
-                    
-                    document.getElementById('online-payment-fields').classList.remove('opacity-0', 'invisible');
-                    document.getElementById('online-payment-fields').classList.add('opacity-100', 'visible');
-                    
-                    checkFormReady();
-                });
-            });
+            paymentRadios.forEach(r => r.addEventListener('change', updatePaymentVisuals));
+            updatePaymentVisuals(); // Initial state
 
-            // Existing form ready check
             function checkFormReady() {
                 const submitBtn = document.getElementById('submit-btn');
                 const addrChecked = document.querySelector('input[name="selected_address"]:checked');
                 const paymentChecked = document.querySelector('input[name="payment_method"]:checked');
-                submitBtn.disabled = !(addrChecked && paymentChecked);
+                
+                if (addrChecked && paymentChecked) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Authorize Transaction";
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = "Complete Selection";
+                }
             }
-            
-            // Trigger initial states
-            checkFormReady();
-            document.querySelectorAll('input[name="selected_address"], input[name="payment_method"]').forEach(radio => {
-                radio.addEventListener('change', checkFormReady);
-            });
-            
-            // Trigger payment visual on load
-            document.querySelector('input[name="payment_method"]:checked').dispatchEvent(new Event('change'));
         });
     </script>
-
 </body>
 </html>

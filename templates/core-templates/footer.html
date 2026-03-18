@@ -1,14 +1,78 @@
-<footer class="bg-[#3E2723] py-12 text-center">
-      <div class="container mx-auto px-6">
-        <div class="flex flex-col items-center gap-4 mb-8">
-            <div class="text-white text-2xl font-black tracking-tighter">CORE<span class="text-[#00796B]">STORE</span></div>
-            <div class="flex gap-6 text-white/50 text-xl">
-                <i class="fa-brands fa-instagram hover:text-white transition-colors cursor-pointer"></i>
-                <i class="fa-brands fa-x-twitter hover:text-white transition-colors cursor-pointer"></i>
-                <i class="fa-brands fa-tiktok hover:text-white transition-colors cursor-pointer"></i>
-            </div>
+<footer class="bg-gradient-to-t from-slate-900 via-black to-slate-950 border-t border-blue-500/10 pt-16 pb-12 relative overflow-hidden">
+  <!-- Background glow -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent"></div>
+  
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      <!-- Logo & Description -->
+      <div class="space-y-6">
+        <a href="/" class="inline-block text-2xl font-black bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+          Core<span class="text-blue-400">Store</span>
+        </a>
+        <p class="text-gray-400 leading-relaxed text-sm max-w-md">
+          Premium marketplace for elite performance gear. Curated selection, worldwide shipping, unmatched quality.
+        </p>
+        <!-- Social -->
+        <div class="flex gap-4">
+          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-discord text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          </a>
+          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-twitter text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          </a>
+          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-instagram text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          </a>
+          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-tiktok text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          </a>
         </div>
-        <p class="text-white/40 text-[10px] font-bold uppercase tracking-widest">© 2026 Core Store Elite Ltd. All Rights Reserved.</p>
       </div>
-    </footer>
 
+      <!-- Quick Links 1 -->
+      <div>
+        <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Shop</h4>
+        <ul class="space-y-3 text-gray-400 text-sm">
+          <li><a href="/products/" class="hover:text-white transition-colors duration-200 block py-1">All Products</a></li>
+          <li><a href="{% url 'products' %}" class="hover:text-white transition-colors duration-200 block py-1">New Arrivals</a></li>
+          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Best Sellers</a></li>
+          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Sale Items</a></li>
+        </ul>
+      </div>
+
+      <!-- Quick Links 2 -->
+      <div>
+        <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Support</h4>
+        <ul class="space-y-3 text-gray-400 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Help Center</a></li>
+          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Shipping Info</a></li>
+          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Returns</a></li>
+          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div>
+        <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Stay Updated</h4>
+        <p class="text-gray-400 text-sm mb-4">Get latest drops and exclusive offers</p>
+        <div class="relative">
+          <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/30 transition-all text-sm backdrop-blur-sm">
+          <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-cyan-400 text-black px-5 py-2 rounded-lg font-bold text-xs uppercase tracking-wider hover:scale-105 transition-all shadow-lg absolute -mr-1">
+            Subscribe
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 mt-2 font-mono tracking-wider">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-t border-gray-800 pt-8 text-center">
+      <p class="text-gray-500 text-sm font-mono uppercase tracking-wider">
+        © 2026 CoreStore Elite. Crafted with <i class="fa-solid fa-heart text-red-500 text-xs"></i> for performance.
+      </p>
+      <p class="text-xs text-gray-600 mt-1 font-mono tracking-[0.3em]">
+        All rights reserved | Privacy | Terms
+      </p>
+    </div>
+  </div>
+</footer>

@@ -8,143 +8,162 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
         
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
+            overflow-x: hidden; 
+        }
+        
+        /* Sharp UI Elements */
         .glass { 
-            background: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.7); 
-            box-shadow: 0 8px 32px 0 rgba(62, 39, 35, 0.05);
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; /* Sharp Edges */
         }
 
-        .order-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .order-card { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-left: 4px solid transparent;
+        }
         .order-card:hover { 
-            transform: translateY(-5px) scale(1.01); 
-            background: white;
-            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.08);
+            border-left-color: var(--accent);
+            transform: translateX(8px);
+            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
         }
 
-        .status-transit { border: 1px solid #00796B; background: #00796B/5; color: #00796B; }
-        .status-delivered { border: 1px solid #6D4C41; background: #6D4C41/5; color: #6D4C41; }
-        .status-processing { border: 1px solid #8D6E63; background: #8D6E63/5; color: #8D6E63; }
-        .status-placed { border: 1px solid #FF9800; background: #FF9800/5; color: #FF9800; }
-        .status-cancelled { border: 1px solid #F44336; background: #F44336/5; color: #F44336; }
+        /* Professional Status Badges */
+        .status-badge {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border-radius: 2px;
+        }
+        .status-transit { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
+        .status-delivered { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; }
+        .status-processing { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
+        .status-placed { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+        .status-cancelled { background: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; }
 
-        /* Custom Pulse for Processing */
-        .pulse-processing { animation: pulse 2s infinite; }
-        @keyframes pulse {
+        .pulse-processing { animation: status-pulse 2s infinite; }
+        @keyframes status-pulse {
             0% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.6; }
             100% { opacity: 1; }
         }
     </style>
 </head>
-<body class="min-h-screen pb-20 overflow-x-hidden">
+<body class="min-h-screen pb-20">
+
     {% include 'core-templates/navbar.html' %}
 
-    <div class="container mx-auto px-4 md:px-6 mt-10 md:mt-16 max-w-4xl">
-        <div class="mb-10 md:mb-14 animate__animated animate__fadeInLeft">
-            <h1 class="text-4xl md:text-5xl font-black italic uppercase leading-none tracking-tighter">
-                Order <span class="text-[#00796B]">History.</span>
-            </h1>
-            <div class="flex items-center gap-4 mt-4">
-                <p class="text-[10px] md:text-xs text-[#3E2723]/60 font-black uppercase tracking-[0.2em]">{{ orders|length }} order{{ orders|length|pluralize }}</p>
-                <div class="h-[1px] w-20 bg-[#3E2723]/10"></div>
-            </div>
+    <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-16 shadow-lg">
+      <div class="container mx-auto px-4 md:px-8 max-w-5xl">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
+          Registry <span class="text-blue-400">History</span>
+        </h1>
+        <div class="flex items-center gap-4 mt-4">
+            <p class="text-[10px] text-blue-200/60 font-bold uppercase tracking-[0.3em]">{{ orders|length }} Recorded Transaction{{ orders|length|pluralize }}</p>
+            <div class="h-[1px] flex-1 bg-blue-400/10"></div>
         </div>
+      </div>
+    </div>
 
+    <main class="container mx-auto px-4 md:px-8 mt-12 max-w-5xl">
+        
         {% if orders %}
-            <div class="space-y-6">
+            <div class="space-y-4">
                 {% for order in orders %}
-                <div class="order-card glass rounded-[2rem] overflow-hidden animate__animated animate__fadeInUp">
-</xai:function_call > 
-
-<xai:function_call name="edit_file">
-<parameter name="path">main project 1/TODO.md
+                <div class="order-card glass overflow-hidden animate__animated animate__fadeInUp" style="animation-delay: {{ forloop.counter0|add:1 }}00ms">
                     {% with first_item=order.items.first %}
-                    <div class="p-5 md:p-8 flex flex-row items-center gap-5 md:gap-10">
-                        <div class="relative w-24 h-24 md:w-32 md:h-32 bg-[#EFEBE9] rounded-[1.5rem] overflow-hidden shrink-0 shadow-inner">
+                    <div class="p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10">
+                        
+                        <div class="relative w-24 h-24 md:w-28 md:h-28 bg-slate-50 border border-slate-100 rounded-sm overflow-hidden shrink-0">
                             {% if first_item.variant.images.first %}
                                 <img src="{{ first_item.variant.images.first.image.url }}" alt="{{ first_item.variant.product.name }}" class="w-full h-full object-cover">
                             {% else %}
-                                <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                                    <i class="fa-solid fa-image text-2xl text-gray-400"></i>
+                                <div class="w-full h-full flex items-center justify-center text-slate-200">
+                                    <i class="fa-solid fa-box text-3xl"></i>
                                 </div>
                             {% endif %}
                         </div>
 
-                        <div class="flex-1 min-w-0">
-                            <div class="mb-2">
+                        <div class="flex-1 min-w-0 text-center md:text-left">
+                            <div class="mb-3">
                                 {% if order.order_status == 'shipped' %}
-                                    <span class="status-transit inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                                        <i class="fa-solid fa-truck-fast mr-1.5"></i> In Transit
-                                    </span>
+                                    <span class="status-badge status-transit"><i class="fa-solid fa-truck-fast mr-2"></i>In Transit</span>
                                 {% elif order.order_status == 'delivered' %}
-                                    <span class="status-delivered inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                                        <i class="fa-solid fa-circle-check mr-1.5"></i> Delivered
-                                    </span>
+                                    <span class="status-badge status-delivered"><i class="fa-solid fa-circle-check mr-2"></i>Delivered</span>
                                 {% elif order.order_status == 'processing' %}
-                                    <span class="status-processing pulse-processing inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                                        <i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Preparing
-                                    </span>
+                                    <span class="status-badge status-processing pulse-processing"><i class="fa-solid fa-gear fa-spin mr-2"></i>Processing</span>
                                 {% elif order.order_status == 'placed' %}
-                                    <span class="status-placed inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                                        <i class="fa-solid fa-clock mr-1.5"></i> Order Placed
-                                    </span>
+                                    <span class="status-badge status-placed"><i class="fa-solid fa-clock mr-2"></i>Order Placed</span>
                                 {% else %}
-                                    <span class="status-cancelled inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                                        <i class="fa-solid fa-xmark mr-1.5"></i> {{ order.order_status|title }}
-                                    </span>
+                                    <span class="status-badge status-cancelled"><i class="fa-solid fa-xmark mr-2"></i>{{ order.order_status|upper }}</span>
                                 {% endif %}
-                                <h3 class="text-lg md:text-2xl font-black uppercase italic tracking-tighter text-[#3E2723] truncate leading-none mt-2">
-                                    {{ first_item.variant.product.name|truncatewords:4 }}
+                                
+                                <h3 class="text-xl font-black uppercase tracking-tighter text-slate-900 truncate leading-none mt-4">
+                                    {{ first_item.variant.product.name }}
                                 </h3>
                             </div>
-                            <div class="flex items-center gap-3 text-[#3E2723]/40 text-[10px] font-bold uppercase tracking-widest">
-                                <span>ID: #{{ order.order_number }}</span>
-                                <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
-                                <span>Qty: {{ first_item.quantity }}{% if order.items.count > 1 %} +{{ order.items.count|add:-1 }} more{% endif %}</span>
-                                <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
-                                <span>{{ order.ordered_at|date:"M d, Y" }}</span>
+                            
+                            <div class="flex flex-wrap justify-center md:justify-start items-center gap-x-4 gap-y-2 text-slate-400 text-[9px] font-bold uppercase tracking-widest">
+                                <span>Ref: #{{ order.order_number }}</span>
+                                <span class="w-1 h-1 rounded-full bg-slate-200"></span>
+                                <span>Units: {{ first_item.quantity }}{% if order.items.count > 1 %} (+{{ order.items.count|add:-1 }} Items){% endif %}</span>
+                                <span class="w-1 h-1 rounded-full bg-slate-200"></span>
+                                <span>Dispatch: {{ order.ordered_at|date:"M d, Y" }}</span>
                             </div>
-                            <p class="text-xl md:text-2xl font-black text-[#3E2723] mt-3">{{ order.total_amount|floatformat:2 }}</p>
                         </div>
 
-                        <div class="hidden md:flex flex-col gap-3 shrink-0">
-                            <a href="{% url 'track_order' order.id %}" target="_blank" class="bg-[#3E2723] text-white px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-lg shadow-[#3E2723]/10 text-center whitespace-nowrap">
-                                Track Order
-                            </a>
-                            <button class="border border-[#3E2723]/10 text-[#3E2723] px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all whitespace-nowrap">
-                                {% if order.order_status == 'delivered' %}Write Review{% else %}Return{% endif %}
-                            </button>
-                            <a href="#" class="text-center text-[#3E2723]/30 hover:text-[#3E2723] text-[9px] font-black uppercase tracking-widest transition-colors">
-                                View Invoice
-                            </a>
+                        <div class="flex flex-col items-center md:items-end gap-4 shrink-0 pt-4 md:pt-0 md:border-l md:border-slate-100 md:pl-10">
+                            <p class="text-2xl font-black text-slate-900 tracking-tighter">${{ order.total_amount|floatformat:2 }}</p>
+                            
+                            <div class="flex md:flex-col gap-2 w-full md:w-auto">
+                                <a href="{% url 'track_order' order.id %}" class="flex-1 bg-slate-900 text-white px-6 py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 transition-all text-center">
+                                    Track Units
+                                </a>
+                                <button class="flex-1 border border-slate-200 text-slate-400 px-6 py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-900 transition-all">
+                                    Invoice
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="md:hidden flex border-t border-[#3E2723]/5">
-                        <a href="{% url 'track_order' order.id %}" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-white bg-[#3E2723] text-center">Track Package</a>
-                        <a href="#" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/60 text-center">Details</a>
                     </div>
                     {% endwith %}
                 </div>
                 {% endfor %}
             </div>
         {% else %}
-            <div class="text-center py-32 glass rounded-[2.5rem] animate__animated animate__fadeIn">
-                <i class="fa-solid fa-boxes-stacked text-6xl text-[#3E2723]/20 mb-8"></i>
-                <h3 class="text-2xl font-black uppercase tracking-wider text-[#3E2723]/60 mb-4">No Orders Yet</h3>
-                <p class="text-[#3E2723]/40 mb-8 max-w-md mx-auto">Your order history is empty. Start shopping to track your purchases!</p>
-                <a href="{% url 'products' %}" class="bg-[#00796B] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-[#00695C] transition-all shadow-xl">
-                    Continue Shopping
+            <div class="text-center py-24 glass animate__animated animate__fadeIn">
+                <i class="fa-solid fa-folder-open text-5xl text-slate-100 mb-6"></i>
+                <h3 class="text-2xl font-black uppercase tracking-tighter text-slate-900 mb-2">Registry Empty</h3>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10">No transaction records detected in this account.</p>
+                <a href="{% url 'products' %}" class="bg-blue-600 text-white px-10 py-4 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-blue-200">
+                    Sync Collection
                 </a>
             </div>
         {% endif %}
 
-        <div class="mt-16 p-8 glass rounded-[2.5rem] text-center opacity-60">
-            <h4 class="text-[10px] font-black uppercase tracking-[0.4em] mb-6">Our Logistics Flow</h4>
+        <div class="mt-20 p-10 glass text-center border-dashed border-2">
+            <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-8">Supply Chain Status</h4>
+            <div class="flex flex-wrap justify-center gap-12 opacity-40 grayscale">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-warehouse"></i> Inventory</div>
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Quality Control</div>
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-plane-departure"></i> Dispatch</div>
+            </div>
         </div>
-    </div>
+    </main>
+
+    {% include 'core-templates/footer.html' %}
 </body>
 </html>

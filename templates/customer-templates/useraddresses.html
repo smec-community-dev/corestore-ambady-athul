@@ -3,140 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Addresses | CORE STORE</title>
+    <title>Address Registry | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
+            overflow-x: hidden; 
+        }
         
         .glass { 
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(62, 39, 35, 0.08); 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; /* Sharp Edges */
         }
 
+        .address-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .address-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.1);
-            background: white;
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
 
-        .btn-outline { border: 1px solid rgba(62, 39, 35, 0.1); transition: all 0.3s ease; }
-        .btn-outline:hover { background: #3E2723; color: white; border-color: #3E2723; transform: scale(1.02); }
+        .btn-outline { 
+            border: 1px solid #e2e8f0; 
+            border-radius: 2px;
+            transition: all 0.2s ease; 
+        }
+        .btn-outline:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        #delete-modal { display: none; }
+        #delete-modal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            z-index: 1000; 
+            background: rgba(15, 23, 42, 0.8); 
+            backdrop-blur: 4px; 
+        }
         #delete-modal.active { display: flex; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto animate__animated animate__fadeInDown">
-        <a href="{% url 'home' %}" class="text-2xl font-extrabold tracking-tighter flex items-center gap-2 group">
-            <div class="bg-[#3E2723] p-1.5 rounded-lg text-white group-hover:rotate-12 transition-transform">
-                <i class="fa-solid fa-bolt"></i>
-            </div>
-            <span>CORE<span class="text-[#00796B]">STORE</span></span>
-        </a>
-        <div class="flex items-center gap-6">
-            <a href="{% url 'profile' %}" class="text-[10px] font-black uppercase tracking-widest hover:text-[#00796B] transition">Back to Profile</a>
-            <div class="w-10 h-10 rounded-full border-2 border-[#00796B] p-0.5 overflow-hidden shadow-lg">
-                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=3E2723&color=fff" class="rounded-full w-full h-full">
+    <nav class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-4 mb-12 animate__animated animate__fadeInDown">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-xl font-black tracking-tighter flex items-center gap-2 group text-white">
+                <div class="bg-blue-600 p-1.5 rounded-sm group-hover:bg-blue-500 transition-colors">
+                    <i class="fa-solid fa-location-dot text-xs"></i>
+                </div>
+                <span>CORE<span class="text-blue-400">STORE</span></span>
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="{% url 'profile' %}" class="text-[10px] font-bold uppercase tracking-widest text-blue-100/80 hover:text-white transition">Back to Registry</a>
+                <div class="w-9 h-9 rounded-full border border-blue-400/30 p-0.5 overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=2563eb&color=fff&bold=true" class="rounded-full w-full h-full">
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-6 mt-10">
+    <main class="max-w-6xl mx-auto px-6">
         <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div class="animate__animated animate__slideInLeft">
-                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-[#00796B] mb-2">Manage Delivery</p>
-                <h1 class="text-5xl font-black text-[#3E2723] tracking-tighter uppercase italic leading-none">Stored <span class="text-[#00796B]">Locations.</span></h1>
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-2">Endpoint Management</p>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase italic">Dispatch <span class="text-blue-600">Registry.</span></h1>
             </div>
             <a href="{% url 'add_address' %}" class="animate__animated animate__slideInRight">
-                <button class="group bg-[#3E2723] text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-xl">
-                    <i class="fa-solid fa-plus mr-2 group-hover:rotate-90 transition-transform"></i> Add New Address
+                <button class="bg-slate-900 text-white px-8 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
+                    <i class="fa-solid fa-plus-square mr-2"></i> Register New Entry
                 </button>
             </a>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for address in addresses %}
-            <div class="address-card glass rounded-[2.5rem] p-8 relative animate__animated animate__fadeInUp {% if address.is_default %}border-2 border-[#00796B]{% else %}border border-[#3E2723]/5{% endif %}" 
+            <div class="address-card glass p-8 relative animate__animated animate__fadeInUp {% if address.is_default %}border-t-4 border-t-blue-600 shadow-md{% endif %}" 
                  style="animation-delay: {{ forloop.counter0 }}00ms;">
                 
                 {% if address.is_default %}
-                <div class="absolute top-6 right-6">
-                    <span class="bg-[#00796B] text-white text-[8px] px-3 py-1 rounded-full font-black uppercase animate__animated animate__pulse animate__infinite">Primary</span>
+                <div class="absolute top-4 right-4">
+                    <span class="bg-blue-50 text-blue-600 text-[8px] px-3 py-1 rounded-sm font-black uppercase border border-blue-100">Primary</span>
                 </div>
                 {% endif %}
 
-                <div class="w-12 h-12 {% if address.is_default %}bg-[#00796B]/10 text-[#00796B]{% else %}bg-[#3E2723]/5 text-[#3E2723]/40{% endif %} rounded-2xl flex items-center justify-center mb-6">
+                <div class="w-12 h-12 {% if address.is_default %}bg-blue-50 text-blue-600{% else %}bg-slate-50 text-slate-400{% endif %} rounded-sm flex items-center justify-center mb-6 border border-slate-100">
                     {% if address.address_type == 'HOME' %}
                         <i class="fa-solid fa-house-chimney text-xl"></i>
                     {% elif address.address_type == 'WORK' %}
-                        <i class="fa-solid fa-briefcase text-xl"></i>
+                        <i class="fa-solid fa-building text-xl"></i>
                     {% else %}
-                        <i class="fa-solid fa-location-dot text-xl"></i>
+                        <i class="fa-solid fa-map-pin text-xl"></i>
                     {% endif %}
                 </div>
 
-                <h3 class="text-xl font-black text-[#3E2723] mb-1 uppercase tracking-tighter italic">{{ address.address_type }}</h3>
-                <div class="text-sm text-[#3E2723]/60 font-medium leading-relaxed">
-                    <p class="font-black text-[#3E2723] text-xs uppercase mb-1">{{ address.full_name }}</p>
-                    <p class="mb-1">{{ address.phone_number }}</p>
+                <h3 class="text-lg font-black text-slate-900 mb-1 uppercase tracking-tighter">{{ address.address_type }}</h3>
+                <div class="text-[11px] text-slate-500 font-medium uppercase leading-relaxed tracking-wide">
+                    <p class="font-black text-slate-900 text-xs mb-1">{{ address.full_name }}</p>
+                    <p class="mb-1 text-slate-400 font-bold tracking-widest">{{ address.phone_number }}</p>
                     <p class="mb-1">{{ address.house_info }}</p>
                     <p class="mb-1">{{ address.locality }}</p>
                     <p class="mb-1">{{ address.city }}, {{ address.state }} - {{ address.pincode }}</p>
                     <p class="mb-1">{{ address.country }}</p>
                     {% if address.landmark %}
-                    <p class="text-xs text-[#3E2723]/40 mt-2"><i class="fa-solid fa-location-arrow mr-1"></i>Landmark: {{ address.landmark }}</p>
+                    <p class="text-[9px] text-blue-600 mt-2 italic font-bold">Ref: {{ address.landmark }}</p>
                     {% endif %}
                 </div>
 
-                <div class="flex gap-3 mt-8 pt-6 border-t border-[#3E2723]/5">
+                <div class="flex gap-2 mt-8 pt-6 border-t border-slate-50">
                     <a href="{% url 'update_address' address.id %}" class="flex-1">
-                        <button class="w-full btn-outline py-3 rounded-xl text-[10px] font-black uppercase tracking-widest">Edit</button>
+                        <button class="w-full btn-outline py-2.5 text-[9px] font-black uppercase tracking-widest">Update</button>
                     </a>
-                    <button onclick="openDeleteModal('{{ address.id }}', '{% url 'delete_address' address.id %}')" class="px-4 btn-outline py-3 rounded-xl text-[10px] text-red-400 hover:text-white hover:bg-red-500 transition-all">
-                        <i class="fa-solid fa-trash"></i>
+                    <button onclick="openDeleteModal('{{ address.id }}', '{% url 'delete_address' address.id %}')" class="px-4 btn-outline py-2.5 text-[9px] text-red-400 hover:bg-red-500 transition-all border-red-100">
+                        <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
             </div>
             {% empty %}
-            <div class="col-span-full py-20 text-center opacity-30">
-                <i class="fa-solid fa-map-location-dot text-6xl mb-4"></i>
-                <p class="font-black uppercase tracking-widest text-sm">No addresses found.</p>
+            <div class="col-span-full py-24 text-center border-2 border-dashed border-slate-200 rounded-sm">
+                <i class="fa-solid fa-database text-5xl text-slate-100 mb-4 block"></i>
+                <p class="font-black uppercase tracking-[0.4em] text-xs text-slate-300">Database Entry: Null</p>
             </div>
             {% endfor %}
         </div>
 
-        <div class="mt-12 p-8 rounded-[2.5rem] bg-[#3E2723]/5 border border-[#3E2723]/10 flex flex-col md:flex-row justify-between items-center gap-6 animate__animated animate__fadeIn">
+        <div class="mt-12 p-8 glass flex flex-col md:flex-row justify-between items-center gap-6 animate__animated animate__fadeIn">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-[#3E2723] text-white flex items-center justify-center animate__animated animate__bounce animate__infinite animate__slow">
-                    <i class="fa-solid fa-truck"></i>
+                <div class="w-10 h-10 bg-slate-900 text-white rounded-sm flex items-center justify-center">
+                    <i class="fa-solid fa-truck-fast text-xs"></i>
                 </div>
-                <p class="text-xs font-bold text-[#3E2723]/70 italic">Note: Changing address won't affect orders already <span class="text-[#00796B]">In Transit</span>.</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    Note: Dispatch parameters are locked once unit has achieved <span class="text-blue-600">Transit Status</span>.
+                </p>
             </div>
-            <a href="#" class="text-[10px] font-black uppercase tracking-widest text-[#3E2723] hover:text-[#00796B] transition">Shipping Policy</a>
+            <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors">Logistics Policy →</a>
         </div>
     </main>
 
-    <div id="delete-modal" class="fixed inset-0 z-[300] items-center justify-center bg-[#3E2723]/80 backdrop-blur-sm p-4">
-        <div class="glass max-w-sm w-full rounded-[3rem] p-10 text-center animate__animated animate__zoomIn">
-            <div class="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
-                <i class="fa-solid fa-trash-can text-3xl"></i>
+    <div id="delete-modal" class="fixed inset-0 items-center justify-center p-4">
+        <div class="glass max-w-xs w-full p-8 text-center animate__animated animate__fadeInUp animate__faster shadow-2xl">
+            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-sm border border-red-100 flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
             </div>
-            <h3 class="text-2xl font-black uppercase italic tracking-tighter text-[#3E2723]">Confirm <span class="text-red-500">Delete</span></h3>
-            <p class="text-[10px] font-bold text-[#3E2723]/40 mt-2 mb-8 uppercase tracking-[0.2em]">This address will be permanently removed.</p>
+            <h3 class="text-sm font-black uppercase tracking-widest text-slate-900">Erase Entry?</h3>
+            <p class="text-[10px] font-bold text-slate-400 mt-2 mb-8 uppercase tracking-widest leading-relaxed">
+                This record will be permanently removed from the registry.
+            </p>
             
-            <div class="flex gap-4">
-                <button onclick="closeDeleteModal()" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40 hover:text-[#3E2723]">Cancel</button>
+            <div class="flex flex-col gap-2">
                 <form id="delete-form" method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="px-8 bg-red-500 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-red-500/20 hover:bg-red-600 transition">Delete</button>
+                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition">Confirm Deletion</button>
                 </form>
+                <button onclick="closeDeleteModal()" class="w-full py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900">Abort</button>
             </div>
         </div>
     </div>

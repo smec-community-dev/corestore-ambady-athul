@@ -8,25 +8,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
         
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #FAF9F6; 
-            color: #3E2723; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
             overflow-x: hidden; 
         }
         
+        /* Sharp Glassmorphism */
         .glass { 
-            background: rgba(255, 255, 255, 0.6); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(62, 39, 35, 0.08); 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; 
         }
         
         .reveal { 
             opacity: 0; 
-            transform: translateY(30px); 
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform: translateY(20px); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         .reveal.active { 
             opacity: 1; 
@@ -34,66 +41,38 @@
         }
 
         #profile-modal { display: none; }
-        #profile-modal.open { display: flex; animation: fadeIn 0.3s ease; }
+        #profile-modal.open { display: flex; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .btn-primary { 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.2s ease;
+            border-radius: 4px;
         }
         .btn-primary:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 10px 25px rgba(0, 121, 107, 0.2); 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); 
         }
         
-        input:focus { border-color: #00796B !important; background: white !important; }
+        input { border-radius: 4px !important; transition: all 0.2s ease; }
+        input:focus { border-color: var(--accent) !important; ring: 2px var(--accent); }
 
-        .verify-btn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 24px;
-            background: #00796B;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 121, 107, 0.1);
-        }
-        .verify-btn:hover {
-            background: #3E2723;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .toast-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            animation: slideIn 0.5s ease, fadeOut 0.5s ease 3s forwards;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        /* Address Card Selection State */
+        /* Address Card States */
         .address-radio:checked + .address-card {
-            border-color: #00796B;
-            background: white;
-            box-shadow: 0 20px 40px rgba(0, 121, 107, 0.1);
+            border-color: var(--accent);
+            background: #eff6ff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
         }
-        .address-radio:checked + .address-card .check-icon {
-            opacity: 1;
+        
+        .verify-badge {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        /* Ambient Theme for Merchant Card */
+        .sidebar-ambient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
         }
     </style>
 </head>
@@ -101,59 +80,61 @@
 
     {% include 'includes/message-toast.html' %}
 
-    <nav class="p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto animate__animated animate__fadeInDown">
-        <a href="{% url 'home' %}" class="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-2 group">
-            <div class="bg-[#3E2723] p-1.5 rounded-lg text-white group-hover:rotate-12 transition-transform">
-                <i class="fa-solid fa-bolt text-sm"></i>
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl">
+      <div class="container mx-auto px-4 md:px-8 py-3">
+        <div class="flex items-center justify-between gap-4">
+          
+          <a href="{% url 'home' %}" class="text-2xl font-black tracking-tighter text-white group flex items-center">
+            <span class="bg-blue-600 text-white px-2 py-1 rounded-sm mr-2 group-hover:bg-blue-500 transition-colors">C</span>
+            CORE<span class="text-blue-400">STORE</span>
+          </a>
+
+          <div class="flex items-center gap-6">
+            <a href="{% url 'home' %}" class="hidden sm:block text-[10px] font-bold uppercase tracking-widest text-blue-100/80 hover:text-white transition">Return to Shop</a>
+            
+            <div class="relative group">
+              <button onclick="toggleModal()" class="block w-10 h-10 rounded-full border-2 border-blue-400/30 p-0.5 hover:border-blue-400 transition-all duration-300 overflow-hidden shadow-lg">
+                <img src="https://ui-avatars.com/api/?name={% if data.first_name %}{{ data.first_name }}{% else %}{{ data.username }}{% endif %}&background=2563eb&color=fff&bold=true" class="w-full h-full object-cover rounded-full">
+              </button>
             </div>
-            <span>CORE<span class="text-[#00796B]">STORE</span></span>
-        </a>
-        <div class="flex items-center gap-6">
-            <a href="{% url 'home' %}" class="hidden sm:block text-[10px] font-black uppercase tracking-[0.2em] hover:text-[#00796B] transition">Back to Store</a>
-            <div class="w-10 h-10 rounded-xl border-2 border-[#00796B] p-0.5 overflow-hidden shadow-lg cursor-pointer active:scale-90 transition-transform" onclick="toggleModal()">
-                <img src="https://ui-avatars.com/api/?name={% if data.first_name %}{{ data.first_name }}+{{ data.last_name }}{% else %}{{ data.username }}{% endif %}&background=00796B&color=fff" class="w-full h-full object-cover rounded-lg">
-            </div>
+          </div>
         </div>
+      </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-4 md:px-6 mt-8 md:mt-12">
+    <div class="h-24 lg:h-28"></div>
+
+    <main class="max-w-6xl mx-auto px-4 md:px-6">
         
-        <header class="mb-12 flex flex-col md:flex-row items-center md:items-end gap-8 reveal">
+        <header class="mb-10 flex flex-col md:flex-row items-center gap-8 reveal">
             <div class="relative group cursor-pointer" onclick="toggleModal()">
-                <div class="w-28 h-28 md:w-36 md:h-36 rounded-[2.5rem] bg-gradient-to-br from-[#3E2723] to-[#1A0F0E] flex items-center justify-center text-white text-4xl font-black shadow-2xl relative z-10 overflow-hidden border-4 border-white transition-transform group-hover:scale-105">
+                <div class="w-32 h-32 md:w-40 md:h-40 rounded-sm bg-slate-900 flex items-center justify-center text-white text-4xl font-black shadow-xl relative z-10 overflow-hidden border-4 border-white">
                     {% if data.profile_image %}
                         <img src="{{ data.profile_image.url }}" class="w-full h-full object-cover">
                     {% else %}
-                        <span class="uppercase tracking-tighter">
-                            {% if data.first_name and data.last_name %}
-                                {{ data.first_name|slice:":1" }}{{ data.last_name|slice:":1" }}
-                            {% else %}
-                                {{ data.username|slice:":2" }}
-                            {% endif %}
-                        </span>
+                        <span class="uppercase">{{ data.username|slice:":1" }}</span>
                     {% endif %}
                     
-                    <div class="absolute inset-0 bg-[#00796B]/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
+                    <div class="absolute inset-0 bg-blue-600/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
                         <i class="fa-solid fa-camera text-xl mb-1"></i>
-                        <span class="text-[8px] font-black uppercase tracking-widest">Edit Photo</span>
+                        <span class="text-[8px] font-bold uppercase tracking-widest">Update</span>
                     </div>
-                </div>
-                <div class="absolute -bottom-2 -right-2 bg-[#00796B] w-10 h-10 rounded-full border-4 border-[#FAF9F6] flex items-center justify-center text-white shadow-lg z-20">
-                    <i class="fa-solid fa-camera text-xs"></i>
                 </div>
             </div>
 
             <div class="text-center md:text-left flex-1">
-                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-[#00796B] mb-2">Verified Elite Member</p>
-                <h1 class="text-4xl md:text-6xl font-black text-[#3E2723] tracking-tighter uppercase italic leading-none">
+                <div class="verify-badge inline-flex items-center gap-2 px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-circle-check"></i> Verified Elite Member
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase leading-none">
                     {% if data.first_name and data.last_name %}
-                        {{ data.first_name }} <span class="text-[#00796B]">{{ data.last_name }}</span>
+                        {{ data.first_name }} <span class="text-blue-600">{{ data.last_name }}</span>
                     {% else %}
-                        {{ data.username }}<span class="text-[#00796B]">.</span>
+                        {{ data.username }}<span class="text-blue-600">.</span>
                     {% endif %}
                 </h1>
-                <p class="text-[11px] font-bold text-[#3E2723]/40 uppercase tracking-widest mt-3 flex items-center justify-center md:justify-start gap-2">
-                    <i class="fa-solid fa-shield-check text-[#00796B]"></i> Account Secured
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-4">
+                    Account Status: <span class="text-slate-900">Active Consignment</span>
                 </p>
             </div>
         </header>
@@ -161,109 +142,73 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <div class="lg:col-span-4 space-y-6">
-                <div class="glass rounded-[2.5rem] p-8 shadow-xl reveal">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/30 mb-6">Menu</h3>
-                    <nav class="flex flex-col gap-2">
-                        <a href="#" class="flex items-center justify-between p-4 bg-[#3E2723] text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg">
-                            <span><i class="fa-solid fa-user-gear mr-3 opacity-50"></i> Profile Info</span>
+                <div class="glass p-6 shadow-sm reveal">
+                    <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6 border-b pb-2">Navigation</h3>
+                    <nav class="flex flex-col gap-1">
+                        <a href="#" class="flex items-center justify-between p-3 bg-blue-600 text-white rounded-sm text-[11px] font-bold uppercase tracking-wider shadow-md">
+                            <span><i class="fa-solid fa-id-badge mr-3"></i> Profile Overview</span>
                             <i class="fa-solid fa-chevron-right text-[8px]"></i>
                         </a>
-                        <a href="{% url 'orders' %}" class="flex items-center justify-between p-4 hover:bg-[#3E2723]/5 rounded-2xl text-xs font-black uppercase tracking-wider group transition-all">
-                            <span><i class="fa-solid fa-box mr-3 opacity-30 group-hover:text-[#00796B]"></i> My Orders</span>
-                            <i class="fa-solid fa-chevron-right text-[8px] opacity-20"></i>
+                        <a href="{% url 'orders' %}" class="flex items-center justify-between p-3 hover:bg-slate-50 text-slate-600 rounded-sm text-[11px] font-bold uppercase tracking-wider group transition-all">
+                            <span><i class="fa-solid fa-box-open mr-3 text-slate-300 group-hover:text-blue-600"></i> My Orders</span>
+                            <i class="fa-solid fa-chevron-right text-[8px] opacity-0 group-hover:opacity-100"></i>
                         </a>
-                        <a href="/cart" class="flex items-center justify-between p-4 hover:bg-[#3E2723]/5 rounded-2xl text-xs font-black uppercase tracking-wider group transition-all">
-                            <span><i class="fa-solid fa-shopping-cart mr-3 opacity-30 group-hover:text-[#00796B]"></i> My Cart</span>
-                            <i class="fa-solid fa-chevron-right text-[8px] opacity-20"></i>
+                        <a href="/wishlist" class="flex items-center justify-between p-3 hover:bg-slate-50 text-slate-600 rounded-sm text-[11px] font-bold uppercase tracking-wider group transition-all">
+                            <span><i class="fa-solid fa-heart mr-3 text-slate-300 group-hover:text-red-500"></i> Wishlist</span>
+                            <i class="fa-solid fa-chevron-right text-[8px] opacity-0 group-hover:opacity-100"></i>
                         </a>
-                        <a href="/wishlist" class="flex items-center justify-between p-4 hover:bg-[#3E2723]/5 rounded-2xl text-xs font-black uppercase tracking-wider group transition-all">
-                            <span><i class="fa-solid fa-heart mr-3 opacity-30 group-hover:text-[#00796B]"></i> Wishlist</span>
-                            <i class="fa-solid fa-chevron-right text-[8px] opacity-20"></i>
-                        </a>
-                        <a href="{% url 'logout' %}" class="flex items-center justify-center gap-2 mt-6 text-red-400 font-black uppercase text-[10px] tracking-[0.2em] hover:text-red-600 transition group">
-                            Sign Out <i class="fa-solid fa-power-off group-hover:rotate-90 transition-transform"></i>
+                        <a href="{% url 'logout' %}" class="flex items-center justify-center gap-2 mt-6 py-3 border border-red-100 text-red-500 font-bold uppercase text-[10px] tracking-widest hover:bg-red-50 transition-all rounded-sm">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout Session
                         </a>
                     </nav>
                 </div>
 
-                <div class="reveal" style="transition-delay: 0.2s;">
-                    <div class="relative overflow-hidden rounded-[2.5rem] p-1 bg-gradient-to-br from-[#00796B] to-[#3E2723] shadow-xl group">
-                        <div class="glass rounded-[2.3rem] p-8 h-full flex flex-col items-center text-center relative z-10">
-                            <div class="w-14 h-14 bg-[#00796B]/10 rounded-2xl flex items-center justify-center text-[#00796B] mb-4 group-hover:rotate-12 transition-all">
-                                <i class="fa-solid fa-store text-2xl"></i>
-                            </div>
-                            <h4 class="text-sm font-black uppercase italic tracking-tighter text-[#3E2723]">Become a Seller</h4>
-                            <p class="text-[10px] font-bold text-[#3E2723]/50 uppercase tracking-widest mt-2 mb-6">Start earning with us.</p>
-                            <button class="btn-primary w-full bg-[#00796B] text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg">Open Shop</button>
-                        </div>
-                    </div>
+                <div class="reveal sidebar-ambient p-8 rounded-sm shadow-lg text-center">
+                    <i class="fa-solid fa-briefcase text-3xl text-blue-400 mb-4"></i>
+                    <h4 class="text-sm font-black uppercase tracking-tight text-white">Merchant Program</h4>
+                    <p class="text-[10px] text-slate-400 uppercase font-bold mt-2 mb-6 leading-relaxed">Expand your reach. Start selling on CoreStore today.</p>
+                    <button class="w-full bg-blue-600 hover:bg-white hover:text-blue-600 text-white py-3 rounded-sm font-black uppercase text-[10px] tracking-widest transition-all">Apply Now</button>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-8">
-                
-                <div class="glass rounded-[2.5rem] p-8 md:p-12 shadow-2xl reveal">
-                    <div class="flex items-center justify-between mb-10">
-                        <h3 class="text-xl font-black uppercase italic tracking-tighter text-[#3E2723]">Profile <span class="text-[#00796B]">Details</span></h3>
-                        <i class="fa-solid fa-id-card text-[#3E2723]/10 text-3xl"></i>
-                    </div>
+                <div class="glass p-8 md:p-10 shadow-sm reveal">
+                    <h3 class="text-lg font-black uppercase tracking-tighter text-slate-900 mb-8">System <span class="text-blue-600">Identity</span></h3>
                     
-                    <form method="POST" class="space-y-8">
+                    <form method="POST" class="space-y-6">
                         {% csrf_token %}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Username</label>
-                                <div class="relative">
-                                    <input type="text" value="{{ data.username }}" readonly class="w-full bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723] opacity-60">
-                                    <i class="fa-solid fa-lock absolute right-5 top-1/2 -translate-y-1/2 text-[10px] text-[#3E2723]/20"></i>
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">User Handle</label>
+                                <input type="text" value="{{ data.username }}" readonly class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 text-xs font-bold text-slate-400">
                             </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Email</label>
-                                <div class="relative">
-                                <input type="email" value="{{ data.email }}" readonly class="w-full bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-2xl px-6 py-4 pr-14 text-xs font-black text-[#3E2723] opacity-60">
-                                    <i class="fa-solid fa-lock absolute right-5 top-1/2 -translate-y-1/2 text-[10px] text-[#3E2723]/20 z-10"></i>
-                                    <a href="{% url 'orders' %}">
-                                        <div class="verify-btn bg-green-500 hover:bg-green-600 cursor-pointer" title="View Orders">
-                                            <i class="fa-solid fa-check"></i>
-                                        </div>
-                                    </a>
-                                </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Electronic Mail</label>
+                                <input type="email" value="{{ data.email }}" readonly class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 text-xs font-bold text-slate-400">
                             </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Phone Number</label>
-                                <div class="relative">
-                                    <input type="tel" name="phone_number" value="{{ data.phone_number|default:'' }}" placeholder="+1 234 567 890" class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 pr-12 text-xs font-black text-[#3E2723] outline-none transition-all">
-                                    <div class="verify-btn" onclick="alert('OTP Sent!')"><i class="fa-solid fa-info"></i></div>
-                                </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Contact Number</label>
+                                <input type="tel" name="phone_number" value="{{ data.phone_number|default:'' }}" class="w-full bg-white border border-slate-200 px-4 py-3.5 text-xs font-bold text-slate-900 outline-none">
                             </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">First Name</label>
-                                <input type="text" name="first_name" value="{{ data.first_name }}" required placeholder="Required" class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723] outline-none transition-all">
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Legal First Name</label>
+                                <input type="text" name="first_name" value="{{ data.first_name }}" class="w-full bg-white border border-slate-200 px-4 py-3.5 text-xs font-bold text-slate-900 outline-none">
                             </div>
-
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Last Name</label>
-                                <input type="text" name="last_name" value="{{ data.last_name }}" required placeholder="Required" class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 text-xs font-black text-[#3E2723] outline-none transition-all">
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-slate-400">Legal Last Name</label>
+                                <input type="text" name="last_name" value="{{ data.last_name }}" class="w-full bg-white border border-slate-200 px-4 py-3.5 text-xs font-bold text-slate-900 outline-none">
                             </div>
                         </div>
-
-                        <div class="mt-4 flex flex-col md:flex-row gap-4 justify-end items-center pt-8 border-t border-[#3E2723]/5">
-                            <button type="submit" name="update_details" class="w-full md:w-auto bg-[#3E2723] text-white px-12 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-[#00796B] shadow-xl transition-all">Save Changes</button>
+                        <div class="pt-6 border-t border-slate-100 flex justify-end">
+                            <button type="submit" name="update_details" class="bg-slate-900 text-white px-10 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-blue-600 rounded-sm">Commit Changes</button>
                         </div>
                     </form>
 
-                    <div class="mt-16 pt-8 border-t-2 border-dashed border-[#3E2723]/5">
+                    <div class="mt-12 pt-8 border-t border-slate-100">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                            <div>
-                                <h3 class="text-xl font-black uppercase italic tracking-tighter text-[#3E2723]">Saved <span class="text-[#00796B]">Addresses</span></h3>
-                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase tracking-widest mt-1">Manage your delivery locations</p>
-                            </div>
-                            <a href="{% url 'user_addresses' %}" class="inline-flex items-center justify-center gap-2 bg-[#00796B]/5 hover:bg-[#00796B] text-[#00796B] hover:text-white px-5 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all group">
-                                <i class="fa-solid fa-plus-circle group-hover:rotate-90 transition-transform"></i> Add New Address
+                            <h3 class="text-lg font-black uppercase tracking-tighter text-slate-900">Shipping <span class="text-blue-600">Registry</span></h3>
+                            <a href="{% url 'user_addresses' %}" class="bg-blue-600 text-white px-5 py-3 rounded-sm text-[9px] font-black uppercase tracking-widest transition-all hover:bg-slate-900">
+                                <i class="fa-solid fa-plus mr-1"></i> Register New Address
                             </a>
                         </div>
 
@@ -274,96 +219,60 @@
                                     {% for address in addresses %}
                                     <label class="relative cursor-pointer group">
                                         <input type="radio" name="selected_address" value="{{ address.id }}" class="address-radio hidden" {% if address.is_default %}checked{% endif %}>
-                                        
-                                        <div class="address-card glass p-6 rounded-[2rem] border-2 border-transparent hover:border-[#3E2723]/10 transition-all duration-500 h-full flex flex-col justify-between">
-                                            <div class="flex justify-between items-start mb-4">
-                                                <div class="flex flex-col gap-1">
-                                                    <span class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]">{{ address.address_type|default:"Home" }}</span>
-                                                    <div class="check-icon opacity-0 flex items-center gap-1 text-[#00796B]">
-                                                        <i class="fa-solid fa-circle-check text-[10px]"></i>
-                                                        <span class="text-[8px] font-black uppercase tracking-tighter">Selected for Shipping</span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex gap-2">
-                                                    <a href="{% url 'update_address' address.id %}" class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#3E2723]/30 hover:text-[#00796B] transition-colors">
-                                                        <i class="fa-solid fa-pen-to-square text-[10px]"></i>
-                                                    </a>
-                                                </div>
+                                        <div class="address-card glass p-5 border-2 transition-all duration-200 min-h-[140px] flex flex-col justify-between">
+                                            <div class="flex justify-between items-start">
+                                                <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">{{ address.address_type|default:"Home" }}</span>
+                                                <a href="{% url 'update_address' address.id %}" class="text-slate-300 hover:text-blue-600 transition-colors">
+                                                    <i class="fa-solid fa-pen-nib text-xs"></i>
+                                                </a>
                                             </div>
-
-                                            <div class="space-y-1">
-                                                <p class="text-xs font-extrabold text-[#3E2723] leading-tight">{{ address.house_info }}</p>
-                                                <p class="text-[10px] font-medium text-[#3E2723]/60 uppercase tracking-wider">
-                                                    {{ address.locality }}, {{ address.city }}, {{ address.state }} {{ address.pincode }}
+                                            <div class="mt-4">
+                                                <p class="text-[11px] font-bold text-slate-900 uppercase tracking-tight">{{ address.house_info }}</p>
+                                                <p class="text-[10px] text-slate-500 mt-1 uppercase">
+                                                    {{ address.locality }}, {{ address.city }}, {{ address.state }} - {{ address.pincode }}
                                                 </p>
                                             </div>
-
-                                            {% if address.is_default %}
-                                            <div class="mt-4 pt-4 border-t border-[#3E2723]/5 flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-[#00796B] animate-pulse"></span>
-                                                <span class="text-[8px] font-black uppercase text-[#00796B] tracking-widest">Primary Address</span>
-                                            </div>
-                                            {% endif %}
                                         </div>
                                     </label>
                                     {% endfor %}
                                 {% else %}
-                                    <div class="md:col-span-2 py-16 bg-[#3E2723]/5 border-2 border-dashed border-[#3E2723]/10 rounded-[2.5rem] flex flex-col items-center justify-center">
-                                        <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-4">
-                                            <i class="fa-solid fa-map-location-dot text-2xl text-[#3E2723]/20"></i>
-                                        </div>
-                                        <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40">Your address book is empty</p>
-                                        <a href="{% url 'user_addresses' %}" class="mt-4 text-[9px] font-black uppercase text-[#00796B] underline decoration-2 underline-offset-4">Add your first address</a>
+                                    <div class="md:col-span-2 py-12 bg-slate-50 border border-dashed border-slate-200 rounded-sm flex flex-col items-center">
+                                        <i class="fa-solid fa-map-location-dot text-slate-200 text-3xl mb-3"></i>
+                                        <p class="text-[9px] font-bold uppercase text-slate-400 tracking-widest">Database Empty</p>
                                     </div>
                                 {% endif %}
                             </div>
-
-                            <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-2 pl-6 bg-[#3E2723]/5 rounded-2xl">
-                                <span class="text-[9px] font-bold text-[#3E2723]/40 uppercase tracking-widest italic">Set your preferred delivery destination</span>
-                                <button type="submit" name="save_default_address" class="w-full sm:w-auto bg-[#3E2723] text-white px-10 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#00796B] shadow-xl transition-all active:scale-95">
-                                    Confirm Selection
+                            <div class="mt-6 flex justify-end">
+                                <button type="submit" name="save_default_address" class="border-2 border-slate-900 text-slate-900 px-8 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all rounded-sm">
+                                    Set Default Destination
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                <div class="glass rounded-[2.5rem] p-8 border-l-[12px] border-[#00796B] shadow-xl reveal">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-[8px] font-black text-[#00796B] uppercase tracking-widest mb-1">Latest Order</p>
-                            <h3 class="text-2xl font-black text-[#3E2723] uppercase italic">Vortex Racer X1</h3>
-                            <p class="text-[10px] font-bold text-[#3E2723]/40 mt-1">Status: In Transit</p>
-                        </div>
-                        <i class="fa-solid fa-truck-fast text-4xl text-[#3E2723]/10"></i>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="profile-modal" class="fixed inset-0 z-[200] items-center justify-center bg-[#3E2723]/90 backdrop-blur-md p-4">
-        <div class="glass max-w-md w-full rounded-[3rem] p-8 md:p-12 text-center relative animate__animated animate__zoomIn">
-            <button onclick="toggleModal()" class="absolute top-6 right-6 text-[#3E2723] hover:text-red-500 transition-colors">
-                <i class="fa-solid fa-circle-xmark text-2xl"></i>
+    <div id="profile-modal" class="fixed inset-0 z-[200] items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4">
+        <div class="glass max-w-sm w-full p-8 text-center relative animate__animated animate__fadeInUp animate__faster">
+            <button onclick="toggleModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <h3 class="text-xl font-black uppercase italic tracking-tighter text-[#3E2723] mb-8">Update <span class="text-[#00796B]">Photo</span></h3>
-            <div class="w-48 h-48 mx-auto rounded-[3rem] bg-[#3E2723] overflow-hidden shadow-2xl mb-8 border-4 border-white flex items-center justify-center">
+            <h3 class="text-sm font-black uppercase tracking-widest text-slate-900 mb-8">Update Avatar</h3>
+            <div class="w-40 h-40 mx-auto bg-slate-50 rounded-sm overflow-hidden mb-8 border border-slate-200 flex items-center justify-center">
                 {% if data.profile_image %}
                     <img id="modal-preview" src="{{ data.profile_image.url }}" class="w-full h-full object-cover">
                 {% else %}
-                    <div id="modal-initials" class="text-white text-6xl font-black uppercase">
-                        {{ data.username|slice:":2" }}
-                    </div>
+                    <div id="modal-initials" class="text-slate-300 text-5xl font-black uppercase">{{ data.username|slice:":1" }}</div>
                     <img id="modal-preview" class="w-full h-full object-cover hidden">
                 {% endif %}
             </div>
-            <form  method="POST" enctype="multipart/form-data" class="space-y-4">
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
                 {% csrf_token %}
-                <input type="file" name="image" id="file-input" onchange="previewFile()" class="block w-full text-xs text-gray-500 file:bg-[#00796B] file:text-white file:rounded-xl file:px-4 file:py-2 cursor-pointer"/>
-                <div class="pt-4 flex gap-3">
-                    <button type="button" onclick="toggleModal()" class="flex-1 text-[10px] font-black uppercase text-gray-400">Cancel</button>
-                    <button type="submit" name="update_photo" class="flex-1 bg-[#3E2723] text-white py-4 rounded-2xl text-[10px] font-black uppercase shadow-xl hover:bg-[#00796B]">Save</button>
+                <input type="file" name="image" id="file-input" onchange="previewFile()" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"/>
+                <div class="pt-4">
+                    <button type="submit" name="update_photo" class="w-full bg-blue-600 text-white py-3.5 text-[10px] font-black uppercase tracking-widest shadow-md rounded-sm">Sync Avatar</button>
                 </div>
             </form>
         </div>

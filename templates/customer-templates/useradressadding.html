@@ -3,115 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Address | CORE STORE</title>
+    <title>Register Destination | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
-        .input-field { background-color: rgba(62, 39, 35, 0.05); border: 1px solid rgba(62, 39, 35, 0.1); border-radius: 1rem; padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 800; width: 100%; transition: all 0.3s ease; color: #3E2723; text-transform: uppercase; letter-spacing: 0.05em; }
-        .input-field:focus { outline: none; border-color: #00796B; background-color: white; box-shadow: 0 8px 15px -8px rgba(0, 121, 107, 0.1); }
-        .label-text { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(62, 39, 35, 0.5); margin-bottom: 0.4rem; display: block; margin-left: 0.5rem; }
-        .loader { border: 2px solid #f3f3f3; border-top: 2px solid #00796B; border-radius: 50%; width: 12px; height: 12px; animation: spin 1s linear infinite; display: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
+        }
+
+        .glass { 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; /* Sharp Edges */
+        }
+
+        /* Technical Input Field */
+        .input-field { 
+            background-color: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; 
+            padding: 0.85rem 1.25rem; 
+            font-size: 12px; 
+            font-weight: 600; 
+            width: 100%; 
+            transition: all 0.2s ease; 
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+        .input-field:focus { 
+            outline: none; 
+            border-color: var(--accent); 
+            ring: 2px var(--accent);
+            background-color: #fafafa; 
+        }
+
+        .label-text { 
+            font-size: 9px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em; 
+            color: #64748b; 
+            margin-bottom: 0.5rem; 
+            display: block; 
+            margin-left: 2px;
+        }
+
+        .loader { 
+            border: 2px solid #f3f3f3; 
+            border-top: 2px solid var(--accent); 
+            border-radius: 50%; 
+            width: 12px; 
+            height: 12px; 
+            animation: spin 1s linear infinite; 
+            display: none; 
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .type-radio:checked + label { background-color: #00796B; color: white; border-color: #00796B; }
+
+        /* Type Toggles */
+        .type-radio:checked + label { 
+            background-color: var(--primary); 
+            color: white; 
+            border-color: var(--primary); 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-main {
+            border-radius: 2px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
-<body class="min-h-screen py-8 px-4 md:px-6">
+<body class="min-h-screen py-12 px-4 md:px-6 flex items-center justify-center">
 
-    <div class="max-w-xl mx-auto animate__animated animate__fadeIn">
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl font-black text-[#3E2723] italic uppercase tracking-tighter leading-none">
-                Add New <span class="text-[#00796B]">Destination.</span>
+    <div class="fixed inset-0 z-[-1] bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f8fafc]"></div>
+
+    <div class="max-w-xl w-full animate__animated animate__fadeIn">
+        <header class="mb-10 flex flex-col items-center">
+            <div class="bg-blue-600 p-2 rounded-sm text-white mb-4 shadow-lg">
+                <i class="fa-solid fa-map-location-dot text-xl"></i>
+            </div>
+            <h1 class="text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">
+                Register New <span class="text-blue-600">Endpoint</span>
             </h1>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em] mt-3">Logistics Registry Management</p>
         </header>
 
-        <form method="POST" class="glass rounded-[2.5rem] p-6 md:p-10 shadow-xl shadow-[#3E2723]/5">
+        <form method="POST" class="glass p-8 md:p-10 shadow-xl relative">
             {% csrf_token %}
             
             <div class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="md:col-span-2">
-                        <label class="label-text">Full Name</label>
-                        <input type="text" name="full_name" required placeholder="JAMES CARTER" class="input-field">
+                        <label class="label-text">Authorized Recipient</label>
+                        <input type="text" name="full_name" required placeholder="Enter full legal name" class="input-field">
                     </div>
                     <div class="md:col-span-2">
-                        <label class="label-text">Phone Number</label>
-                        <input type="tel" name="phone_number" required placeholder="+91 00000 00000" class="input-field">
+                        <label class="label-text">Communication Line (Phone)</label>
+                        <input type="tel" name="phone_number" required placeholder="+00 00000 00000" class="input-field">
                     </div>
                 </div>
 
-                <hr class="border-[#3E2723]/5">
+                <div class="h-px bg-slate-100"></div>
 
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <div class="relative">
                         <label class="label-text flex items-center gap-2">
-                            Pincode <span id="pin-loader" class="loader"></span>
+                            Regional Pincode <span id="pin-loader" class="loader"></span>
                         </label>
-                        <input type="text" name="pincode" id="pincode" maxlength="6" required placeholder="686563" class="input-field">
+                        <input type="text" name="pincode" id="pincode" maxlength="6" required placeholder="000000" class="input-field border-blue-100 bg-blue-50/30">
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="label-text">House Info / Flat No.</label>
-                            <input type="text" name="house_info" required placeholder="VILLA 402" class="input-field">
+                            <label class="label-text">Structural Info (House/Flat)</label>
+                            <input type="text" name="house_info" required placeholder="E.G. SUITE 101" class="input-field">
                         </div>
                         <div>
-                            <label class="label-text">Locality / Area</label>
-                            <input type="text" name="locality" id="locality" required placeholder="E.G. KUMARAKOM" class="input-field">
+                            <label class="label-text">Locality / Sector</label>
+                            <input type="text" name="locality" id="locality" required placeholder="Sector / Area Name" class="input-field">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-5">
                         <div>
-                            <label class="label-text">City</label>
-                            <input type="text" name="city" id="city" required placeholder="CITY" class="input-field">
+                            <label class="label-text">Metropolis</label>
+                            <input type="text" name="city" id="city" required placeholder="City" class="input-field">
                         </div>
                         <div>
-                            <label class="label-text">State</label>
-                            <input type="text" name="state" id="state" required placeholder="STATE" class="input-field">
+                            <label class="label-text">Administrative State</label>
+                            <input type="text" name="state" id="state" required placeholder="State" class="input-field">
                         </div>
                     </div>
 
                     <div>
-                        <label class="label-text">Landmark (Optional)</label>
-                        <input type="text" name="landmark" placeholder="NEAR THE BACKWATERS" class="input-field">
+                        <label class="label-text">Navigation Reference (Landmark)</label>
+                        <input type="text" name="landmark" placeholder="Near major installation" class="input-field">
                     </div>
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-5 pt-2">
                     <div>
-                        <label class="label-text">Address Type</label>
-                        <div class="flex gap-3">
+                        <label class="label-text">Destination Category</label>
+                        <div class="flex gap-2">
                             <div class="flex-1">
                                 <input type="radio" name="address_type" id="HOME" value="HOME" class="hidden type-radio" checked>
-                                <label for="HOME" class="block text-center py-3 border border-[#3E2723]/10 rounded-xl text-[9px] font-black uppercase cursor-pointer transition-all">Home</label>
+                                <label for="HOME" class="block text-center py-3 border border-slate-200 rounded-sm text-[10px] font-black uppercase cursor-pointer transition-all hover:bg-slate-50">Residential</label>
                             </div>
                             <div class="flex-1">
                                 <input type="radio" name="address_type" id="WORK" value="WORK" class="hidden type-radio">
-                                <label for="WORK" class="block text-center py-3 border border-[#3E2723]/10 rounded-xl text-[9px] font-black uppercase cursor-pointer transition-all">Work</label>
+                                <label for="WORK" class="block text-center py-3 border border-slate-200 rounded-sm text-[10px] font-black uppercase cursor-pointer transition-all hover:bg-slate-50">Commercial</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-3 px-2">
-                        <input type="checkbox" name="is_default" id="is_default" class="w-4 h-4 rounded accent-[#00796B] cursor-pointer">
-                        <label for="is_default" class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 cursor-pointer">Set as Primary</label>
+                    <div class="flex items-center gap-3 px-1">
+                        <input type="checkbox" name="is_default" id="is_default" class="w-4 h-4 rounded-sm accent-blue-600 cursor-pointer">
+                        <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer hover:text-blue-600 transition-colors">Set as Primary Endpoint</label>
                     </div>
                 </div>
 
-                <div class="pt-4 space-y-3">
-                    <button type="submit" class="w-full bg-[#3E2723] text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#00796B] transition-all shadow-lg active:scale-95">
-                        Save Destination
+                <div class="pt-6 space-y-3">
+                    <button type="submit" class="btn-main w-full bg-slate-900 text-white py-4 text-[11px] tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
+                        Commit Destination to Registry
                     </button>
-                    <button type="button" onclick="window.history.back()" class="w-full bg-transparent text-[#3E2723] py-4 rounded-xl font-black uppercase text-[10px] tracking-widest border-2 border-[#3E2723]/20 hover:border-[#3E2723]/40 transition-all active:scale-95">
-                        Cancel
+                    <button type="button" onclick="window.history.back()" class="btn-main w-full bg-white text-slate-400 py-4 text-[11px] tracking-widest border border-slate-200 hover:text-slate-900 hover:border-slate-900 transition-all">
+                        Abort Entry
                     </button>
                 </div>
             </div>
         </form>
+        <p class="text-center text-[8px] font-bold text-slate-300 uppercase tracking-[0.6em] mt-10">Secure Data Transmit Protocol v2.6</p>
     </div>
 
     <script>
@@ -153,7 +228,7 @@
             }
         });
 
-        // Clear pincode if user manually edits the City
+        // Clear pincode if user manually edits the City to avoid data mismatch
         cityInput.addEventListener('input', () => {
             if (cityInput.value.length > 0) pinInput.value = "";
         });

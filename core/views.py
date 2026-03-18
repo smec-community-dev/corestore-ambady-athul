@@ -90,43 +90,7 @@ def product_single(request, slug):
         'is_in_cart': is_in_cart
     })
 
-@login_required
-def single_product_checkout(request, slug):
-    """
-    Buy Now from single product - clear cart and add single item with POST quantity
-    """
-    variant = get_object_or_404(ProductVariant.objects.select_related('product'), slug=slug)
-    
-    if variant.stock_quantity <= 0:
-        messages.error(request, 'Item out of stock.')
-        return redirect('product_single', slug=slug)
-    
-    # Get quantity from POST, validate and default to 1
-    quantity = 1
-    if request.method == 'POST':
-        try:
-            qty = int(request.POST.get('quantity', 1))
-            quantity = max(1, min(qty, variant.stock_quantity))
-        except (ValueError, TypeError):
-            quantity = 1
-    
-    # Get or create cart
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    
-    # Clear existing items for Buy Now (replace cart)
-    cart.items.all().delete()
-    
-    # Add single item with quantity
-    CartItem.objects.create(
-        cart=cart,
-        variant=variant,
-        quantity=quantity,
-        price_at_time=variant.selling_price
-    )
-    
-    # Set session flag for single checkout detection
-    request.session['single_checkout'] = True
-    request.session['single_product_slug'] = slug
-    
-    messages.success(request, f'{quantity} x {variant.product.name} added for quick checkout!')
-    return redirect('checkout')
+# Deprecated - Buy Now now handled in customer.views.buy_now_checkout
+# @login_required
+# def single_product_checkout(request, slug):
+#     pass
