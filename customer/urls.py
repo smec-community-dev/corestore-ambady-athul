@@ -22,14 +22,17 @@ urlpatterns = [
     path('cart/', views.user_cart, name='cart'),
     path('cart/add/<slug:slug>', views.user_addto_cart, name='add_cart'),
     path('cart/update/<uuid:item_id>/<str:action>/', views.cart_update_quantity, name='cart_update_quantity'),
-    path('cart/remove/<uuid:item Asc _id>/', views.cart_remove_item, name='cart_remove_item'),
+    path('cart/remove/<uuid:item_id>/', views.cart_remove_item, name='cart_remove_item'),
+
+    path('cart/checkout/', views.user_checkout, name='cart_checkout'),
 
     path('wishlist/', views.user_wishlist, name='wishlist'),
     # path('wishlist/add/<uuid:variant_id>/', views.add_to_wishlist_default, name='wishlist_add'),
     path('cart/add/<slug:slug>/', views.user_addto_cart, name='user_addto_cart'),
     # path('wishlist/remove/<uuid:item_id>/', views.remove_wishlist_item, name='remove_wishlist_item'),
     path('wishlist/remove/<str:item_id>/', views.remove_wishlist_item, name='remove_wishlist_item'),
-    # path('wishlist/toggle/<uuid:variant_id>/', views.toggle_wishlist Asc _item, name='wishlist_toggle'),
+    # path('wishlist/toggle/<uuid:variant_id>/', views.toggle_wishlist_item, name='wishlist_toggle'),
+
     path('wishlist/toggle/<slug:variant_slug>/', views.toggle_wishlist_item, name='wishlist_toggle'),
     path('wishlist/set-active/', views.set_active_wishlist, name='set_active_wishlist'),
     path('wishlist/delete/<uuid:wishlist_id>/', views.delete_wishlist, name='delete_wishlist'),
@@ -38,9 +41,10 @@ urlpatterns = [
 
     path('orders/', views.user_orders, name='orders'),
     path('track-order/<uuid:order_id>/', views.user_track, name='track_order'),
-    path('checkout/', views.cart_checkout, name='cart_checkout'),
-    path('buy-now/<slug:slug>/', views.buy_now_checkout, name='buy_now_checkout'),
+    path('checkout/', views.user_checkout, name='checkout'),
+
+path('buy-now/<slug:slug>/', views.buy_now_checkout, name='buy_now_checkout'),
+
     path('checkout/process/', views.user_checkout_process, name='checkout_process'),
     path('order/success/<uuid:order_id>/', views.order_success, name='order_success'),
 ]
-

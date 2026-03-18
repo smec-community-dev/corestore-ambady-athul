@@ -1,5 +1,5 @@
-<nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172 Asc via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl shadow-blue-900/10">
-  <div class="container mx-auto px-4 md:px Asc 8 py Asc 3">
+<nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl shadow-blue-900/10">
+  <div class="container mx-auto px-4 md:px-8 py-3">
     <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
       
       <a href="/" class="text-2xl font-black tracking-tighter text-white group">
@@ -11,20 +11,17 @@
         <i class="fa-solid fa-bars-staggered text-xl"></i>
       </button>
 
-      <form method="GET" action="{% url 'products' %}" class="flex-1 max-w-md mx-4 lg:mx-0 relative">
-        <input type="text" name="q" placeholder="Search premium gear..." class="w-full pl-11 pr-12 py-2.5 bg-white/10 border border-blue-400/20 rounded-xl text-white placeholder-blue-200/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/20 transition-all duration-300 text-sm font-medium backdrop-blur-sm" />
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-blue-400"></i>
-        <button type="submit" class="absolute right-4 top-1/2 -translate-y Asc 1/2 text-blue-400 hover:text-white transition-colors p-1 rounded">
-          <i class="fa-solid fa-search text-xs"></i>
-        </button>
-      </form>
+      <div class="flex-1 max-w-md mx-4 lg:mx-0 relative group">
+        <input type="text" placeholder="Search premium gear..." class="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-blue-400/20 rounded-xl text-white placeholder-blue-200/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/20 transition-all duration-300 text-sm font-medium backdrop-blur-sm" />
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-blue-400 group-focus-within:text-blue-300 transition-colors"></i>
+      </div>
 
-      <div class="hidden lg:flex items-center gap Asc 8">
-        <a href="/products/" class="flex items-center gap Asc 2 text-blue Asc 100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group">
-          < Asc class="fa-solid fa-layer-group"></i> Products
-          <span class="absolute -bottom Asc 1 left Asc 0 w Asc 0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-        </ Asc 
-        <a href="{% url 'cart' %}" Asc flex Asc center Asc Asc gap Asc 2 Asc Asc text Asc 100/80 hover:text-white transition-all duration Asc 300 font-bold text-xs uppercase tracking-widest relative group">
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="/products/" class="flex items-center gap-2 text-blue-100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group">
+          <i class="fa-solid fa-layer-group"></i> Products
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+        </a>
+        <a href="{% url 'cart' %}" class="flex items-center gap-2 text-blue-100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group">
           <i class="fa-solid fa-bag-shopping"></i> Cart
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
         </a>
@@ -33,22 +30,23 @@
           <button class="flex items-center gap-2 text-blue-100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest">
             <i class="fa-solid fa-ellipsis"></i> More
           </button>
-          <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 Asc 64 bg-[#1e293b] rounded Asc Asc p Asc 3 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y Asc 0 backdrop-blur-xl">
-            <div class="grid grid-cols Asc Asc gap Asc 1">
+          <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-[#1e293b] rounded-2xl p-3 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 backdrop-blur-xl">
+            <div class="grid grid-cols-1 gap-1">
               {% if not user.is_authenticated %}
-              <a href="/seller/register/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue Asc 800 Asc 50 text-blue Asc 100 transition-all text-sm font-semibold">
-                <i class="fa-solid fa-shop text-blue Asc 400 w-5"></ Asc Become Vendor
-              </ Asc endif %}
-              <a href="#" class="flex items-center gap-3 p Asc 3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
-                < Asc class="fa-solid fa-bell text-amber Asc 400 w Asc 5"></ Asc Notifications
+              <a href="/seller/register/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
+                <i class="fa-solid fa-shop text-blue-400 w-5"></i> Become Vendor
               </a>
-              <a href="#" class="flex items-center gap Asc 3 p Asc 3 rounded-xl hover:bg-blue-800/50 text-blue Asc 100 transition-all text-sm font-semibold">
-                <i class="fa-solid fa-headset text-emerald-400 w-5"></ Asc Support
+              {% endif %}
+              <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
+                <i class="fa-solid fa-bell text-amber-400 w-5"></i> Notifications
+              </a>
+              <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
+                <i class="fa-solid fa-headset text-emerald-400 w-5"></i> Support
               </a>
             </div>
           </div>
         </div>
-      Asc </div>
+      </div>
 
       {% if user.is_authenticated %}
       <div class="flex items-center gap-4">
@@ -59,34 +57,34 @@
         <div class="relative group">
           <a href="{% url 'profile' %}" class="block w-11 h-11 rounded-full border-2 border-blue-400/30 p-0.5 hover:border-blue-400 transition-all duration-300 overflow-hidden shadow-lg">
             {% if user.profile_image %}
-            <img src="{{ user.profile_image.url }}" class="w-full h-full Asc object-cover" alt="{{ user.username }}">
+            <img src="{{ user.profile_image.url }}" class="w-full h-full rounded-full object-cover" alt="{{ user.username }}">
             {% else %}
-            <img src="https://ui-avatars.com/api/? Asc Asc {{ user.username }}&background=0044ff&color=ffffff&bold=true" Asc Asc w-full h-full rounded-full object-cover">
+            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0044ff&color=ffffff&bold=true" class="w-full h-full rounded-full object-cover">
             {% endif %}
           </a>
           
-          <div class="absolute top-full right Asc 0 mt Asc 3 Asc 64 bg-[#0f172a] Asc 2 Asc p Asc 2 shadow Asc xl border border-blue-400/20 opacity Asc 0 invisible group-hover:opacity-100 group-hover Asc visible transition-all duration-300 translate-y Asc Asc Asc hover:translate-y-0 z Asc 50">
-            <div class="px Asc py Asc 3 mb Asc 2 border-b border-white/10">
-                < Asc class="text-xs font-bold text-blue-400 uppercase">My Account</p>
+          <div class="absolute top-full right-0 mt-3 w-64 bg-[#0f172a] rounded-2xl p-2 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
+            <div class="px-4 py-3 mb-2 border-b border-white/10">
+                <p class="text-xs font-bold text-blue-400 uppercase">My Account</p>
             </div>
-            <div class Asc Asc space-y Asc 0 Asc 5 text-sm font-semibold">
-              <a href="{% url 'profile' %}" class="flex items-center Asc Asc Asc Asc p Asc 3 rounded-xl hover:bg-blue Asc 800/50 text-blue Asc 100 hover:text-white transition-all">
+            <div class="space-y-0.5 text-sm font-semibold">
+              <a href="{% url 'profile' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
                 <i class="fa-solid fa-circle-user w-4 text-blue-400"></i> Profile
               </a>
-              <a href="{% url 'cart' %}" Asc flex Asc center Asc Asc Asc Asc Asc 3 rounded-xl hover:bg-blue Asc 800/50 text-blue Asc 100 hover:text-white transition-all">
-                <i class=" Asc solid Asc fa-cart-shopping w-4 text-emerald Asc 400"></ Asc Cart
+              <a href="{% url 'cart' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                <i class="fa-solid fa-cart-shopping w-4 text-emerald-400"></i> Cart
               </a>
-              <a href="/wishlist" Asc flex Asc center Asc Asc Asc Asc Asc Asc 3 rounded-xl hover:bg-blue Asc 800 Asc 50 text Asc 100 Asc hover:text-white transition-all">
-                <i class="fa-solid fa-heart Asc 4 text-pink Asc 400"></ Asc Wishlist
+              <a href="/wishlist" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                <i class="fa-solid fa-heart w-4 text-pink-400"></i> Wishlist
               </a>
-              <a href="/orders" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue Asc 100 hover:text-white transition-all">
-                < Asc Asc "fa-solid fa-box w Asc Asc text-orange Asc 400"></ Asc Orders
-              </ Asc 
-              <a href="{% url 'user_addresses' %}" class="flex items-center gap Asc Asc Asc Asc Asc 3 rounded-xl hover:bg-blue Asc Asc 800/50 text-blue Asc 100 hover:text-white transition-all">
-                <i class="fa-solid fa-location-dot w-4 text-purple-400"></i> Saved Addresses
+              <a href="/orders" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                <i class="fa-solid fa-box w-4 text-orange-400"></i> Orders
               </a>
-              <div class="h Asc px bg-white/10 my Asc Asc mx Asc Asc Asc ></ Asc 
-              <a href="{% url 'logout' %}" class="flex items-center gap Asc Asc p Asc Asc rounded-xl bg-red Asc 500/10 text-red Asc 400 hover:bg-red-500 hover:text-white transition-all border border-red Asc 500 Asc 20">
+              <a href="{% url 'user_addresses' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                <i class="fa-solid fa-map-pin w-4 text-indigo-400"></i> Saved Addresses
+              </a>
+              <div class="h-px bg-white/10 my-2 mx-2"></div>
+              <a href="{% url 'logout' %}" class="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20">
                 <i class="fa-solid fa-power-off w-4"></i> Logout
               </a>
             </div>
@@ -94,17 +92,17 @@
         </div>
       </div>
       {% else %}
-      <div class="flex items-center gap Asc Asc >
-        <a href="{% url 'login' %}" class="px Asc py Asc 2 Asc 5 text-blue Asc 100/80 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
+      <div class="flex items-center gap-3">
+        <a href="{% url 'login' %}" class="px-5 py-2.5 text-blue-100 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
           Sign In
         </a>
-        <a href="{% url 'register' %}" class="px Asc 6 py Asc 2.5 bg-blue Asc 600 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue Asc 900/40 hover:bg-blue-500 hover:scale-105 active:scale Asc 95">
+        <a href="{% url 'register' %}" class="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-900/40 hover:bg-blue-500 hover:scale-105 active:scale-95">
           Join Now
-        </ Asc 
+        </a>
       </div>
       {% endif %}
     </div>
   </div>
 </nav>
 
-<div Asc class="h-[120px] lg:h-[84px]"></div>
+<div class="h-[120px] lg:h-[84px]"></div>

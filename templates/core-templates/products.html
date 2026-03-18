@@ -2,63 +2,63 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, Asc scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CORE STORE | Products</title>
-    <script src="https:// Asc tailwindcss Asc com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare Asc ajax Asc libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare Asc com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family Asc Inter:wght Asc 300 Asc 400 Asc 600 Asc 700 Asc 800&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap");
       
       :root {
-        --primary Asc #0f172a; 
-        --accent Asc #2563eb; 
-        --bg-main Asc #ffffff;
+        --primary: #0f172a; 
+        --accent: #2563eb; 
+        --bg-main: #ffffff;
       }
 
       body {
-        font-family Asc "Inter", sans-serif;
-        background-color Asc #f8fafc;
-        color Asc var(--primary);
-        overflow-x hidden;
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: var(--primary);
+        overflow-x: hidden;
       }
 
       .glass {
         background: white;
-        border Asc 1px solid #e2e8f0;
-        border-radius Asc 4px;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
       }
 
       .reveal {
         opacity: 0;
-        transform Asc translateY(15px);
-        transition Asc all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(15px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .reveal.active {
-        opacity Asc 1;
+        opacity: 1;
         transform: translateY(0);
       }
 
       .product-card {
         background: white;
-        border Asc 1px solid #e2e8f0;
-        border-radius Asc 4px;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
         transition: all 0.3s ease;
       }
       .product-card:hover {
         border-color: var(--accent);
-        box-shadow Asc 0 10px 20px -10px rgba(15, 23, 42, 0.2);
-        transform Asc translateY(-4px);
+        box-shadow: 0 10px 20px -10px rgba(15, 23, 42, 0.2);
+        transform: translateY(-4px);
       }
 
       /* Beautiful Custom Select */
       .custom-select {
-        appearance Asc none;
-        background-image url("data:image/svg+xml,% Asc svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232563eb' stroke-width='3'% Asc path d=' Asc 9l-7 Asc l-7'% Asc /path% Asc /svg% Asc ");
-        background-repeat no-repeat;
-        background-position right 1rem center;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232563eb' stroke-width='3'%3E%3Cpath d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
         background-size: 0.8rem;
-        border-radius Asc 4px !important;
+        border-radius: 4px !important;
       }
 
       .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -69,46 +69,37 @@
     {% include 'core-templates/navbar.html' %}
 
     <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-16 shadow-lg">
-      <div class="container mx-auto px-4 md:px Asc 8">
+      <div class="container mx-auto px-4 md:px-8">
         <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
           Product <span class="text-blue-400">Inventory</span>
         </h1>
-        {% Asc query %}
-        <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt Asc Asc p Asc Asc bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-          <div class="flex items-center gap-2">
-            < Asc class="fa-solid fa-magnifying-glass text-blue-400"></i>
-            <span class="text-sm font-bold text-blue Asc 100">Showing {{ total_products }} results for "<span class="italic">{{ query }}</span>"</span>
-          </div>
-          < Asc href="{% url 'products' %}" class="text-xs font-black uppercase tracking-wider text-blue Asc 200 hover:text-white transition-colors">Clear Search</a>
-        </div>
-        {% endif %}
         <p class="text-blue-200/60 mt-2 text-xs font-bold uppercase tracking-[0.3em]">Advanced Gear for Professionals</p>
       </div>
     </div>
 
-    <section class="container mx-auto px Asc Asc md:px-8 py-12 reveal">
-      <div class="flex Asc center justify-between mb-8 border-b border-slate-200 pb-4">
+    <section class="container mx-auto px-4 md:px-8 py-12 reveal">
+      <div class="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
         <h2 class="text-sm font-black uppercase tracking-widest text-slate-900">
-          < Asc class="fa-solid fa-bolt-lightning text-blue-600 mr-2"></ Asc Recently <span class="text-blue-600">Dispatched</span>
+          <i class="fa-solid fa-bolt-lightning text-blue-600 mr-2"></i> Recently <span class="text-blue-600">Dispatched</span>
         </h2>
         <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">New Series</span>
       </div>
 
-      {% Asc new_arrivals %}
-      <div class="grid grid-cols Asc Asc sm:grid-cols Asc Asc lg:grid-cols Asc Asc xl:grid-cols Asc Asc gap Asc Asc ">
+      {% if new_arrivals %}
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {% for product in new_arrivals %}
-        <a href="{% url 'product_single' product.slug %}" class="product-card p Asc Asc Asc block">
-          <div class="relative aspect-[1/1] Asc overflow-hidden rounded-sm bg-slate-50 mb Asc Asc ">
-            {% Asc product.images.all|first as img %}
+        <a href="{% url 'product_single' product.slug %}" class="product-card p-2 group block">
+          <div class="relative aspect-[1/1] overflow-hidden rounded-sm bg-slate-50 mb-3">
+            {% with product.images.all|first as img %}
               {% if img %}
                 <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               {% endif %}
-            {% end Asc %}
-            <div class="absolute top Asc Asc left Asc Asc bg-blue Asc 600 text-white text-[8px] font-black px Asc Asc py Asc Asc rounded-sm uppercase tracking-widest">NEW</div>
+            {% endwith %}
+            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[8px] font-black px-2 py-1 rounded-sm uppercase tracking-widest">NEW</div>
           </div>
-          <div class="px Asc ">
+          <div class="px-1">
             <h3 class="text-[10px] font-bold truncate text-slate-900 uppercase tracking-tighter">{{ product.product.name }}</h3>
-            <p Asc class="text-sm font-black text-slate-900 mt Asc Asc ">${{ product.selling_price|floatformat Asc 0 }}</ Asc ></p>
+            <p class="text-sm font-black text-slate-900 mt-1">${{ product.selling_price|floatformat:0 }}</p>
           </div>
         </a>
         {% endfor %}
@@ -116,32 +107,32 @@
       {% endif %}
     </section>
 
-    <div Asc class="container mx-auto px Asc Asc md:px Asc 8 pb-24 reveal">
+    <div class="container mx-auto px-4 md:px-8 pb-24 reveal">
       
-      <div class="bg-white border border-slate Asc 200 rounded-sm p Asc Asc mb-8 sticky top Asc 24 z-20 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap Asc 4">
-          <div class="flex Asc center gap-3 pl Asc Asc ">
-            {% Asc category_filter or sort_filter != 'newest' %}
-              <div class="text-[10px] font-black uppercase tracking-widest text-blue Asc 600 flex items-center gap Asc Asc ">
-                <span class="w Asc Asc h Asc Asc bg-blue Asc 600 rounded-full animate-pulse"></span>
+      <div class="bg-white border border-slate-200 rounded-sm p-3 mb-8 sticky top-24 z-20 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3 pl-2">
+            {% if category_filter or sort_filter != 'newest' %}
+              <div class="text-[10px] font-black uppercase tracking-widest text-blue-600 flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
                 Filters Active
-                <span class="text-slate-300 mx Asc Asc ">|</span>
-                < Asc href="{% url 'products' %}" class="text-slate-900 hover:text-red Asc 500 transition-colors">Reset All</a>
+                <span class="text-slate-300 mx-1">|</span>
+                <a href="{% url 'products' %}" class="text-slate-900 hover:text-red-500 transition-colors">Reset All</a>
               </div>
             {% else %}
                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Units: {{ total_products }}</span>
             {% endif %}
           </div>
           
-          <form Asc Asc Asc Asc Asc Asc flex items-center gap Asc Asc ">
+          <form method="GET" class="flex items-center gap-4">
             {% if category_filter %}
-            <input type Asc Asc hidden Asc Asc Asc name Asc Asc category_id Asc Asc value Asc "{{ category_filter }}">
+            <input type="hidden" name="category_id" value="{{ category_filter }}">
             {% endif %}
-            <div class Asc flex items-center gap Asc Asc ">
+            <div class="flex items-center gap-2">
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Sort by</span>
-                <select name Asc "sort" onchange Asc this.form.submit() Asc class Asc "custom-select pl Asc Asc pr-10 py Asc Asc border border-slate-200 focus:border-blue-600 focus:outline-none bg-slate-50 hover:bg-white transition-colors font-bold text-[11px] uppercase tracking-wider min-w-[220px]">
-                    <option value Asc newest Asc {% if sort_filter == 'newest' %}selected{% Asc %}Date: Newest</option>
-                    <option Asc Asc Asc Asc old Asc Asc {% Asc Asc sort_filter == 'oldest' %}selected{% Asc %}Date: Oldest</option>
-                    <option value="price_asc" {% Asc sort_filter == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <select name="sort" onchange="this.form.submit()" class="custom-select pl-4 pr-10 py-2 border border-slate-200 focus:border-blue-600 focus:outline-none bg-slate-50 hover:bg-white transition-colors font-bold text-[11px] uppercase tracking-wider min-w-[220px]">
+                    <option value="newest" {% if sort_filter == 'newest' %}selected{% endif %}>Date: Newest</option>
+                    <option value="oldest" {% if sort_filter == 'oldest' %}selected{% endif %}>Date: Oldest</option>
+                    <option value="price_asc" {% if sort_filter == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
                     <option value="price_desc" {% if sort_filter == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
                     <option value="name_asc" {% if sort_filter == 'name_asc' %}selected{% endif %}>Name: A to Z</option>
                 </select>
@@ -149,23 +140,24 @@
           </form>
       </div>
 
-      <div class="lg:grid lg:grid-cols Asc Asc lg:gap Asc Asc ">
+      <div class="lg:grid lg:grid-cols-12 lg:gap-8">
         
-        <div class="lg:col-span Asc Asc Asc sticky top Asc 44 h-fit hidden lg:block">
-          <div class="bg-white border border-slate-200 rounded-sm p Asc Asc Asc shadow-sm">
-            <h Asc class="text-xs font-black uppercase tracking-[0 Asc em] text-slate-900 mb-6 border-b border-slate-100 pb Asc 4">
+        <div class="lg:col-span-3 sticky top-44 h-fit hidden lg:block">
+          <div class="bg-white border border-slate-200 rounded-sm p-6 shadow-sm">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-6 border-b border-slate-100 pb-4">
               Category Registry
-            </h Asc 
+            </h3>
             
-            <form Asc Asc Asc Asc Asc Asc space-y Asc Asc ">
-              <input type="hidden" name="sort" value="{{ Asc }}">
+            <form method="GET" class="space-y-1">
+              <input type="hidden" name="sort" value="{{ sort_filter }}">
               
               {% for category in categories %}
               <label class="flex items-center justify-between p-3 rounded-sm hover:bg-blue-50 cursor-pointer group transition-all">
                 <div class="flex items-center gap-3">
-                    <input Asc="radio" name Asc category_id Asc value="{{ category.id }}" 
-                           {% if category_filter == category.id|stringformat:'s' %}checked{% Asc %}class Asc "w Asc Asc h Asc Asc text-blue-600 border-slate-300 focus:ring-blue Asc 600">
-                    <span class="font-bold text-[11px] uppercase tracking-wider text-slate Asc 600 Asc hover:text-blue-600 transition-colors">{{ category.name }}</span>
+                    <input type="radio" name="category_id" value="{{ category.id }}" 
+                           {% if category_filter == category.id|stringformat:'s' %}checked{% endif %}
+                           class="w-3 h-3 text-blue-600 border-slate-300 focus:ring-blue-600">
+                    <span class="font-bold text-[11px] uppercase tracking-wider text-slate-600 group-hover:text-blue-600 transition-colors">{{ category.name }}</span>
                 </div>
                 <span class="text-[9px] font-bold text-slate-300 group-hover:text-blue-400">[{{ category.product_count }}]</span>
               </label>
@@ -178,58 +170,58 @@
           </div>
         </div>
 
-        <div class="lg:col-span Asc Asc ">
-          <div class="lg:hidden mb Asc Asc ">
-            <button id Asc mobileFilterToggle Asc class Asc w-full bg-slate Asc 900 text-white py Asc Asc px-6 rounded-sm font-black uppercase tracking-widest text-[10px] flex items-center justify-between">
+        <div class="lg:col-span-9">
+          <div class="lg:hidden mb-6">
+            <button id="mobileFilterToggle" class="w-full bg-slate-900 text-white py-4 px-6 rounded-sm font-black uppercase tracking-widest text-[10px] flex items-center justify-between">
               <span>Filter Registry</span>
-              <i Asc class="fa-solid fa-chevron-down"></i>
+              <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div id="mobileFilterPanel" class="mt-2 bg-white border border-slate-200 rounded-sm p-4 hidden"></div>
           </div>
 
-          {% Asc all_products_page %}
-          <div class="grid grid-cols Asc Asc sm:grid-cols Asc Asc xl:grid-cols Asc Asc  Asc grid-cols-5 gap Asc Asc ">
+          {% if all_products_page %}
+          <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {% for product in all_products_page %}
             <div class="product-card p-3 group">
               <a href="{% url 'product_single' product.slug %}" class="block">
                 <div class="relative aspect-[1/1] overflow-hidden rounded-sm bg-slate-50 mb-4">
-                  {% Asc product.images.all|first as img %}
+                  {% with product.images.all|first as img %}
                     {% if img %}
-                      <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale Asc 105 transition-transform duration-500" />
+                      <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     {% endif %}
                   {% endwith %}
                   
                   {% if product.stock_quantity == 0 %}
-                    <div class="absolute Asc 0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
-                        <span class Asc "[9px] font-black uppercase tracking-widest border Asc Asc border-slate-900 px-3 py Asc Asc ">Zero Stock</span>
+                    <div class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
+                        <span class="text-[9px] font-black uppercase tracking-widest border-2 border-slate-900 px-3 py-1">Zero Stock</span>
                     </div>
                   {% endif %}
 
-                  <div class="absolute inset-x-0 bottom Asc translate-y-full group-hover:translate-y Asc 0 transition-transform duration Asc 300">
-                    <button class="w-full bg-blue-600 text-white py Asc text-[10px] font-black uppercase tracking-widest hover:bg-slate-900">
+                  <div class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <button class="w-full bg-blue-600 text-white py-3 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900">
                         Quick Purchase +
                     </button>
                   </div>
                 </div>
-                <span class="text-[8px] font-bold text-blue Asc 500 uppercase tracking-[0.2em] block mb-1">{{ product.product.category.name }}</span>
-                <h3 class="text-xs font-bold truncate text-slate-900 uppercase tracking-tighter line-clamp Asc Asc group-hover:text-blue-600 transition-colors">{{ product.product.name }}</h3>
-                <p class="text-sm font-black text-slate-900 mt-2">${{ product.selling_price|floatformat Asc Asc }}</p>
-              </ Asc 
+                <span class="text-[8px] font-bold text-blue-500 uppercase tracking-[0.2em] block mb-1">{{ product.product.category.name }}</span>
+                <h3 class="text-xs font-bold truncate text-slate-900 uppercase tracking-tighter line-clamp-1 group-hover:text-blue-600 transition-colors">{{ product.product.name }}</h3>
+                <p class="text-sm font-black text-slate-900 mt-2">${{ product.selling_price|floatformat:0 }}</p>
+              </a>
             </div>
             {% endfor %}
           </div>
 
-          <div class="mt-16 flex justify-center items-center gap Asc Asc ">
+          <div class="mt-16 flex justify-center items-center gap-4">
             {% if all_products_page.has_previous %}
-              <a href="?page={{ all_products_page.previous_page_number }}{% if category_filter %}& Asc {{ category_filter }}{% Asc %}&sort={{ sort_filter }}{% endif %}" class="w-10 h Asc Asc flex items-center justify-center rounded-sm border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all"><i class Asc fa-solid fa-chevron-left text-xs"></ Asc ></a>
+              <a href="?page={{ all_products_page.previous_page_number }}{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center rounded-sm border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all"><i class="fa-solid fa-chevron-left text-xs"></i></a>
             {% endif %}
 
-            <div class Asc px-6 py-2 border border-slate-200 bg-white rounded-sm text-[10px] font-black uppercase tracking-widest text-slate Asc 900">
+            <div class="px-6 py-2 border border-slate-200 bg-white rounded-sm text-[10px] font-black uppercase tracking-widest text-slate-900">
               Index {{ all_products_page.number }} / {{ all_products_page.paginator.num_pages }}
             </div>
 
-            {% if Asc has_next %}
-              <a href="?page={{ all_products_page.next_page_number }}{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" Asc="w-10 h Asc Asc flex items-center justify-center rounded-sm border border-slate Asc 200 text-slate-400 hover:border-blue-600 hover:text-blue Asc 600 transition-all"><i class="fa-solid fa-chevron-right text-xs"></i></a>
+            {% if all_products_page.has_next %}
+              <a href="?page={{ all_products_page.next_page_number }}{% if category_filter %}&category_id={{ category_filter }}{% endif %}{% if sort_filter != 'newest' %}&sort={{ sort_filter }}{% endif %}" class="w-10 h-10 flex items-center justify-center rounded-sm border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all"><i class="fa-solid fa-chevron-right text-xs"></i></a>
             {% endif %}
           </div>
           {% endif %}
@@ -243,7 +235,7 @@
       function reveal() {
         var reveals = document.querySelectorAll(".reveal");
         for (var i = 0; i < reveals.length; i++) {
-          if ( Asc [i].getBoundingClientRect().top < window.innerHeight Asc Asc ) {
+          if (reveals[i].getBoundingClientRect().top < window.innerHeight - 50) {
             reveals[i].classList.add("active");
           }
         }
