@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Login | CoreStore Merchant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --brand-teal: #4F7D88;
+            --brand-bg: #F8FAFB;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--brand-bg); 
+            color: #2D3748;
+            overflow: hidden;
+        }
+
+        .main-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        .input-box {
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            transition: all 0.3s ease;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--brand-teal);
+            box-shadow: 0 0 0 4px rgba(79, 125, 136, 0.1);
+        }
+
+        .bg-side-panel {
+            background-image: linear-gradient(rgba(79, 125, 136, 0.8), rgba(79, 125, 136, 0.9)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .back-btn {
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--brand-teal);
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- <div class="fixed top-8 left-8 z-50">
+        <a href="/sellerhome/" class="back-btn flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-[0.2em]">
+            <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center bg-white shadow-sm">
+                <i class="fa-solid fa-arrow-left"></i>
+            </div>
+            Back to Inventory
+        </a>
+    </div> -->
+
+    <div class="main-card w-full max-w-5xl lg:h-[650px] flex flex-col lg:row overflow-hidden rounded-[2rem] relative">
+        
+        <div class="flex flex-col lg:flex-row h-full">
+            <div class="w-full lg:w-1/2 p-10 md:p-16 flex flex-col justify-center">
+                
+                <div class="mb-10 text-center lg:text-left">
+                    <div class="flex items-center justify-center lg:justify-start gap-2 mb-6">
+                        <span class="text-xl font-extrabold tracking-tighter uppercase">Studio<span class="text-[#4F7D88]">Pro</span></span>
+                    </div>
+                    <h1 class="text-3xl font-black text-[#2D3748] tracking-tight">Merchant <span class="text-[#4F7D88]">Access.</span></h1>
+                    <p class="text-gray-400 text-[11px] font-bold uppercase tracking-widest mt-2">Manage your storefront & inventory</p>
+                </div>
+
+                {% if messages %}
+                <div class="mb-6 space-y-2">
+                    {% for message in messages %}
+                    <div class="bg-red-50 border-l-4 border-red-400 text-red-600 px-4 py-3 rounded-lg text-xs font-bold flex items-center gap-3">
+                        <i class="fa-solid fa-circle-exclamation"></i> {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form class="space-y-6" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-bold uppercase tracking-widest text-gray-500 ml-1">Account Username</label>
+                        <div class="input-box relative rounded-xl flex items-center">
+                            <i class="fa-solid fa-user absolute left-5 text-gray-300 text-sm"></i>
+                            <input type="text" placeholder="e.g. merchant_admin" name="username" class="w-full bg-transparent px-12 py-4 text-sm font-semibold text-gray-700 outline-none placeholder:text-gray-300" required>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center px-1">
+                            <label class="text-[11px] font-bold uppercase tracking-widest text-gray-500">Security Key</label>
+                            <a href="#" class="text-[10px] font-bold text-[#4F7D88] hover:underline uppercase">Forgot?</a>
+                        </div>
+                        <div class="input-box relative rounded-xl flex items-center">
+                            <i class="fa-solid fa-lock absolute left-5 text-gray-300 text-sm"></i>
+                            <input type="password" placeholder="••••••••" name="password" class="w-full bg-transparent px-12 py-4 text-sm font-semibold text-gray-700 outline-none" required>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 px-1 pt-2">
+                        <input type="checkbox" id="remember" class="accent-[#4F7D88] w-4 h-4 rounded border-gray-300 cursor-pointer">
+                        <label for="remember" class="text-[11px] font-bold text-gray-500 uppercase tracking-tight cursor-pointer select-none">Stay logged in for 30 days</label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#4F7D88] text-white py-4 rounded-xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#3D626B] transition-all shadow-lg shadow-[#4F7D88]/20 mt-4 flex items-center justify-center gap-3 group">
+                        Authorize & Login
+                        <i class="fa-solid fa-arrow-right-long text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </form>
+
+                <footer class="mt-12 text-center lg:text-left border-t border-gray-100 pt-8">
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-tight">
+                        New merchant partner? <a href="" class="text-[#4F7D88] hover:text-[#3D626B] font-black underline underline-offset-4">Apply for StudioPro</a>
+                    </p>
+                </footer>
+            </div>
+
+            <div class="hidden lg:block lg:w-1/2 bg-side-panel relative">
+                <div class="absolute inset-0 flex flex-col justify-end p-16">
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-white text-[10px] font-bold uppercase tracking-[0.2em]">Platform Status: Operational</span>
+                        </div>
+                        <h2 class="text-white text-2xl font-black leading-tight mb-4">Empowering the next generation of commerce.</h2>
+                        <p class="text-teal-50/70 text-xs font-medium leading-relaxed uppercase tracking-wider">Secure, scalable, and data-driven inventory management at your fingertips.</p>
+                        
+                        <div class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between">
+                            <div class="flex -space-x-3">
+                                <div class="w-8 h-8 rounded-full border-2 border-[#4F7D88] bg-gray-200"></div>
+                                <div class="w-8 h-8 rounded-full border-2 border-[#4F7D88] bg-gray-300"></div>
+                                <div class="w-8 h-8 rounded-full border-2 border-[#4F7D88] bg-gray-400"></div>
+                            </div>
+                            <span class="text-white/40 text-[9px] font-bold uppercase tracking-widest italic">Trusted by 2k+ Sellers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-8 text-center w-full pointer-events-none">
+        <p class="text-[9px] font-black uppercase tracking-[0.5em] text-gray-300">StudioPro Secure Environment &copy; 2026</p>
+    </div>
+
+</body>
+</html>
