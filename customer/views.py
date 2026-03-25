@@ -449,6 +449,11 @@ def user_profile(request):
         elif 'update_photo' in request.POST:
             image = request.FILES.get('image')
             if image:
+                # SAFETY CHECK: Only delete if an old image actually exists
+                if user_data.profile_image:
+                    user_data.profile_image.delete(save=False)
+                
+                # Assign the new image and save to the database
                 user_data.profile_image = image
                 user_data.save()
                 messages.success(request, 'Photo updated successfully!')
@@ -457,7 +462,7 @@ def user_profile(request):
 
         return redirect('profile') 
             
-    return render(request, 'customer-templates/userprofile.html', {'data': user_data,'addresses': addresses})
+    return render(request, 'customer-templates/userprofile.html', {'data': user_data, 'addresses': addresses})
 
 
 # @login_required
@@ -787,7 +792,6 @@ def cart_update_quantity(request, item_id, action):
 
 @login_required
 def cart_remove_item(request, item_id):
-    """Remove item via form POST"""
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     cart_item.delete()
     messages.info(request, "Item removed from cart.")
