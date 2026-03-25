@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from .models import *
@@ -876,8 +877,14 @@ def remove_wishlist_item(request, item_id):
     item.delete()
     return redirect(f"/wishlist/?id={wishlist_id}")
 
-@login_required
 def toggle_wishlist_item(request, variant_slug):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            'status': 'unauthenticated',
+            'message': 'You must be logged in to manage your wishlist.',
+            'login_url': f"{reverse('login')}?next={request.path}"
+        }, status=401)
+
     variant = get_object_or_404(ProductVariant, slug=variant_slug)
     
     # Get active wishlist

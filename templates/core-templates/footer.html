@@ -1,38 +1,37 @@
-<footer class="bg-gradient-to-t from-slate-900 via-black to-slate-950 border-t border-blue-500/10 pt-16 pb-12 relative overflow-hidden">
-  <!-- Background glow -->
+<footer class="bg-gradient-to-t from-slate-900 via-black to-slate-950 border-t border-blue-500/10 pt-10 pb-6 relative overflow-hidden">
   <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent"></div>
   
   <div class="container mx-auto px-6 relative z-10">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-      <!-- Logo & Description -->
-      <div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+      <div class="space-y-4">
         <a href="/" class="inline-block text-2xl font-black bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
           Core<span class="text-blue-400">Store</span>
         </a>
         <p class="text-gray-400 leading-relaxed text-sm max-w-md">
           Premium marketplace for elite performance gear. Curated selection, worldwide shipping, unmatched quality.
         </p>
-        <!-- Social -->
-        <div class="flex gap-4">
-          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
-            <i class="fab fa-discord text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+        
+        <div class="flex gap-3">
+          <a href="https://discord.com/login" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-black/50 rounded-xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-discord text-lg group-hover:rotate-12 group-hover:scale-110"></i>
           </a>
-          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
-            <i class="fab fa-twitter text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          <a href="https://x.com/login" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-black/50 rounded-xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <svg class="w-4 h-4 fill-current group-hover:rotate-12 group-hover:scale-110 transition-transform" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+              <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+            </svg>
           </a>
-          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
-            <i class="fab fa-instagram text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          <a href="https://www.instagram.com/accounts/login/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-black/50 rounded-xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-instagram text-lg group-hover:rotate-12 group-hover:scale-110"></i>
           </a>
-          <a href="#" class="w-12 h-12 bg-black/50 rounded-2xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
-            <i class="fab fa-tiktok text-xl group-hover:rotate-12 group-hover:scale-110"></i>
+          <a href="https://www.facebook.com/login/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-black/50 rounded-xl flex items-center justify-center border border-gray-700 hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400 hover:text-blue-300 transition-all duration-300 group">
+            <i class="fab fa-facebook-f text-lg group-hover:rotate-12 group-hover:scale-110"></i>
           </a>
         </div>
       </div>
 
-      <!-- Quick Links 1 -->
       <div>
-        <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Shop</h4>
-        <ul class="space-y-3 text-gray-400 text-sm">
+        <h4 class="text-white font-bold text-base mb-4 tracking-tight">Shop</h4>
+        <ul class="space-y-2 text-gray-400 text-sm">
           <li><a href="/products/" class="hover:text-white transition-colors duration-200 block py-1">All Products</a></li>
           <li><a href="{% url 'products' %}" class="hover:text-white transition-colors duration-200 block py-1">New Arrivals</a></li>
           <li><a href="{% url 'about' %}" class="hover:text-white transition-colors duration-200 block py-1">About Us</a></li>
@@ -40,24 +39,22 @@
         </ul>
       </div>
 
-      <!-- Quick Links 2 -->
       <div>
-        <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Support</h4>
-        <ul class="space-y-3 text-gray-400 text-sm">
+        <h4 class="text-white font-bold text-base mb-4 tracking-tight">Support</h4>
+        <ul class="space-y-2 text-gray-400 text-sm">
           <li><a href="{% url 'helpe_center' %}" class="hover:text-white transition-colors duration-200 block py-1">Help Center</a></li>
           <li><a href="{% url 'shipping_info' %}" class="hover:text-white transition-colors duration-200 block py-1">Shipping Info</a></li>
-          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Returns</a></li>
+          <li><a href="{% url 'orders' %}" class="hover:text-white transition-colors duration-200 block py-1">Returns</a></li>
           <li><a href="{% url 'support_or_contact' %}" class="hover:text-white transition-colors duration-200 block py-1">Contact</a></li>
         </ul>
       </div>
 
-      <!-- Newsletter -->
       <div>
-        <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Stay Updated</h4>
-        <p class="text-gray-400 text-sm mb-4">Get latest drops and exclusive offers</p>
+        <h4 class="text-white font-bold text-base mb-4 tracking-tight">Stay Updated</h4>
+        <p class="text-gray-400 text-sm mb-3">Get latest drops and exclusive offers</p>
         <div class="relative">
-          <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/30 transition-all text-sm backdrop-blur-sm">
-          <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-cyan-400 text-black px-5 py-2 rounded-lg font-bold text-xs uppercase tracking-wider hover:scale-105 transition-all shadow-lg absolute -mr-1">
+          <input type="email" placeholder="your@email.com" class="w-full px-4 py-2 bg-black/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/30 transition-all text-sm backdrop-blur-sm">
+          <button class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-cyan-400 text-black px-4 py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider hover:scale-105 transition-all shadow-lg">
             Subscribe
           </button>
         </div>
@@ -65,8 +62,7 @@
       </div>
     </div>
 
-    <!-- Bottom Bar -->
-    <div class="border-t border-gray-800 pt-8 text-center">
+    <div class="border-t border-gray-800 pt-6 text-center">
       <p class="text-gray-500 text-sm font-mono uppercase tracking-wider">
         © 2026 CoreStore Elite. Crafted with <i class="fa-solid fa-heart text-red-500 text-xs"></i> for performance.
       </p>
