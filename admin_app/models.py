@@ -34,38 +34,51 @@ class Coupon(models.Model):
         return self.code
 
 class OfferDiscountBridge(models.Model):
-    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
-    discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE  ,null=True,blank=True)
+
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE  ,null=True,blank=True)
+
     
     def __str__(self):
         return f"{self.offer.title} - {self.discount.name}"
 
 class ProductOfferBridge(models.Model):
-    product = models.ForeignKey("seller.Product", on_delete=models.CASCADE)
-    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+    product = models.ForeignKey("seller.Product", on_delete=models.CASCADE  ,null=True,blank=True)
+
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE  ,null=True,blank=True)
+
     
     def __str__(self):
         return f"{self.product.name} - {self.offer.title}"
 
 class CategoryOfferBridge(models.Model):
-    category = models.ForeignKey("core.Category", on_delete=models.CASCADE)
-    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+    category = models.ForeignKey("core.Category", on_delete=models.CASCADE  ,null=True,blank=True)
+
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE  ,null=True,blank=True)
+
 
 class ProductDiscountBridge(models.Model):
-    product = models.ForeignKey("seller.Product", on_delete=models.CASCADE)
-    discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
+    product = models.ForeignKey("seller.Product", on_delete=models.CASCADE  ,null=True,blank=True)
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE ,null=True,blank=True)
 
 class CategoryDiscountBridge(models.Model):
     category = models.ForeignKey("core.Category", on_delete=models.CASCADE)
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
 
 class PlatformCommission(models.Model):
-    seller = models.ForeignKey("seller.SellerProfile", on_delete=models.CASCADE)
-    order_item = models.ForeignKey("customer.OrderItem", on_delete=models.CASCADE)
+    seller = models.ForeignKey(
+        "seller.SellerProfile",
+        on_delete=models.CASCADE,
+        null=True,        # 👈 add this
+        blank=True        # 👈 add this
+    )
+    order_item = models.ForeignKey(
+        "customer.OrderItem",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     commission_percentage = models.FloatField()
     commission_amount = models.DecimalField(max_digits=10, decimal_places=2)
     settlement_status = models.CharField(max_length=20, default='UNSETTLED')
     settled_at = models.DateTimeField(null=True, blank=True)
-    
-    def __str__(self):
-        return f"Comm: {self.commission_amount}"

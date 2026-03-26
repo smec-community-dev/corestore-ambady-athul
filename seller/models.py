@@ -59,8 +59,10 @@ class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     slug = models.SlugField(unique=True, blank=True)  
     sku_code = models.CharField(max_length=100, unique=True)
-    mrp = models.DecimalField(max_digits=10, decimal_places=2)
-    selling_price = models.DecimalField(max_digits=10, decimal_places=2)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2  ,null=True,blank=True)
+
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2  ,null=True,blank=True)
+
     cost_price = models.DecimalField(max_digits=10, decimal_places=2)
     stock_quantity = models.IntegerField()
     weight = models.FloatField(help_text="Weight in kg")
@@ -102,7 +104,11 @@ class VariantAttributeBridge(models.Model):
     option = models.ForeignKey(AttributeOption, on_delete=models.CASCADE)
 
 class ReturnRequest(models.Model):
-    order_item = models.ForeignKey("customer.OrderItem", on_delete=models.CASCADE)
+    order_item = models.ForeignKey(
+    "customer.OrderItem",
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True)
     seller = models.ForeignKey("seller.SellerProfile", on_delete=models.CASCADE)
     reason = models.TextField()
     status = models.CharField(max_length=20, default="requested")
