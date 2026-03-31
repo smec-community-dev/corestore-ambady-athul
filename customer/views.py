@@ -13,6 +13,8 @@ from .utils import generate_otp, send_otp_email
 from decimal import Decimal
 from django.utils import timezone
 from datetime import timedelta
+from core.decorator import customer_required
+
 
 User = get_user_model()
 
@@ -45,7 +47,7 @@ def home(request):
     return render(request, 'core-templates/mainhome.html', context)
 
 
-@login_required
+@customer_required
 def buy_now_checkout(request, slug):
     """
     Buy Now from single product - clear cart and add single item with POST quantity
@@ -422,7 +424,7 @@ def user_logout(request):
     messages.error(request, 'Logout from account')
     return redirect('/')
 
-@login_required
+@customer_required
 def user_profile(request):
     user_data = request.user
     addresses = Address.objects.filter(user=request.user)
@@ -480,12 +482,12 @@ def user_profile(request):
 #     """Handles textual profile updates separately if needed."""
 #     return redirect('profile')
 
-@login_required
+@customer_required
 def user_addresses(request):
     addresses = Address.objects.filter(user=request.user)
     return render(request, 'customer-templates/useraddresses.html', {'addresses': addresses})
 
-@login_required
+@customer_required
 def user_address_adding(request):
     if request.method == "POST":
         address_obj = Address()
@@ -518,7 +520,7 @@ def user_address_adding(request):
 
     return render(request, 'customer-templates/useradressadding.html')
 
-@login_required
+@customer_required
 def user_address_update(request, address_id):
 
     address = Address.objects.get(id=address_id, user=request.user)
@@ -555,7 +557,7 @@ def user_address_update(request, address_id):
 
     return render(request, 'customer-templates/useraddressupdate.html', {'address': address})
 
-@login_required
+@customer_required
 def user_address_delete(request, address_id):
     address = Address.objects.get(id=address_id, user=request.user)
     
@@ -577,7 +579,7 @@ def user_address_delete(request, address_id):
 
     return redirect('user_addresses')
 
-@login_required
+@customer_required
 def user_cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart).prefetch_related('variant__product', 'variant__images')
@@ -709,7 +711,7 @@ def user_cart(request):
 # Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'message': str(e)
 # Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc })
     
-@login_required
+@customer_required
 def user_addto_cart(request, slug):
     if request.method == "POST":
         product_variant = get_object_or_404(ProductVariant, slug=slug)
@@ -745,7 +747,7 @@ def user_addto_cart(request, slug):
 
 
 
-@login_required
+@customer_required
 def cart_update_quantity(request, item_id, action):
     """Update cart item quantity (AJAX or form POST)"""
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
@@ -791,14 +793,14 @@ def cart_update_quantity(request, item_id, action):
     
     return redirect('cart')
 
-@login_required
+@customer_required
 def cart_remove_item(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     cart_item.delete()
     messages.info(request, "Item removed from cart.")
     return redirect('cart')
 
-@login_required
+@customer_required
 def user_wishlist(request):
     default_wishlist, _ = Wishlist.objects.get_or_create(user=request.user, wishlist_name=request.user.username)
 
@@ -823,7 +825,7 @@ def user_wishlist(request):
         'default_wishlist': default_wishlist,
     })
 
-@login_required
+@customer_required
 def set_active_wishlist(request):
     if request.method == "POST":
         wishlist_id = request.POST.get('wishlist_id')
@@ -837,7 +839,7 @@ def set_active_wishlist(request):
         })
     return redirect('wishlist')
 
-@login_required
+@customer_required
 def create_wishlist(request):
     if request.method == "POST":
         name = request.POST.get('wishlist_name')
@@ -847,7 +849,7 @@ def create_wishlist(request):
             return redirect(f"/wishlist/?id={new_list.id}")
     return redirect('wishlist')
 
-@login_required
+@customer_required
 def rename_wishlist(request, wishlist_id):
     wishlist = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
     if request.method == "POST":
@@ -858,7 +860,7 @@ def rename_wishlist(request, wishlist_id):
             messages.success(request, "Collection renamed.")
     return redirect(f"/wishlist/?id={wishlist.id}")
 
-@login_required
+@customer_required
 def delete_wishlist(request, wishlist_id):
     wishlist = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
     if wishlist.wishlist_name != request.user.username:
@@ -870,7 +872,7 @@ def delete_wishlist(request, wishlist_id):
         messages.success(request, "Collection deleted.")
     return redirect('wishlist')
 
-@login_required
+@customer_required
 def remove_wishlist_item(request, item_id):
     item = get_object_or_404(WishlistItem, id=item_id, wishlist__user=request.user)
     wishlist_id = item.wishlist.id
@@ -926,7 +928,7 @@ def toggle_wishlist_item(request, variant_slug):
         'message': message
     })
 
-@login_required
+@customer_required
 def user_checkout(request):
     cart = Cart.objects.filter(user=request.user).first()
     
@@ -967,7 +969,7 @@ def user_checkout(request):
         'back_product_slug': back_product_slug
     })
 
-@login_required
+@customer_required
 def user_checkout_process(request):
     if request.method != 'POST':
         return redirect('checkout')
@@ -1040,7 +1042,7 @@ def user_checkout_process(request):
         messages.error(request, 'Order processing failed. Please try again.')
         return redirect('checkout')
 
-@login_required
+@customer_required
 def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     order_items = order.items.select_related('variant__product').prefetch_related('variant__images')
@@ -1049,7 +1051,7 @@ def order_success(request, order_id):
         'order_items': order_items
     })
 
-@login_required
+@customer_required
 def user_orders(request):
     orders = Order.objects.filter(
         user=request.user
@@ -1059,11 +1061,11 @@ def user_orders(request):
     ).order_by('-ordered_at')
     return render(request, 'customer-templates/userorders.html', {'orders': orders})
 
-@login_required
+@customer_required
 def user_track(request, order_id):
     return render(request, 'customer-templates/usertrack.html', {'order_id': order_id})
 
-@login_required
+@customer_required
 def order_detail(request, order_id):
     order = get_object_or_404(
         Order.objects.prefetch_related(
@@ -1098,7 +1100,7 @@ def order_detail(request, order_id):
     
     return render(request, 'customer-templates/order-detail.html', context)
 
-@login_required
+@customer_required
 def my_reviews(request):
     reviews = Review.objects.filter(
         user=request.user
@@ -1114,7 +1116,7 @@ def my_reviews(request):
     }
     return render(request, 'customer-templates/my-reviews.html', context)
 
-@login_required
+@customer_required
 def submit_review(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -1155,7 +1157,7 @@ def submit_review(request):
     return redirect('order_detail', order_id=order_id)
 
 
-@login_required
+@customer_required
 def edit_review(request, review_id):
     review = get_object_or_404(Review, id=review_id, user=request.user)
     product = review.product

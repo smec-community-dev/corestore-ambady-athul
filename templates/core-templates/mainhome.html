@@ -141,6 +141,9 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
         {% for product in products_page %}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fc48336313d1d7e3aacea95bd85af412fed26470
         <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block">
           <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
             {% with product.images.all|dictsortreversed:"is_primary"|first as img %}
@@ -158,6 +161,7 @@
     {% endwith %}
             <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button class="bg-white p-3 rounded-full text-[#3E2723] translate-y-4 group-hover:translate-y-0 transition-transform"><i class="fa-solid fa-cart-plus"></i></button>
+<<<<<<< HEAD
 =======
         <div class="pro-card group">
           <a href="{% url 'product_single' product.slug %}" class="block h-full flex flex-col">
@@ -176,6 +180,8 @@
                 </button>
               </div>
 >>>>>>> safe-hpuse
+=======
+>>>>>>> fc48336313d1d7e3aacea95bd85af412fed26470
             </div>
 
             <div class="p-3 card-footer-ambient flex-1 flex flex-col justify-end">

@@ -69,8 +69,8 @@ class PlatformCommission(models.Model):
     seller = models.ForeignKey(
         "seller.SellerProfile",
         on_delete=models.CASCADE,
-        null=True,        # 👈 add this
-        blank=True        # 👈 add this
+        null=True,        
+        blank=True        
     )
     order_item = models.ForeignKey(
         "customer.OrderItem",

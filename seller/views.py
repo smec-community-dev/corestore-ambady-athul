@@ -26,7 +26,7 @@ def selleregis(request):
                                           first_name=request.POST.get("first_name"),
                                           last_name=request.POST.get("last_name"),
                                           phone_number=request.POST.get("phone_number"),
-                                          role="seller",
+                                          role="SELLER",
                                           profile_image=request.FILES.get("profile_image"),
                                           )
             
