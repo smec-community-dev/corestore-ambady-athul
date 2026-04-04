@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,28 +16,51 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
+        html.dark .glass {
+            background-color: #1e293b; /* slate-800 */
+            border-color: #334155; /* slate-700 */
+        }
+
+        /* Custom Radio Button Logic */
         .reason-option {
             transition: all 0.2s ease;
         }
         .reason-option:hover {
             background-color: #f8fafc;
         }
+        html.dark .reason-option:hover {
+            background-color: #0f172a; /* slate-950 */
+        }
+        
         .reason-option.selected {
             background-color: #eff6ff;
             border-color: #2563eb;
+        }
+        html.dark .reason-option.selected {
+            background-color: rgba(37, 99, 235, 0.15); /* Subtle deep blue glow */
+            border-color: #3b82f6; /* Lighter blue border for dark mode */
         }
     </style>
 </head>
@@ -48,13 +71,13 @@
     <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-10 sm:py-12 md:py-16 shadow-lg px-4">
       <div class="container mx-auto max-w-3xl">
         <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic leading-tight">
-          Cancel <span class="text-red-400">Order</span>
+          Cancel <span class="text-red-500">Order</span>
         </h1>
         <div class="flex items-center gap-4 mt-3 sm:mt-4">
             <p class="text-[9px] sm:text-[10px] text-red-200/60 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] shrink-0">
                 Order #{{ order.order_number }}
             </p>
-            <div class="h-[1px] flex-1 bg-red-400/10"></div>
+            <div class="h-[1px] flex-1 bg-red-500/20"></div>
         </div>
       </div>
     </div>
@@ -63,11 +86,11 @@
         
         <div class="glass p-6 sm:p-8 md:p-12 animate__animated animate__fadeIn">
             <div class="text-center mb-8">
-                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i>
-                <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 mb-2">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4 transition-colors"></i>
+                <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">
                     Confirm Cancellation
                 </h2>
-                <p class="text-slate-600 text-sm leading-relaxed">
+                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed transition-colors">
                     Please provide a reason for cancelling this order. This action cannot be undone.
                 </p>
             </div>
@@ -76,51 +99,51 @@
                 {% csrf_token %}
                 
                 <div class="space-y-3">
-                    <label class="block text-sm font-bold text-slate-700 uppercase tracking-widest mb-4">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-4 transition-colors">
                         Reason for Cancellation
                     </label>
                     
                     <div class="space-y-2">
-                        <label class="reason-option flex items-center p-4 border border-slate-200 rounded-sm cursor-pointer">
-                            <input type="radio" name="reason" value="Changed my mind" class="mr-3 text-blue-600 focus:ring-blue-500" required>
-                            <span class="text-sm font-medium text-slate-900">Changed my mind</span>
+                        <label class="reason-option flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-sm cursor-pointer">
+                            <input type="radio" name="reason" value="Changed my mind" class="mr-3 text-blue-600 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-600" required>
+                            <span class="text-sm font-medium text-slate-900 dark:text-slate-200 transition-colors">Changed my mind</span>
                         </label>
                         
-                        <label class="reason-option flex items-center p-4 border border-slate-200 rounded-sm cursor-pointer">
-                            <input type="radio" name="reason" value="Found better price elsewhere" class="mr-3 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium text-slate-900">Found better price elsewhere</span>
+                        <label class="reason-option flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-sm cursor-pointer">
+                            <input type="radio" name="reason" value="Found better price elsewhere" class="mr-3 text-blue-600 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-600">
+                            <span class="text-sm font-medium text-slate-900 dark:text-slate-200 transition-colors">Found better price elsewhere</span>
                         </label>
                         
-                        <label class="reason-option flex items-center p-4 border border-slate-200 rounded-sm cursor-pointer">
-                            <input type="radio" name="reason" value="Delivery delay" class="mr-3 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium text-slate-900">Delivery delay</span>
+                        <label class="reason-option flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-sm cursor-pointer">
+                            <input type="radio" name="reason" value="Delivery delay" class="mr-3 text-blue-600 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-600">
+                            <span class="text-sm font-medium text-slate-900 dark:text-slate-200 transition-colors">Delivery delay</span>
                         </label>
                         
-                        <label class="reason-option flex items-center p-4 border border-slate-200 rounded-sm cursor-pointer">
-                            <input type="radio" name="reason" value="Ordered by mistake" class="mr-3 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium text-slate-900">Ordered by mistake</span>
+                        <label class="reason-option flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-sm cursor-pointer">
+                            <input type="radio" name="reason" value="Ordered by mistake" class="mr-3 text-blue-600 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-600">
+                            <span class="text-sm font-medium text-slate-900 dark:text-slate-200 transition-colors">Ordered by mistake</span>
                         </label>
                         
-                        <label class="reason-option flex items-center p-4 border border-slate-200 rounded-sm cursor-pointer">
-                            <input type="radio" name="reason" value="other" id="other-radio" class="mr-3 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium text-slate-900">Other</span>
+                        <label class="reason-option flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-sm cursor-pointer">
+                            <input type="radio" name="reason" value="other" id="other-radio" class="mr-3 text-blue-600 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-600">
+                            <span class="text-sm font-medium text-slate-900 dark:text-slate-200 transition-colors">Other</span>
                         </label>
                     </div>
                     
                     <div id="custom-reason" class="hidden mt-4">
                         <textarea name="custom_reason" rows="3" 
-                            class="w-full px-4 py-3 border border-slate-200 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-slate-500 transition-colors resize-none shadow-inner"
                             placeholder="Please specify your reason..."></textarea>
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-100">
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-100 dark:border-slate-700 transition-colors">
                     <a href="{% url 'orders' %}" 
-                        class="flex-1 bg-slate-100 text-slate-700 px-6 py-3 rounded-sm font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all text-center">
+                        class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-transparent dark:border-slate-700 px-6 py-3.5 rounded-sm font-black text-sm uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-center">
                         Keep Order
                     </a>
                     <button type="submit" 
-                        class="flex-1 bg-red-600 text-white px-6 py-3 rounded-sm font-black text-sm uppercase tracking-widest hover:bg-red-700 transition-all shadow-lg hover:shadow-xl">
+                        class="flex-1 bg-red-600 text-white px-6 py-3.5 rounded-sm font-black text-sm uppercase tracking-widest hover:bg-red-700 transition-all shadow-md hover:shadow-lg">
                         Cancel Order
                     </button>
                 </div>
@@ -151,6 +174,22 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

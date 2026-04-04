@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,21 +18,36 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Unified Glassmorphism */
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px; /* Sharp Edges */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
         }
 
         .success-card {
-            border-top: 4px solid var(--accent);
+            border-top: 4px solid var(--accent) !important;
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -44,7 +59,7 @@
         }
     </style>
 </head>
-<body class="bg-[#f8fafc] pb-20">
+<body class="min-h-screen pb-20">
 
     <nav class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-3 md:py-4 mb-8 md:mb-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -60,17 +75,17 @@
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
         
-        <div class="glass success-card p-6 sm:p-8 md:p-12 text-center shadow-xl mb-8 md:mb-10 max-w-2xl mx-auto animate__animated animate__zoomIn animate__faster">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-600 rounded-sm flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg celebrate-icon">
+        <div class="glass success-card p-6 sm:p-8 md:p-12 text-center shadow-xl mb-8 md:mb-10 max-w-2xl mx-auto animate__animated animate__zoomIn animate__faster transition-colors">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-600 rounded-sm flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg celebrate-icon transition-colors">
                 <i class="fa-solid fa-check text-2xl sm:text-3xl text-white"></i>
             </div>
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 mb-2">
-                Order <span class="text-blue-600 block sm:inline">Authenticated</span>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">
+                Order <span class="text-blue-600 dark:text-blue-400 block sm:inline">Authenticated</span>
             </h1>
-            <p class="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-5 sm:mb-6 break-all px-2">
+            <p class="text-[9px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-5 sm:mb-6 break-all px-2 transition-colors">
                 Identification: #{{ order.order_number }}
             </p>
-            <p class="text-xs sm:text-sm font-medium text-slate-500 leading-relaxed max-w-sm mx-auto">
+            <p class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-300 leading-relaxed max-w-sm mx-auto transition-colors">
                 Thank you for your acquisition. A formal dispatch registry has been transmitted to your electronic mail.
             </p>
         </div>
@@ -78,100 +93,100 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
             
             <div class="space-y-6">
-                <div class="glass p-5 sm:p-8 shadow-sm animate__animated animate__fadeInLeft">
-                    <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-5 sm:mb-6 border-b border-slate-50 pb-4">Order Metadata</h3>
+                <div class="glass p-5 sm:p-8 shadow-sm animate__animated animate__fadeInLeft transition-colors">
+                    <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white mb-5 sm:mb-6 border-b border-slate-50 dark:border-slate-700 pb-4 transition-colors">Order Metadata</h3>
                     
                     <div class="space-y-4">
                         <div class="flex flex-col sm:flex-row sm:justify-between py-1 sm:py-2 gap-1 sm:gap-0">
-                            <span class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400">Timestamp</span>
-                            <span class="text-xs font-black text-slate-900">{{ order.ordered_at|date:"M d, Y | H:i" }}</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 transition-colors">Timestamp</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white transition-colors">{{ order.ordered_at|date:"M d, Y | H:i" }}</span>
                         </div>
                         <div class="flex flex-col sm:flex-row sm:justify-between py-1 sm:py-2 gap-1 sm:gap-0">
-                            <span class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400">Payment Mode</span>
-                            <span class="text-xs font-black text-blue-600">
+                            <span class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 transition-colors">Payment Mode</span>
+                            <span class="text-xs font-black text-blue-600 dark:text-blue-400 transition-colors">
                                 {% if order.payment_status == 'COD' %}CASH ON DELIVERY{% else %}ONLINE DEBIT{% endif %}
                             </span>
                         </div>
                         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1 sm:py-2 gap-2 sm:gap-0">
-                            <span class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400">Fulfillment Status</span>
-                            <span class="inline-block self-start sm:self-auto px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black rounded-sm uppercase border border-blue-100">
+                            <span class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 transition-colors">Fulfillment Status</span>
+                            <span class="inline-block self-start sm:self-auto px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-black rounded-sm uppercase border border-blue-100 dark:border-blue-800 transition-colors">
                                 {{ order.order_status|upper }}
                             </span>
                         </div>
-                        <div class="pt-5 sm:pt-6 border-t border-slate-100 mt-2">
+                        <div class="pt-5 sm:pt-6 border-t border-slate-100 dark:border-slate-700 mt-2 transition-colors">
                             <div class="flex justify-between items-end">
-                                <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-500 mb-1">Total Valuation</span>
-                                <span class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tighter">${{ order.total_amount|floatformat:2 }}</span>
+                                <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1 transition-colors">Total Valuation</span>
+                                <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter transition-colors">${{ order.total_amount|floatformat:2 }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {% if order.shipping_address %}
-                <div class="glass p-5 sm:p-8 shadow-sm animate__animated animate__fadeInLeft" style="animation-delay: 0.1s;">
-                    <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-5 sm:mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-map-pin text-blue-600"></i> Dispatch Destination
+                <div class="glass p-5 sm:p-8 shadow-sm animate__animated animate__fadeInLeft transition-colors" style="animation-delay: 0.1s;">
+                    <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white mb-5 sm:mb-6 flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-map-pin text-blue-600 dark:text-blue-400"></i> Dispatch Destination
                     </h3>
-                    <div class="bg-slate-50 p-4 sm:p-5 rounded-sm border border-slate-100">
-                        <p class="text-[9px] sm:text-[10px] font-black text-slate-900 mb-1.5 uppercase">{{ order.shipping_address.full_name }}</p>
-                        <p class="text-[9px] sm:text-[10px] font-medium text-slate-500 uppercase leading-relaxed">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 sm:p-5 rounded-sm border border-slate-100 dark:border-slate-700/50 transition-colors">
+                        <p class="text-[9px] sm:text-[10px] font-black text-slate-900 dark:text-white mb-1.5 uppercase transition-colors">{{ order.shipping_address.full_name }}</p>
+                        <p class="text-[9px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase leading-relaxed transition-colors">
                             {{ order.shipping_address.house_info }}, {{ order.shipping_address.locality }}<br>
                             {{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.pincode }}
                         </p>
-                        <div class="mt-3 sm:mt-4 pt-3 border-t border-slate-200 flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-slate-700">
-                            <i class="fa-solid fa-phone-flip text-[8px] text-blue-500"></i> {{ order.shipping_address.phone_number }}
+                        <div class="mt-3 sm:mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2 text-[9px] sm:text-[10px] font-bold text-slate-700 dark:text-slate-300 transition-colors">
+                            <i class="fa-solid fa-phone-flip text-[8px] text-blue-500 dark:text-blue-400"></i> {{ order.shipping_address.phone_number }}
                         </div>
                     </div>
                 </div>
                 {% endif %}
             </div>
 
-            <div class="glass p-5 sm:p-8 shadow-sm animate__animated animate__fadeInRight flex flex-col h-full">
-                <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-5 sm:mb-6 border-b border-slate-50 pb-4 shrink-0">Manifest Contents</h3>
+            <div class="glass p-5 sm:p-8 shadow-sm animate__animated animate__fadeInRight flex flex-col h-full transition-colors">
+                <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white mb-5 sm:mb-6 border-b border-slate-50 dark:border-slate-700 pb-4 shrink-0 transition-colors">Manifest Contents</h3>
                 
                 <div class="space-y-3 sm:space-y-4 max-h-[400px] lg:max-h-[500px] overflow-y-auto no-scrollbar flex-1">
                     {% for item in order_items %}
-                    <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-slate-50 rounded-sm hover:bg-slate-50 transition-all">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-sm overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0">
+                    <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-slate-50 dark:border-slate-700 rounded-sm hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-sm overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex-shrink-0 transition-colors">
                             
                             {% if item.variant.images.all %}
-                                <img src="{{ item.variant.images.all.0.images.url }}" class="w-full h-full object-cover" alt="{{ item.variant.product.name }}" onerror="this.style.display='none';">
+                                <img src="{{ item.variant.images.all.0.image.url }}" class="w-full h-full object-cover" alt="{{ item.variant.product.name }}" onerror="this.style.display='none';">
                             {% else %}
-                                <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                <div class="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600 transition-colors">
                                     <i class="fa-solid fa-box text-xl"></i>
                                 </div>
                             {% endif %}
 
                         </div>
                         <div class="flex-1 min-w-0 py-1">
-                            <h4 class="text-[9px] sm:text-[10px] font-black text-slate-900 uppercase truncate pr-2">{{ item.variant.product.name }}</h4>
-                            <p class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase mt-0.5 sm:mt-1 truncate">Ref: {{ item.variant.sku_code }}</p>
-                            <p class="text-[9px] sm:text-[10px] font-black text-slate-900 mt-1">Units: {{ item.quantity }}</p>
+                            <h4 class="text-[9px] sm:text-[10px] font-black text-slate-900 dark:text-white uppercase truncate pr-2 transition-colors">{{ item.variant.product.name }}</h4>
+                            <p class="text-[8px] sm:text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-0.5 sm:mt-1 truncate transition-colors">Ref: {{ item.variant.sku_code }}</p>
+                            <p class="text-[9px] sm:text-[10px] font-black text-slate-900 dark:text-slate-300 mt-1 transition-colors">Units: {{ item.quantity }}</p>
                         </div>
                         <div class="text-right shrink-0">
-                            <p class="text-xs sm:text-sm font-black text-blue-600">${{ item.price_at_purchase|floatformat:0 }}</p>
+                            <p class="text-xs sm:text-sm font-black text-blue-600 dark:text-blue-400 transition-colors">${{ item.price_at_purchase|floatformat:0 }}</p>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 
                 <div class="flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-10 shrink-0">
-<a href="{% url 'orders' %}" class="bg-slate-900 text-white py-3.5 sm:py-4 rounded-sm font-black uppercase text-[9px] sm:text-[10px] tracking-widest hover:bg-blue-600 transition-all text-center shadow-lg active:scale-95">
+                    <a href="{% url 'orders' %}" class="bg-slate-900 dark:bg-blue-600 text-white py-3.5 sm:py-4 rounded-sm font-black uppercase text-[9px] sm:text-[10px] tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-all text-center shadow-lg active:scale-95">
                         Registry History
                     </a>
-                    <a href="{% url 'home' %}" class="bg-white border-2 border-slate-900 text-slate-900 py-3.5 sm:py-4 rounded-sm font-black uppercase text-[9px] sm:text-[10px] tracking-widest hover:bg-slate-900 hover:text-white transition-all text-center active:scale-95 shadow-sm">
+                    <a href="{% url 'home' %}" class="bg-white dark:bg-transparent border-2 border-slate-900 dark:border-slate-600 text-slate-900 dark:text-white py-3.5 sm:py-4 rounded-sm font-black uppercase text-[9px] sm:text-[10px] tracking-widest hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition-all text-center active:scale-95 shadow-sm">
                         New Acquisition
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="mt-10 sm:mt-12 text-center animate__animated animate__fadeInUp pb-6">
+        <div class="mt-10 sm:mt-12 flex flex-col justify-center items-center animate__animated animate__fadeInUp pb-6">
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
-                <div id="countdown" class="text-lg font-black text-blue-600 bg-blue-50 px-4 py-2 rounded-sm border-2 border-blue-200 animate-pulse">5</div>
-                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">seconds to Orders →</span>
+                <div id="countdown" class="text-lg font-black text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-sm border-2 border-blue-200 dark:border-blue-800 animate-pulse transition-colors">5</div>
+                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider transition-colors">seconds to Orders →</span>
             </div>
-            <p class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em] sm:tracking-[0.4em]">Expected Fulfillment within 72 Hours</p>
+            <p class="text-[8px] sm:text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] sm:tracking-[0.4em] transition-colors">Expected Fulfillment within 72 Hours</p>
         </div>
 
         <script>
@@ -234,6 +249,21 @@
                 }());
             }, 500);
         });
+    </script>
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

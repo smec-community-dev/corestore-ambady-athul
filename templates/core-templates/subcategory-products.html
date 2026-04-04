@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,11 +16,19 @@
         --bg-main: #f8fafc;
       }
 
+      /* Dark Mode Core Variables */
+      html.dark {
+        --primary: #ffffff;
+        --accent: #3b82f6;
+        --bg-main: #0f172a; /* Tailwind slate-950 */
+      }
+
       body {
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
         overflow-x: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       /* Sharp UI Elements */
@@ -28,6 +36,11 @@
         background: white;
         border: 1px solid #e2e8f0;
         border-radius: 4px;
+      }
+      
+      html.dark .glass {
+        background-color: #1e293b; /* slate-800 */
+        border-color: #334155; /* slate-700 */
       }
 
       .reveal {
@@ -53,7 +66,19 @@
         transform: translateY(-4px);
       }
 
+      /* THE BUG FIX: Forcing the background to stay dark on hover */
+      html.dark .product-card {
+        background-color: #1e293b !important; /* slate-800 */
+        border-color: #334155 !important; /* slate-700 */
+      }
+      html.dark .product-card:hover {
+        background-color: #1e293b !important; /* STOPS THE WHITE FLASH */
+        border-color: var(--accent) !important;
+        box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5) !important;
+      }
+
       .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       
       .dropdown-animate {
         opacity: 0;
@@ -66,14 +91,11 @@
         transform: translateY(0);
         pointer-events: auto;
       }
-      .products-active span { 
-        width: 100% !important; 
-      }
     </style>
   </head>
   <body>
 
-{% include 'core-templates/navbar.html' %}
+    {% include 'core-templates/navbar.html' %}
 
     <section class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] py-16 border-b border-blue-400/20">
       <div class="container mx-auto px-4 md:px-8">
@@ -91,14 +113,19 @@
       </div>
     </section>
 
-    <section class="bg-white border-b border-slate-200 sticky top-[68px] z-40">
-      <div class="container mx-auto px-4 md:px-8 py-4 flex items-center gap-4 overflow-x-auto no-scrollbar">
-        <a href="{% url 'category_view' category.slug %}" class="px-4 py-2 bg-slate-100 text-slate-500 rounded-sm text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white shrink-0 transition-all">
+    <section class="bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 sticky top-[64px] lg:top-[80px] z-40 transition-colors">
+      <div class="container mx-auto px-4 md:px-8 py-4 flex items-center gap-4 overflow-x-auto no-scrollbar snap-x">
+        <a href="{% url 'category_view' category.slug %}" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-sm text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-blue-600 hover:text-white shrink-0 snap-start transition-all">
           <i class="fa-solid fa-arrow-left mr-2"></i> Back to {{ category.name }}
         </a>
         {% for cat in categories %}
         <a href="{% url 'category_view' cat.slug %}" 
-           class="px-4 py-2 rounded-sm text-[9px] font-black uppercase tracking-widest shrink-0 transition-all {% if cat.id == category.id %}bg-blue-600 text-white shadow-lg shadow-blue-200{% else %}bg-slate-50 text-slate-400 hover:bg-slate-200 hover:text-slate-900{% endif %}">
+           class="px-4 py-2 rounded-sm text-[9px] font-black uppercase tracking-widest shrink-0 snap-start transition-colors 
+           {% if cat.id == category.id %}
+             bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none
+           {% else %}
+             bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-200
+           {% endif %}">
           {{ cat.name }}
         </a>
         {% endfor %}
@@ -107,43 +134,49 @@
 
     <main class="container mx-auto px-4 md:px-8 py-12">
       {% if products_page %}
-      <div class="flex items-center justify-between mb-10 border-b border-slate-100 pb-4">
-        <h2 class="text-xl font-black uppercase tracking-tighter text-slate-900">
-          Available <span class="text-blue-600">Units</span>
+      <div class="flex items-center justify-between mb-10 border-b border-slate-100 dark:border-slate-800 pb-4 transition-colors">
+        <h2 class="text-xl font-black uppercase tracking-tighter text-slate-900 dark:text-white transition-colors">
+          Available <span class="text-blue-600 dark:text-blue-400">Units</span>
         </h2>
-        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ products_page.paginator.count }} Indexed Items</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">{{ products_page.paginator.count }} Indexed Items</span>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {% for product in products_page %}
-        <a href="{% url 'product_single' product.slug %}" class="product-card p-2 group block">
-          <div class="relative aspect-square overflow-hidden rounded-sm bg-slate-50 mb-3">
+        <a href="{% url 'product_single' product.slug %}" class="product-card p-2 group block flex flex-col h-full">
+          <div class="relative aspect-[1/1] overflow-hidden rounded-sm bg-slate-50 dark:bg-slate-900 mb-3 transition-colors">
+            
             {% with product.images.all|first as img %}
               {% if img %}
                 <img src="{{ img.images.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ product.product.name }}" />
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 transition-colors"><i class="fa-solid fa-image text-slate-200 dark:text-slate-700 text-xl"></i></div>
               {% endif %}
             {% endwith %}
             
             {% if product.stock_quantity <= 0 %}
-            <div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
-                <span class="text-[8px] font-black uppercase tracking-widest border-2 border-slate-900 px-2 py-1">Stock Zero</span>
+            <div class="absolute inset-0 bg-white/60 dark:bg-slate-900/60 backdrop-blur-[1px] flex items-center justify-center z-10 transition-colors">
+                <span class="text-[8px] font-black text-slate-900 dark:text-white uppercase tracking-widest border-2 border-slate-900 dark:border-white px-2 py-1 transition-colors">Stock Zero</span>
             </div>
             {% endif %}
 
-            <div class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="w-full" onclick="event.stopPropagation();">
+            <div class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20">
+                <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="w-full m-0" onclick="event.stopPropagation();">
                   {% csrf_token %}
                   <input type="hidden" name="quantity" value="1">
-                  <button type="submit" class="w-full bg-blue-600 text-white py-2 text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 transition-colors cursor-pointer">
+                  <button type="submit" class="w-full bg-blue-600/95 backdrop-blur-sm text-white py-2.5 text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-slate-950 transition-colors cursor-pointer outline-none border-0">
                       Add to Cart +
                   </button>
                 </form>
             </div>
           </div>
-          <div class="px-1">
-            <h3 class="text-[9px] font-bold text-slate-900 uppercase tracking-tighter truncate mb-1">{{ product.product.name }}</h3>
-            <p class="text-xs font-black text-slate-900">${{ product.selling_price|floatformat:0 }}</p>
-            {% include 'core-templates/partials/product-rating.html' with product=product %}
+          
+          <div class="px-1 flex-1 flex flex-col justify-end">
+            <h3 class="text-[9px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-tighter truncate mb-1 transition-colors">{{ product.product.name }}</h3>
+            <div class="flex items-center justify-between mt-auto">
+                <p class="text-xs font-black text-slate-900 dark:text-white transition-colors">${{ product.selling_price|floatformat:0 }}</p>
+                {% include 'core-templates/partials/product-rating.html' with product=product %}
+            </div>
           </div>
         </a>
         {% endfor %}
@@ -152,32 +185,32 @@
       {% if products_page.has_other_pages %}
       <div class="mt-16 flex justify-center items-center gap-4">
         {% if products_page.has_previous %}
-          <a href="?page={{ products_page.previous_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-sm border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all"><i class="fa-solid fa-chevron-left text-xs"></i></a>
+          <a href="?page={{ products_page.previous_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:border-blue-600 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm"><i class="fa-solid fa-chevron-left text-xs"></i></a>
         {% endif %}
 
-        <div class="px-6 py-2 border border-slate-200 bg-white rounded-sm text-[10px] font-black uppercase tracking-widest text-slate-900">
+        <div class="px-6 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-sm text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors shadow-sm">
           Page {{ products_page.number }} of {{ products_page.paginator.num_pages }}
         </div>
 
         {% if products_page.has_next %}
-          <a href="?page={{ products_page.next_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-sm border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-all"><i class="fa-solid fa-chevron-right text-xs"></i></a>
+          <a href="?page={{ products_page.next_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:border-blue-600 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm"><i class="fa-solid fa-chevron-right text-xs"></i></a>
         {% endif %}
       </div>
       {% endif %}
 
       {% else %}
-      <div class="bg-white border border-slate-200 rounded-sm p-16 text-center shadow-sm">
-        <i class="fa-solid fa-microchip text-6xl text-slate-100 mb-8"></i>
-        <h2 class="text-3xl font-black uppercase tracking-tighter text-slate-900 mb-4">Registry Empty</h2>
-        <p class="text-slate-400 text-sm max-w-md mx-auto mb-10 uppercase font-bold tracking-widest">No hardware units matched the current subcategory index.</p>
-        <a href="{% url 'category_view' category.slug %}" class="inline-flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all">
+      <div class="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-sm p-16 text-center shadow-sm transition-colors">
+        <i class="fa-solid fa-microchip text-6xl text-slate-100 dark:text-slate-700 mb-8 transition-colors"></i>
+        <h2 class="text-3xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-4 transition-colors">Registry Empty</h2>
+        <p class="text-slate-400 dark:text-slate-500 text-sm max-w-md mx-auto mb-10 uppercase font-bold tracking-widest transition-colors">No hardware units matched the current subcategory index.</p>
+        <a href="{% url 'category_view' category.slug %}" class="inline-flex items-center gap-3 bg-slate-900 dark:bg-blue-600 text-white px-10 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-slate-900 transition-all shadow-md">
           <i class="fa-solid fa-arrow-left"></i> Return to {{ category.name }}
         </a>
       </div>
       {% endif %}
     </main>
 
-{% include 'core-templates/footer.html' %}
+    {% include 'core-templates/footer.html' %}
 
     <script>
       function reveal() {
@@ -190,6 +223,21 @@
       }
       window.addEventListener("scroll", reveal);
       reveal();
+    </script>
+
+    <script>
+      // Theme Initialization
+      function applyTheme() {
+        const themeData = document.documentElement.getAttribute('data-theme');
+        if (themeData === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      
+      document.addEventListener('DOMContentLoaded', applyTheme);
+      applyTheme();
     </script>
   </body>
 </html>

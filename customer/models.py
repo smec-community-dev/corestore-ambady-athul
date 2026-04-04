@@ -49,6 +49,14 @@ class Review(models.Model):
     def __str__(self):
         return f"Review by {self.user.username}"
 
+class ReviewImage(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='review_images/', null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review image for {self.review.user.username} - {self.review.product.name}"
+
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey("core.User", on_delete=models.CASCADE, related_name="orders", null=True, blank=True)

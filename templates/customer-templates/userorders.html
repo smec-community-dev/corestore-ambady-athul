@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,11 +16,19 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         /* Sharp UI Elements */
@@ -28,6 +36,13 @@
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Dark Mode Card Backgrounds */
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
         }
 
         .order-card { 
@@ -38,6 +53,9 @@
             border-left-color: var(--accent);
             transform: translateX(4px);
             box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
+        }
+        html.dark .order-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
         }
 
         /* Professional Status Badges */
@@ -51,11 +69,19 @@
             display: inline-flex;
             align-items: center;
         }
-        .status-transit { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
-        .status-delivered { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; }
-        .status-processing { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
-        .status-placed { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
-        .status-cancelled { background: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; }
+        
+        .status-transit { background: rgba(37, 99, 235, 0.1); color: var(--accent); border: 1px solid rgba(37, 99, 235, 0.2); }
+        .status-delivered { background: rgba(22, 163, 74, 0.1); color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.2); }
+        html.dark .status-delivered { color: #4ade80; }
+        
+        .status-processing { background: rgba(217, 119, 6, 0.1); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.2); }
+        html.dark .status-processing { color: #fbbf24; }
+        
+        .status-placed { background: rgba(100, 116, 139, 0.1); color: #64748b; border: 1px solid rgba(100, 116, 139, 0.2); }
+        html.dark .status-placed { color: #94a3b8; }
+        
+        .status-cancelled { background: rgba(220, 38, 38, 0.1); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.2); }
+        html.dark .status-cancelled { color: #f87171; }
 
         .pulse-processing { animation: status-pulse 2s infinite; }
         @keyframes status-pulse {
@@ -69,16 +95,16 @@
 
     {% include 'core-templates/navbar.html' %}
 
-    <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-10 sm:py-12 md:py-16 shadow-lg px-4">
+    <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-10 sm:py-12 md:py-16 shadow-lg px-4 transition-colors">
       <div class="container mx-auto max-w-5xl">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic leading-tight">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic leading-tight transition-colors">
           Registry <span class="text-blue-400">History</span>
         </h1>
         <div class="flex items-center gap-4 mt-3 sm:mt-4">
-            <p class="text-[9px] sm:text-[10px] text-blue-200/60 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] shrink-0">
+            <p class="text-[9px] sm:text-[10px] text-blue-200/60 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] shrink-0 transition-colors">
                 {{ orders|length }} Recorded Transaction{{ orders|length|pluralize }}
             </p>
-            <div class="h-[1px] flex-1 bg-blue-400/10"></div>
+            <div class="h-[1px] flex-1 bg-blue-400/10 transition-colors"></div>
         </div>
       </div>
     </div>
@@ -88,23 +114,23 @@
         {% if orders %}
             <div class="space-y-4 sm:space-y-6">
                 {% for order in orders %}
-                <div class="order-card glass overflow-hidden animate__animated animate__fadeInUp" style="animation-delay: {{ forloop.counter0|add:1 }}00ms">
+                <div class="order-card glass overflow-hidden animate__animated animate__fadeInUp transition-colors" style="animation-delay: {{ forloop.counter0|add:1 }}00ms">
                     {% with first_item=order.items.first %}
                     
                     <div class="p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5 sm:gap-6 md:gap-8">
                         
                         <div class="flex items-start sm:items-center gap-4 sm:gap-6 md:gap-8 flex-1 min-w-0">
                             
-                            <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-slate-50 border border-slate-100 rounded-sm overflow-hidden shrink-0 shadow-sm">
+                            <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-sm overflow-hidden shrink-0 shadow-sm transition-colors">
                                 {% with variant_img=first_item.variant.images.all|dictsortreversed:"is_primary"|first %}
                                     {% if variant_img %}
                                         <img src="{{ variant_img.images.url }}" class="w-full h-full object-cover" alt="{{ first_item.variant.product.name }}">
                                     {% else %}
                                         {% if first_item.variant.images.all %}
-                                            <img src="{{ first_item.variant.images.all.0.images.url }}" class="w-full h-full object-cover" alt="{{ first_item.variant.product.name }}">
+                                            <img src="{{ first_item.variant.images.all.0.image.url }}" class="w-full h-full object-cover" alt="{{ first_item.variant.product.name }}">
                                         {% else %}
-                                            <div class="w-full h-full flex items-center justify-center bg-slate-100">
-                                                <i class="fa-solid fa-box text-slate-300 text-2xl sm:text-3xl"></i>
+                                            <div class="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 transition-colors">
+                                                <i class="fa-solid fa-box text-slate-300 dark:text-slate-600 text-2xl sm:text-3xl transition-colors"></i>
                                             </div>
                                         {% endif %}
                                     {% endif %}
@@ -127,41 +153,41 @@
                                         <span class="status-badge status-placed"><i class="fa-solid fa-question mr-1.5 text-[10px]"></i>{{ order.order_status|upper }}</span>
                                     {% endif %}
                                     
-                                    <h3 class="text-base sm:text-lg md:text-xl font-black uppercase tracking-tighter text-slate-900 truncate leading-tight mt-2.5 sm:mt-3">
+                                    <h3 class="text-base sm:text-lg md:text-xl font-black uppercase tracking-tighter text-slate-900 dark:text-white truncate leading-tight mt-2.5 sm:mt-3 transition-colors">
                                         {{ first_item.variant.product.name }}
                                     </h3>
                                 </div>
                                 
-                                <div class="flex flex-wrap items-center gap-x-2.5 sm:gap-x-3 gap-y-1.5 text-slate-500 text-[9px] font-bold uppercase tracking-widest">
+                                <div class="flex flex-wrap items-center gap-x-2.5 sm:gap-x-3 gap-y-1.5 text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase tracking-widest transition-colors">
                                     <span>Ref: #{{ order.order_number }}</span>
-                                    <span class="hidden sm:block w-1 h-1 rounded-full bg-slate-300"></span>
+                                    <span class="hidden sm:block w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 transition-colors"></span>
                                     <span>Units: {{ first_item.quantity }}{% if order.items.count > 1 %} (+{{ order.items.count|add:-1 }}){% endif %}</span>
-                                    <span class="hidden sm:block w-1 h-1 rounded-full bg-slate-300"></span>
+                                    <span class="hidden sm:block w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 transition-colors"></span>
                                     <span>{{ order.ordered_at|date:"M d, Y" }}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex flex-col sm:flex-row md:flex-col items-center sm:items-stretch md:items-end gap-3 sm:gap-4 shrink-0 pt-4 sm:pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 md:pl-8">
+                        <div class="flex flex-col sm:flex-row md:flex-col items-center sm:items-stretch md:items-end gap-3 sm:gap-4 shrink-0 pt-4 sm:pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-700 md:pl-8 transition-colors">
                             
                             <div class="w-full sm:w-auto md:w-full flex justify-between md:justify-end items-center mb-1 sm:mb-0">
-                                <span class="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total</span>
-                                <p class="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter">${{ order.total_amount|floatformat:2 }}</p>
+                                <span class="md:hidden text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Total</span>
+                                <p class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tighter transition-colors">${{ order.total_amount|floatformat:2 }}</p>
                             </div>
                             
                             <div class="grid grid-cols-2 sm:flex sm:flex-row md:flex-col gap-2 w-full">
-                                <a href="{% url 'order_detail' order.id %}" class="col-span-2 sm:flex-1 bg-slate-900 text-white px-4 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 transition-all text-center shadow-sm">
+                                <a href="{% url 'order_detail' order.id %}" class="col-span-2 sm:flex-1 bg-slate-900 dark:bg-blue-600 text-white px-4 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-all text-center shadow-sm">
                                     View Details
                                 </a>
-                                <a href="{% url 'track_order' order.id %}" class="col-span-1 sm:flex-1 bg-white border border-slate-200 text-slate-600 px-3 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-900 hover:bg-slate-50 transition-all text-center shadow-sm">
+                                <a href="{% url 'track_order' order.id %}" class="col-span-1 sm:flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-3 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 dark:hover:text-white hover:border-slate-900 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-center shadow-sm">
                                     Track
                                 </a>
                                 {% if order.order_status != 'delivered' and order.order_status != 'cancelled' %}
-                                <a href="{% url 'cancel_order' order.id %}" class="col-span-1 sm:flex-1 bg-red-50 border border-red-200 text-red-600 px-3 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-red-700 hover:border-red-300 hover:bg-red-100 transition-all text-center shadow-sm">
+                                <a href="{% url 'cancel_order' order.id %}" class="col-span-1 sm:flex-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 px-3 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-red-700 dark:hover:text-red-300 hover:border-red-300 dark:hover:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-center shadow-sm">
                                     Cancel
                                 </a>
                                 {% else %}
-                                <div class="col-span-1 sm:flex-1 bg-slate-100 border border-slate-200 text-slate-400 px-3 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest text-center">
+                                <div class="col-span-1 sm:flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 px-3 sm:px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest text-center transition-colors">
                                     {% if order.order_status == 'cancelled' %}Cancelled{% else %}Delivered{% endif %}
                                 </div>
                                 {% endif %}
@@ -175,26 +201,42 @@
             </div>
 
         {% else %}
-            <div class="text-center py-16 sm:py-24 px-4 glass animate__animated animate__fadeIn">
-                <i class="fa-solid fa-folder-open text-4xl sm:text-5xl text-slate-200 mb-5 sm:mb-6"></i>
-                <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 mb-2">Registry Empty</h3>
-                <p class="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-8 sm:mb-10 max-w-sm mx-auto leading-relaxed">No transaction records detected in this account.</p>
-                <a href="{% url 'products' %}" class="inline-block bg-blue-600 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg hover:shadow-xl shadow-blue-600/20">
+            <div class="text-center py-16 sm:py-24 px-4 glass animate__animated animate__fadeIn transition-colors">
+                <i class="fa-solid fa-folder-open text-4xl sm:text-5xl text-slate-200 dark:text-slate-700 mb-5 sm:mb-6 transition-colors"></i>
+                <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">Registry Empty</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-8 sm:mb-10 max-w-sm mx-auto leading-relaxed transition-colors">No transaction records detected in this account.</p>
+                <a href="{% url 'products' %}" class="inline-block bg-blue-600 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-blue-500 transition-all shadow-lg hover:shadow-xl shadow-blue-600/20">
                     Sync Collection
                 </a>
             </div>
         {% endif %}
 
-        <div class="mt-12 sm:mt-16 md:mt-20 p-6 sm:p-10 glass text-center border-dashed border-2">
-            <h4 class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-slate-400 mb-6 sm:mb-8">Supply Chain Status</h4>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-12 opacity-50 grayscale">
-                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-warehouse text-slate-500"></i> Inventory</div>
-                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-shield-check text-slate-500"></i> Quality Control</div>
-                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-plane-departure text-slate-500"></i> Dispatch</div>
+        <div class="mt-12 sm:mt-16 md:mt-20 p-6 sm:p-10 glass text-center border-dashed border-2 border-slate-200 dark:border-slate-700 transition-colors">
+            <h4 class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-slate-400 dark:text-slate-500 mb-6 sm:mb-8 transition-colors">Supply Chain Status</h4>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-12 opacity-50 grayscale transition-colors">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400"><i class="fa-solid fa-warehouse text-slate-500 dark:text-slate-400"></i> Inventory</div>
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400"><i class="fa-solid fa-shield-check text-slate-500 dark:text-slate-400"></i> Quality Control</div>
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400"><i class="fa-solid fa-plane-departure text-slate-500 dark:text-slate-400"></i> Dispatch</div>
             </div>
         </div>
     </main>
 
     {% include 'core-templates/footer.html' %}
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
+    </script>
 </body>
 </html>

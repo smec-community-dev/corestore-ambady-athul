@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,10 +15,18 @@
         --bg-main: #ffffff; 
       }
 
+      /* Dark Mode Base Variables */
+      html.dark {
+        --primary: #ffffff;
+        --accent: #3b82f6;
+        --bg-main: #0f172a; /* Tailwind slate-950 */
+      }
+
       body {
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       /* Noticeable Smooth Reveal */
@@ -46,6 +54,17 @@
         transform: translateY(-4px);
       }
 
+      /* Flawless Dark Mode Pro-Card Support */
+      html.dark .pro-card {
+        background: #1e293b; /* Tailwind slate-800 */
+        border-color: #334155; /* Tailwind slate-700 */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      }
+      html.dark .pro-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+      }
+
       /* FAQ Accordion Styling */
       .faq-answer {
         max-height: 0;
@@ -67,8 +86,8 @@
           <h1 class="text-3xl md:text-5xl font-black tracking-tighter mb-6 uppercase">How can we help?</h1>
           
           <div class="relative max-w-lg mx-auto">
-            <input type="text" placeholder="Search for answers..." class="w-full bg-white text-slate-900 pl-12 pr-4 py-3 rounded-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg placeholder-slate-400">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" placeholder="Search for answers..." class="w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white pl-12 pr-4 py-3 rounded-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg placeholder-slate-400 dark:placeholder-slate-500 border border-transparent dark:border-slate-700 transition-colors">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors"></i>
           </div>
         </div>
       </div>
@@ -78,35 +97,35 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         
         <a href="#" class="pro-card group p-6 flex flex-col items-center text-center">
-          <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+          <div class="w-12 h-12 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
             <i class="fa-solid fa-box-open text-xl text-blue-600 group-hover:text-white transition-colors"></i>
           </div>
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">Order Status</h3>
-          <p class="text-xs text-slate-500 font-medium">Track your elite gear, modify orders, or view history.</p>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-2 transition-colors">Order Status</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium transition-colors">Track your elite gear, modify orders, or view history.</p>
         </a>
 
         <a href="#" class="pro-card group p-6 flex flex-col items-center text-center">
-          <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+          <div class="w-12 h-12 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
             <i class="fa-solid fa-rotate-left text-xl text-blue-600 group-hover:text-white transition-colors"></i>
           </div>
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">Returns & Refunds</h3>
-          <p class="text-xs text-slate-500 font-medium">Start a return, print labels, or check refund status.</p>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-2 transition-colors">Returns & Refunds</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium transition-colors">Start a return, print labels, or check refund status.</p>
         </a>
 
         <a href="#" class="pro-card group p-6 flex flex-col items-center text-center">
-          <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+          <div class="w-12 h-12 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
             <i class="fa-solid fa-credit-card text-xl text-blue-600 group-hover:text-white transition-colors"></i>
           </div>
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">Payment Issues</h3>
-          <p class="text-xs text-slate-500 font-medium">Manage payment methods, invoices, and promo codes.</p>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-2 transition-colors">Payment Issues</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium transition-colors">Manage payment methods, invoices, and promo codes.</p>
         </a>
 
         <a href="#" class="pro-card group p-6 flex flex-col items-center text-center">
-          <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+          <div class="w-12 h-12 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
             <i class="fa-solid fa-shield-halved text-xl text-blue-600 group-hover:text-white transition-colors"></i>
           </div>
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">Account & Security</h3>
-          <p class="text-xs text-slate-500 font-medium">Reset passwords, update email, and manage security.</p>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-2 transition-colors">Account & Security</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium transition-colors">Reset passwords, update email, and manage security.</p>
         </a>
 
       </div>
@@ -114,53 +133,53 @@
 
     <section class="container mx-auto px-4 md:px-6 pb-20 reveal max-w-4xl">
       <div class="mb-8">
-        <h2 class="text-lg font-black tracking-tighter uppercase border-l-4 border-blue-600 pl-3">Frequently Asked Questions</h2>
+        <h2 class="text-lg font-black tracking-tighter uppercase border-l-4 border-blue-600 pl-3 dark:text-white transition-colors">Frequently Asked Questions</h2>
       </div>
 
       <div class="space-y-4">
-        <div class="border border-slate-200 rounded-sm bg-white overflow-hidden">
+        <div class="border border-slate-200 dark:border-slate-700 rounded-sm bg-white dark:bg-slate-800 overflow-hidden transition-colors">
           <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFAQ(this)">
-            <span class="font-bold text-sm text-slate-800 uppercase tracking-wide">How long does shipping take?</span>
-            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+            <span class="font-bold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide transition-colors">How long does shipping take?</span>
+            <i class="fa-solid fa-chevron-down text-slate-400 dark:text-slate-500 text-xs transition-transform duration-300"></i>
           </button>
-          <div class="faq-answer bg-slate-50">
-            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 font-medium">
+          <div class="faq-answer bg-slate-50 dark:bg-slate-900/50 transition-colors">
+            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 dark:text-slate-400 font-medium transition-colors">
               Standard shipping takes 3-5 business days within the US. Expedited shipping is available at checkout for 1-2 day delivery. International shipping usually takes 7-14 business days depending on the destination.
             </p>
           </div>
         </div>
 
-        <div class="border border-slate-200 rounded-sm bg-white overflow-hidden">
+        <div class="border border-slate-200 dark:border-slate-700 rounded-sm bg-white dark:bg-slate-800 overflow-hidden transition-colors">
           <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFAQ(this)">
-            <span class="font-bold text-sm text-slate-800 uppercase tracking-wide">What is your return policy?</span>
-            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+            <span class="font-bold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide transition-colors">What is your return policy?</span>
+            <i class="fa-solid fa-chevron-down text-slate-400 dark:text-slate-500 text-xs transition-transform duration-300"></i>
           </button>
-          <div class="faq-answer bg-slate-50">
-            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 font-medium">
+          <div class="faq-answer bg-slate-50 dark:bg-slate-900/50 transition-colors">
+            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 dark:text-slate-400 font-medium transition-colors">
               We accept returns within 30 days of delivery. Items must be in their original condition and packaging. To initiate a return, navigate to your Orders page and select "Return Item".
             </p>
           </div>
         </div>
 
-        <div class="border border-slate-200 rounded-sm bg-white overflow-hidden">
+        <div class="border border-slate-200 dark:border-slate-700 rounded-sm bg-white dark:bg-slate-800 overflow-hidden transition-colors">
           <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFAQ(this)">
-            <span class="font-bold text-sm text-slate-800 uppercase tracking-wide">Do you offer warranty on products?</span>
-            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+            <span class="font-bold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide transition-colors">Do you offer warranty on products?</span>
+            <i class="fa-solid fa-chevron-down text-slate-400 dark:text-slate-500 text-xs transition-transform duration-300"></i>
           </button>
-          <div class="faq-answer bg-slate-50">
-            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 font-medium">
+          <div class="faq-answer bg-slate-50 dark:bg-slate-900/50 transition-colors">
+            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 dark:text-slate-400 font-medium transition-colors">
               Yes, all Core Store products come with a standard 1-year manufacturer warranty covering defects in materials and workmanship. Extended warranties can be purchased during checkout.
             </p>
           </div>
         </div>
         
-        <div class="border border-slate-200 rounded-sm bg-white overflow-hidden">
+        <div class="border border-slate-200 dark:border-slate-700 rounded-sm bg-white dark:bg-slate-800 overflow-hidden transition-colors">
           <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none" onclick="toggleFAQ(this)">
-            <span class="font-bold text-sm text-slate-800 uppercase tracking-wide">Can I change or cancel my order?</span>
-            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+            <span class="font-bold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide transition-colors">Can I change or cancel my order?</span>
+            <i class="fa-solid fa-chevron-down text-slate-400 dark:text-slate-500 text-xs transition-transform duration-300"></i>
           </button>
-          <div class="faq-answer bg-slate-50">
-            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 font-medium">
+          <div class="faq-answer bg-slate-50 dark:bg-slate-900/50 transition-colors">
+            <p class="px-6 pb-4 pt-2 text-sm text-slate-600 dark:text-slate-400 font-medium transition-colors">
               Orders can be modified or cancelled within 1 hour of placement. After that, the order is sent to our warehouse for fulfillment and cannot be changed. You can return the item once it arrives.
             </p>
           </div>
@@ -174,10 +193,10 @@
             <h2 class="text-2xl md:text-3xl font-black tracking-tighter mb-4 uppercase relative z-10">Still need help?</h2>
             <p class="text-blue-100 font-medium mb-8 max-w-lg mx-auto relative z-10">Our elite support team is available 24/7 to assist you with any questions or issues regarding your gear.</p>
             <div class="flex flex-wrap justify-center gap-4 relative z-10">
-                <a href="#" class="bg-white text-blue-600 px-8 py-3 rounded-sm font-bold text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-colors">
+                <a href="#" class="bg-white text-blue-600 px-8 py-3 rounded-sm font-bold text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-colors shadow-lg">
                     <i class="fa-solid fa-envelope mr-2"></i> Email Us
                 </a>
-                <a href="#" class="bg-blue-700 border border-blue-500 text-white px-8 py-3 rounded-sm font-bold text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:border-slate-900 transition-colors">
+                <a href="#" class="bg-blue-700 border border-blue-500 text-white px-8 py-3 rounded-sm font-bold text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:border-slate-900 transition-colors shadow-lg">
                     <i class="fa-solid fa-comment-dots mr-2"></i> Live Chat
                 </a>
             </div>
@@ -219,6 +238,22 @@
             icon.classList.add('rotate-180');
         }
       }
+    </script>
+
+    <script>
+      // Theme Initialization
+      function applyTheme() {
+        const themeData = document.documentElement.getAttribute('data-theme');
+        if (themeData === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      
+      // Apply theme on page load
+      document.addEventListener('DOMContentLoaded', applyTheme);
+      applyTheme();
     </script>
 
     {% include 'core-templates/footer.html' %}

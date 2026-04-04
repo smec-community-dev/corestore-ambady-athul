@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,17 +16,31 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Unified Glassmorphism */
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
-            border-radius: 4px; /* Sharp Edges */
+            border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
         }
 
         /* Technical Timeline Styling */
@@ -42,9 +56,12 @@
             width: 2px;
             height: calc(100% - 40px);
             background: #e2e8f0;
+            transition: background-color 0.3s ease;
         }
+        html.dark .timeline-step::before { background: #334155; } /* slate-700 */
         
         .timeline-step.step-complete::before { background: var(--accent); }
+        html.dark .timeline-step.step-complete::before { background: var(--accent); }
         .timeline-step:last-child::before { display: none; }
 
         .step-icon {
@@ -59,17 +76,27 @@
             z-index: 10;
             transition: all 0.3s ease;
         }
+        html.dark .step-icon {
+            background: #1e293b; /* slate-800 */
+            border-color: #334155; /* slate-700 */
+        }
 
+        /* Timeline States (Dark Mode Adaptive) */
         .step-complete .step-icon { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+        html.dark .step-complete .step-icon { background: rgba(37, 99, 235, 0.15); color: #60a5fa; border-color: var(--accent); }
+        
         .step-active .step-icon { border-color: var(--accent); color: white; background: var(--accent); box-shadow: 0 0 15px rgba(37, 99, 235, 0.3); }
+        html.dark .step-active .step-icon { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        
         .step-pending .step-icon { color: #cbd5e1; }
+        html.dark .step-pending .step-icon { color: #475569; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-4">
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-4 transition-colors">
         <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
             <a href="{% url 'orders' %}" class="text-blue-100 hover:text-white transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-widest">
                 <i class="fa-solid fa-arrow-left-long"></i> Back to Registry
@@ -84,24 +111,24 @@
 
     <main class="container mx-auto px-4 max-w-4xl mt-12">
         
-        <div class="glass p-8 md:p-12 mb-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm border-t-4 border-t-blue-600 animate__animated animate__fadeIn">
+        <div class="glass p-8 md:p-12 mb-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm border-t-4 border-t-blue-600 dark:border-t-blue-500 animate__animated animate__fadeIn transition-colors">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-2">Tracking Session Active</p>
-                <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900">Unit Identification</h1>
-                <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Manifest Reference: <span class="text-slate-900">#{{ order.order_number }}</span></p>
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 mb-2 transition-colors">Tracking Session Active</p>
+                <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white transition-colors">Unit Identification</h1>
+                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-2 uppercase tracking-widest transition-colors">Manifest Reference: <span class="text-slate-900 dark:text-white transition-colors">#{{ order.order_number }}</span></p>
             </div>
-            <div class="bg-slate-50 border border-slate-200 px-8 py-4 rounded-sm text-center">
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Current Status</p>
-                <span class="text-sm font-black text-blue-600 uppercase tracking-tighter" id="global-status-text">{{ order.order_status|upper }}</span>
+            <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-sm text-center transition-colors">
+                <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 transition-colors">Current Status</p>
+                <span class="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-tighter transition-colors" id="global-status-text">{{ order.order_status|upper }}</span>
             </div>
         </div>
 
-        <div class="glass p-8 md:p-12 shadow-sm mb-12 animate__animated animate__fadeInUp">
+        <div class="glass p-8 md:p-12 shadow-sm mb-12 animate__animated animate__fadeInUp transition-colors">
             <div class="max-w-xl mx-auto">
                 
                 {% with status=order.order_status %}
                 {% if status == 'cancelled' %}
-                <div class="mb-6 p-4 rounded-sm bg-red-50 border border-red-200 text-red-700">
+                <div class="mb-6 p-4 rounded-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-400 transition-colors">
                     <strong>Order Cancelled:</strong> {{ order.cancel_reason|default:'No cancel reason provided.' }}
                 </div>
                 {% endif %}
@@ -109,43 +136,43 @@
                 <div class="timeline-step step-complete flex gap-6">
                     <div class="step-icon"><i class="fa-solid fa-file-contract"></i></div>
                     <div>
-                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-900">Registry Entry Created</h3>
-                        <p class="text-xs font-medium text-slate-500 mt-1">Order received and logged into central database.</p>
-                        <span class="text-[9px] font-bold text-blue-500 uppercase mt-2 block">System Check: Verified</span>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors">Registry Entry Created</h3>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 transition-colors">Order received and logged into central database.</p>
+                        <span class="text-[9px] font-bold text-blue-500 dark:text-blue-400 uppercase mt-2 block transition-colors">System Check: Verified</span>
                     </div>
                 </div>
 
                 <div class="timeline-step {% if status != 'pending' and status != 'cancelled' %}step-complete{% else %}step-pending{% endif %} flex gap-6">
                     <div class="step-icon"><i class="fa-solid fa-shield-check"></i></div>
                     <div>
-                        <h3 class="text-sm font-black uppercase tracking-widest {% if status != 'pending' and status != 'cancelled' %}text-slate-900{% else %}text-slate-400{% endif %}">Authorization Success</h3>
-                        <p class="text-xs font-medium {% if status != 'pending' and status != 'cancelled' %}text-slate-500{% else %}text-slate-300{% endif %} mt-1">Financial transaction cleared and secured.</p>
-                        <span class="text-[9px] font-bold {% if status != 'pending' and status != 'cancelled' %}text-blue-500{% else %}text-slate-300{% endif %} uppercase mt-2 block">Payment Ref: AUTH-{{ order.order_number|slice:":4" }}</span>
+                        <h3 class="text-sm font-black uppercase tracking-widest {% if status != 'pending' and status != 'cancelled' %}text-slate-900 dark:text-white{% else %}text-slate-400 dark:text-slate-600{% endif %} transition-colors">Authorization Success</h3>
+                        <p class="text-xs font-medium {% if status != 'pending' and status != 'cancelled' %}text-slate-500 dark:text-slate-400{% else %}text-slate-300 dark:text-slate-600{% endif %} mt-1 transition-colors">Financial transaction cleared and secured.</p>
+                        <span class="text-[9px] font-bold {% if status != 'pending' and status != 'cancelled' %}text-blue-500 dark:text-blue-400{% else %}text-slate-300 dark:text-slate-600{% endif %} uppercase mt-2 block transition-colors">Payment Ref: AUTH-{{ order.order_number|slice:":4" }}</span>
                     </div>
                 </div>
 
                 <div class="timeline-step {% if status == 'placed' or status == 'processing' %}step-active{% elif status == 'shipped' or status == 'delivered' %}step-complete{% else %}step-pending{% endif %} flex gap-6">
                     <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
                     <div>
-                        <h3 class="text-sm font-black uppercase tracking-widest {% if status == 'placed' or status == 'processing' %}text-slate-900{% elif status == 'shipped' or status == 'delivered' %}text-slate-900{% else %}text-slate-400{% endif %}">Technical Preparation</h3>
-                        <p class="text-xs font-medium {% if status == 'placed' or status == 'processing' or status == 'shipped' or status == 'delivered' %}text-slate-500{% else %}text-slate-300{% endif %} mt-1">Units are undergoing final QA and manifest packing.</p>
-                        <span class="text-[9px] font-bold {% if status == 'placed' or status == 'processing' %}text-amber-500{% else %}text-blue-500{% endif %} uppercase mt-2 block {% if status == 'placed' or status == 'processing' %}animate-pulse{% endif %}">{% if status == 'placed' or status == 'processing' %}In Progress: Warehouse Sector 7{% elif status == 'shipped' or status == 'delivered' %}Completed{% else %}Pending{% endif %}</span>
+                        <h3 class="text-sm font-black uppercase tracking-widest {% if status == 'placed' or status == 'processing' %}text-slate-900 dark:text-white{% elif status == 'shipped' or status == 'delivered' %}text-slate-900 dark:text-white{% else %}text-slate-400 dark:text-slate-600{% endif %} transition-colors">Technical Preparation</h3>
+                        <p class="text-xs font-medium {% if status == 'placed' or status == 'processing' or status == 'shipped' or status == 'delivered' %}text-slate-500 dark:text-slate-400{% else %}text-slate-300 dark:text-slate-600{% endif %} mt-1 transition-colors">Units are undergoing final QA and manifest packing.</p>
+                        <span class="text-[9px] font-bold {% if status == 'placed' or status == 'processing' %}text-amber-500 dark:text-amber-400{% else %}text-blue-500 dark:text-blue-400{% endif %} uppercase mt-2 block {% if status == 'placed' or status == 'processing' %}animate-pulse{% endif %} transition-colors">{% if status == 'placed' or status == 'processing' %}In Progress: Warehouse Sector 7{% elif status == 'shipped' or status == 'delivered' %}Completed{% else %}Pending{% endif %}</span>
                     </div>
                 </div>
 
                 <div class="timeline-step {% if status == 'shipped' %}step-active{% elif status == 'delivered' %}step-complete{% else %}step-pending{% endif %} flex gap-6">
                     <div class="step-icon"><i class="fa-solid fa-plane-departure"></i></div>
                     <div>
-                        <h3 class="text-sm font-black uppercase tracking-widest {% if status == 'shipped' or status == 'delivered' %}text-slate-900{% else %}text-slate-400{% endif %}">Logistics Dispatch</h3>
-                        <p class="text-xs font-medium {% if status == 'shipped' or status == 'delivered' %}text-slate-500{% else %}text-slate-300{% endif %} mt-1">Consignment is outgoing from regional hub.</p>
+                        <h3 class="text-sm font-black uppercase tracking-widest {% if status == 'shipped' or status == 'delivered' %}text-slate-900 dark:text-white{% else %}text-slate-400 dark:text-slate-600{% endif %} transition-colors">Logistics Dispatch</h3>
+                        <p class="text-xs font-medium {% if status == 'shipped' or status == 'delivered' %}text-slate-500 dark:text-slate-400{% else %}text-slate-300 dark:text-slate-600{% endif %} mt-1 transition-colors">Consignment is outgoing from regional hub.</p>
                     </div>
                 </div>
 
                 <div class="timeline-step {% if status == 'delivered' %}step-active{% else %}step-pending{% endif %} flex gap-6">
                     <div class="step-icon"><i class="fa-solid fa-location-dot"></i></div>
                     <div>
-                        <h3 class="text-sm font-black uppercase tracking-widest {% if status == 'delivered' %}text-slate-900{% else %}text-slate-400{% endif %}">Final Destination</h3>
-                        <p class="text-xs font-medium {% if status == 'delivered' %}text-slate-500{% else %}text-slate-300{% endif %} mt-1">Registry closeout upon confirmed physical delivery.</p>
+                        <h3 class="text-sm font-black uppercase tracking-widest {% if status == 'delivered' %}text-slate-900 dark:text-white{% else %}text-slate-400 dark:text-slate-600{% endif %} transition-colors">Final Destination</h3>
+                        <p class="text-xs font-medium {% if status == 'delivered' %}text-slate-500 dark:text-slate-400{% else %}text-slate-300 dark:text-slate-600{% endif %} mt-1 transition-colors">Registry closeout upon confirmed physical delivery.</p>
                     </div>
                 </div>
                 {% endwith %}
@@ -154,20 +181,20 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate__animated animate__fadeInUp">
-            <div class="glass p-6 hover:border-blue-600 transition-all group">
-                <i class="fa-solid fa-headset text-blue-600 mb-4 block text-xl"></i>
-                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2">Technical Support</h4>
-                <p class="text-[10px] font-medium text-slate-500 leading-relaxed">Assistance with tracking data and manifest errors.</p>
+            <div class="glass p-6 hover:border-blue-600 dark:hover:border-blue-500 transition-all group">
+                <i class="fa-solid fa-headset text-blue-600 dark:text-blue-400 mb-4 block text-xl transition-colors"></i>
+                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2 text-slate-900 dark:text-white transition-colors">Technical Support</h4>
+                <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed transition-colors">Assistance with tracking data and manifest errors.</p>
             </div>
-            <div class="glass p-6 hover:border-blue-600 transition-all">
-                <i class="fa-solid fa-phone-volume text-blue-600 mb-4 block text-xl"></i>
-                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2">Direct Line</h4>
-                <p class="text-[10px] font-medium text-slate-500 leading-relaxed">+1 800-CORE-DEP<br>0900 - 2100 HRS</p>
+            <div class="glass p-6 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
+                <i class="fa-solid fa-phone-volume text-blue-600 dark:text-blue-400 mb-4 block text-xl transition-colors"></i>
+                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2 text-slate-900 dark:text-white transition-colors">Direct Line</h4>
+                <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed transition-colors">+1 800-CORE-DEP<br>0900 - 2100 HRS</p>
             </div>
-            <div class="glass p-6 bg-slate-900 text-white">
-                <i class="fa-solid fa-clock text-blue-400 mb-4 block text-xl"></i>
-                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2">Estimated Arrival</h4>
-                <p class="text-[10px] font-bold text-blue-100 leading-relaxed">48 - 72 Hours<br>Standard Freight</p>
+            <div class="glass p-6 bg-slate-900 dark:bg-slate-800 text-white border-transparent dark:border-slate-700 transition-colors">
+                <i class="fa-solid fa-clock text-blue-400 mb-4 block text-xl transition-colors"></i>
+                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2 transition-colors">Estimated Arrival</h4>
+                <p class="text-[10px] font-bold text-blue-100 leading-relaxed transition-colors">48 - 72 Hours<br>Standard Freight</p>
             </div>
         </div>
 
@@ -180,6 +207,17 @@
             if (activeStep) {
                 document.getElementById('global-status-text').textContent = activeStep.textContent;
             }
+
+            // Theme Initialization
+            function applyTheme() {
+                const themeData = document.documentElement.getAttribute('data-theme');
+                if (themeData === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            applyTheme();
         });
     </script>
 </body>

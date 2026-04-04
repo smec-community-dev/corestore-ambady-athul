@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,49 @@
             --primary: #0f172a; 
             --accent: #2563eb; 
             --bg-main: #f8fafc;
+        }
+
+        /* Dark Mode Support */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a;
+        }
+
+        html.dark body {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+            color: #ffffff;
+        }
+
+        html.dark input {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #ffffff;
+        }
+
+        html.dark input::placeholder {
+            color: #94a3b8;
+        }
+
+        html.dark .glass-panel {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        html.dark .text-slate-600 {
+            color: #cbd5e1;
+        }
+
+        html.dark .text-slate-400 {
+            color: #94a3b8;
+        }
+
+        html.dark .text-slate-900 {
+            color: #ffffff;
         }
 
         body { 
@@ -208,6 +251,22 @@
             }
             timeLeft--;
         }, 1000);
+    </script>
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

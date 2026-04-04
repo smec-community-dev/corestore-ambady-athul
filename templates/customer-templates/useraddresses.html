@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,17 +16,33 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
+        /* Unified Glassmorphism */
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px; /* Sharp Edges */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* THE BUG FIX: Forcing background to stay dark on hover */
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
         }
 
         .address-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -35,13 +51,25 @@
             border-color: var(--accent);
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
+        
+        html.dark .address-card:hover {
+            background-color: #1e293b !important; /* STOPS THE WHITE FLASH */
+            border-color: var(--accent) !important;
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5) !important;
+        }
 
+        /* Outline Button Dark Mode Fixes */
         .btn-outline { 
             border: 1px solid #e2e8f0; 
             border-radius: 2px;
             transition: all 0.2s ease; 
         }
+        html.dark .btn-outline {
+            border-color: #475569; /* slate-600 */
+            color: #94a3b8; /* slate-400 */
+        }
         .btn-outline:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        html.dark .btn-outline:hover { background: var(--accent); color: white; border-color: var(--accent); }
 
         #delete-modal { 
             display: none; 
@@ -49,7 +77,7 @@
             inset: 0; 
             z-index: 1000; 
             background: rgba(15, 23, 42, 0.8); 
-            backdrop-blur: 4px; 
+            backdrop-filter: blur(4px); 
         }
         #delete-modal.active { display: flex; }
     </style>
@@ -76,11 +104,11 @@
     <main class="max-w-6xl mx-auto px-6">
         <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div class="animate__animated animate__slideInLeft">
-                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-2">Endpoint Management</p>
-                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase italic">Dispatch <span class="text-blue-600">Registry.</span></h1>
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 dark:text-blue-400 mb-2 transition-colors">Endpoint Management</p>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic transition-colors">Dispatch <span class="text-blue-600 dark:text-blue-400">Registry.</span></h1>
             </div>
             <a href="{% url 'add_address' %}" class="animate__animated animate__slideInRight">
-                <button class="bg-slate-900 text-white px-8 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
+                <button class="bg-slate-900 dark:bg-blue-600 text-white px-8 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-all shadow-lg active:scale-95">
                     <i class="fa-solid fa-plus-square mr-2"></i> Register New Entry
                 </button>
             </a>
@@ -93,11 +121,11 @@
                 
                 {% if address.is_default %}
                 <div class="absolute top-4 right-4">
-                    <span class="bg-blue-50 text-blue-600 text-[8px] px-3 py-1 rounded-sm font-black uppercase border border-blue-100">Primary</span>
+                    <span class="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[8px] px-3 py-1 rounded-sm font-black uppercase border border-blue-100 dark:border-blue-800 transition-colors">Primary</span>
                 </div>
                 {% endif %}
 
-                <div class="w-12 h-12 {% if address.is_default %}bg-blue-50 text-blue-600{% else %}bg-slate-50 text-slate-400{% endif %} rounded-sm flex items-center justify-center mb-6 border border-slate-100">
+                <div class="w-12 h-12 {% if address.is_default %}bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800/50{% else %}bg-slate-50 dark:bg-slate-900 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700{% endif %} rounded-sm flex items-center justify-center mb-6 border transition-colors">
                     {% if address.address_type == 'HOME' %}
                         <i class="fa-solid fa-house-chimney text-xl"></i>
                     {% elif address.address_type == 'WORK' %}
@@ -107,65 +135,65 @@
                     {% endif %}
                 </div>
 
-                <h3 class="text-lg font-black text-slate-900 mb-1 uppercase tracking-tighter">{{ address.address_type }}</h3>
-                <div class="text-[11px] text-slate-500 font-medium uppercase leading-relaxed tracking-wide">
-                    <p class="font-black text-slate-900 text-xs mb-1">{{ address.full_name }}</p>
-                    <p class="mb-1 text-slate-400 font-bold tracking-widest">{{ address.phone_number }}</p>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tighter transition-colors">{{ address.address_type }}</h3>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium uppercase leading-relaxed tracking-wide transition-colors">
+                    <p class="font-black text-slate-900 dark:text-slate-200 text-xs mb-1 transition-colors">{{ address.full_name }}</p>
+                    <p class="mb-1 text-slate-400 dark:text-slate-500 font-bold tracking-widest transition-colors">{{ address.phone_number }}</p>
                     <p class="mb-1">{{ address.house_info }}</p>
                     <p class="mb-1">{{ address.locality }}</p>
                     <p class="mb-1">{{ address.city }}, {{ address.state }} - {{ address.pincode }}</p>
                     <p class="mb-1">{{ address.country }}</p>
                     {% if address.landmark %}
-                    <p class="text-[9px] text-blue-600 mt-2 italic font-bold">Ref: {{ address.landmark }}</p>
+                    <p class="text-[9px] text-blue-600 dark:text-blue-400 mt-2 italic font-bold transition-colors">Ref: {{ address.landmark }}</p>
                     {% endif %}
                 </div>
 
-                <div class="flex gap-2 mt-8 pt-6 border-t border-slate-50">
+                <div class="flex gap-2 mt-8 pt-6 border-t border-slate-50 dark:border-slate-700/50 transition-colors">
                     <a href="{% url 'update_address' address.id %}" class="flex-1">
                         <button class="w-full btn-outline py-2.5 text-[9px] font-black uppercase tracking-widest">Update</button>
                     </a>
-                    <button onclick="openDeleteModal('{{ address.id }}', '{% url 'delete_address' address.id %}')" class="px-4 btn-outline py-2.5 text-[9px] text-red-400 hover:bg-red-500 transition-all border-red-100">
+                    <button onclick="openDeleteModal('{{ address.id }}', '{% url 'delete_address' address.id %}')" class="px-4 btn-outline py-2.5 text-[9px] text-red-400 dark:text-red-500 hover:bg-red-500 dark:hover:bg-red-600 hover:text-white dark:hover:text-white transition-all border-red-100 dark:border-red-900/30">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
             </div>
             {% empty %}
-            <div class="col-span-full py-24 text-center border-2 border-dashed border-slate-200 rounded-sm">
-                <i class="fa-solid fa-database text-5xl text-slate-100 mb-4 block"></i>
-                <p class="font-black uppercase tracking-[0.4em] text-xs text-slate-300">Database Entry: Null</p>
+            <div class="col-span-full py-24 text-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-sm transition-colors">
+                <i class="fa-solid fa-database text-5xl text-slate-100 dark:text-slate-700 mb-4 block transition-colors"></i>
+                <p class="font-black uppercase tracking-[0.4em] text-xs text-slate-300 dark:text-slate-500 transition-colors">Database Entry: Null</p>
             </div>
             {% endfor %}
         </div>
 
-        <div class="mt-12 p-8 glass flex flex-col md:flex-row justify-between items-center gap-6 animate__animated animate__fadeIn">
+        <div class="mt-12 p-8 glass flex flex-col md:flex-row justify-between items-center gap-6 animate__animated animate__fadeIn transition-colors">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-slate-900 text-white rounded-sm flex items-center justify-center">
+                <div class="w-10 h-10 bg-slate-900 dark:bg-slate-700 text-white rounded-sm flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-truck-fast text-xs"></i>
                 </div>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                    Note: Dispatch parameters are locked once unit has achieved <span class="text-blue-600">Transit Status</span>.
+                <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest transition-colors">
+                    Note: Dispatch parameters are locked once unit has achieved <span class="text-blue-600 dark:text-blue-400">Transit Status</span>.
                 </p>
             </div>
-            <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors">Logistics Policy →</a>
+            <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Logistics Policy →</a>
         </div>
     </main>
 
     <div id="delete-modal" class="fixed inset-0 items-center justify-center p-4">
-        <div class="glass max-w-xs w-full p-8 text-center animate__animated animate__fadeInUp animate__faster shadow-2xl">
-            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-sm border border-red-100 flex items-center justify-center mx-auto mb-6">
+        <div class="glass max-w-xs w-full p-8 text-center animate__animated animate__fadeInUp animate__faster shadow-2xl transition-colors">
+            <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 rounded-sm border border-red-100 dark:border-red-900/50 flex items-center justify-center mx-auto mb-6 transition-colors">
                 <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
             </div>
-            <h3 class="text-sm font-black uppercase tracking-widest text-slate-900">Erase Entry?</h3>
-            <p class="text-[10px] font-bold text-slate-400 mt-2 mb-8 uppercase tracking-widest leading-relaxed">
+            <h3 class="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors">Erase Entry?</h3>
+            <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-2 mb-8 uppercase tracking-widest leading-relaxed transition-colors">
                 This record will be permanently removed from the registry.
             </p>
             
             <div class="flex flex-col gap-2">
                 <form id="delete-form" method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition">Confirm Deletion</button>
+                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition shadow-md">Confirm Deletion</button>
                 </form>
-                <button onclick="closeDeleteModal()" class="w-full py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900">Abort</button>
+                <button onclick="closeDeleteModal()" class="w-full py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Abort</button>
             </div>
         </div>
     </div>
@@ -184,6 +212,22 @@
         }
 
         window.onclick = (e) => { if (e.target == modal) closeDeleteModal(); }
+    </script>
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

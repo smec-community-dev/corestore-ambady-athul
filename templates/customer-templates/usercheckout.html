@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,11 +16,19 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Sharp UI Elements */
@@ -28,23 +36,58 @@
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
         }
         
         /* Address Card Logic */
         .address-radio { display: none; }
         .address-card { 
             cursor: pointer; 
+            background-color: #ffffff;
             border: 1px solid #e2e8f0; 
             border-radius: 4px;
             transition: all 0.3s ease; 
         }
+        html.dark .address-card {
+            background-color: #1e293b;
+            border-color: #334155;
+        }
+        
         .address-radio:checked + .address-card { 
             border-color: var(--accent); 
             background-color: #eff6ff; 
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
+        html.dark .address-radio:checked + .address-card {
+            border-color: var(--accent); 
+            background-color: rgba(37, 99, 235, 0.15); 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
         .address-radio:checked + .address-card .check-icon { display: block; }
+
+        /* Payment Label Logic (Replaces Inline JS Styles) */
+        .payment-label {
+            border-color: #e2e8f0;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+        html.dark .payment-label {
+            border-color: #334155;
+        }
+        .payment-label.selected {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+        }
+        html.dark .payment-label.selected {
+            border-color: var(--accent);
+            background-color: rgba(37, 99, 235, 0.15);
+        }
 
         .input-field { 
             background: #ffffff; 
@@ -54,9 +97,17 @@
             font-size: 12px; 
             font-weight: 600; 
             width: 100%; 
+            color: #0f172a;
             transition: all 0.2s ease; 
         }
+        html.dark .input-field {
+            background-color: #0f172a; /* slate-950 */
+            border-color: #334155;
+            color: #ffffff;
+        }
+        html.dark .input-field::placeholder { color: #64748b; }
         .input-field:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37,99,235,0.2); }
+        html.dark .input-field:focus { background-color: #1e293b; box-shadow: 0 0 0 2px rgba(59,130,246,0.3); }
         
         .label-sm { 
             font-size: 10px; 
@@ -66,19 +117,26 @@
             color: #64748b; 
             margin-bottom: 6px; 
             display: block; 
+            transition: color 0.3s ease;
         }
+        html.dark .label-sm { color: #94a3b8; }
 
         .payment-fields { opacity: 0; visibility: hidden; height: 0; overflow: hidden; transition: all 0.3s ease; }
         .payment-fields.visible { opacity: 1 !important; visibility: visible !important; height: auto !important; margin-top: 1.5rem; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .btn-interact { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px; }
+        .btn-interact:active { transform: scale(0.98); }
     </style>
 </head>
-<body class="bg-[#f8fafc] pb-20">
+<body class="min-h-screen pb-20">
 
     {% include 'includes/message-toast.html' %}
     {% include 'core-templates/navbar.html' %}
+
+    <div class="h-20 sm:h-24"></div>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <form method="POST" action="{% url 'checkout_process' %}" class="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-10" id="checkout-form">
@@ -87,19 +145,19 @@
             
             <div class="lg:col-span-7 space-y-6 md:space-y-8 animate__animated animate__fadeIn">
                 <header class="mb-4">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 leading-tight">
-                        Checkout <span class="text-blue-600">Protocol</span>
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 dark:text-white leading-tight transition-colors">
+                        Checkout <span class="text-blue-600 dark:text-blue-400">Protocol</span>
                     </h1>
-                    <p class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 italic">Confirm destination and payment authorization</p>
+                    <p class="text-[9px] sm:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2 italic transition-colors">Confirm destination and payment authorization</p>
                 </header>
 
-                <section class="glass p-5 sm:p-6 md:p-8 shadow-sm">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-8 border-b border-slate-100 pb-4 gap-3">
+                <section class="glass p-5 sm:p-6 md:p-8 shadow-sm transition-colors">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-8 border-b border-slate-100 dark:border-slate-700 pb-4 gap-3 transition-colors">
                         <div class="flex items-center gap-3">
                             <span class="text-xs font-black text-white bg-blue-600 w-6 h-6 flex items-center justify-center rounded-sm">01</span>
-                            <h2 class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-900">Shipping Registry</h2>
+                            <h2 class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors">Shipping Registry</h2>
                         </div>
-                        <a href="{% url 'add_address' %}" class="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-slate-900 transition-colors flex items-center shrink-0">
+                        <a href="{% url 'add_address' %}" class="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center shrink-0">
                             <i class="fa-solid fa-plus-square mr-1.5 text-sm"></i> Add New Entry
                         </a>
                     </div>
@@ -109,74 +167,74 @@
                         <label class="relative block group cursor-pointer h-full">
                             <input type="radio" name="selected_address" value="{{ addr.id }}" class="address-radio" id="addr-{{ addr.id }}" {% if addr.is_default %}checked{% endif %} required>
                             <div class="address-card p-4 sm:p-5 relative h-full flex flex-col">
-                                <div class="check-icon hidden absolute top-4 right-4 text-blue-600">
+                                <div class="check-icon hidden absolute top-4 right-4 text-blue-600 dark:text-blue-400 transition-colors">
                                     <i class="fa-solid fa-circle-check text-lg"></i>
                                 </div>
-                                <p class="text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">{{ addr.address_type }}</p>
-                                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-tight pr-6">{{ addr.full_name }}</h4>
-                                <p class="text-[10px] font-medium text-slate-500 mt-2 leading-relaxed uppercase flex-1">
+                                <p class="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest transition-colors">{{ addr.address_type }}</p>
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-tight pr-6 transition-colors">{{ addr.full_name }}</h4>
+                                <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-2 leading-relaxed uppercase flex-1 transition-colors">
                                     {{ addr.house_info }}, {{ addr.locality }}<br>
                                     {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}
                                 </p>
-                                <div class="mt-4 pt-3 border-t border-slate-100/50 flex items-center text-slate-900 text-[10px] font-bold">
-                                    <i class="fa-solid fa-phone-flip text-[8px] mr-2 text-blue-500"></i> {{ addr.phone_number }}
+                                <div class="mt-4 pt-3 border-t border-slate-100/50 dark:border-slate-700 flex items-center text-slate-900 dark:text-slate-300 text-[10px] font-bold transition-colors">
+                                    <i class="fa-solid fa-phone-flip text-[8px] mr-2 text-blue-500 dark:text-blue-400"></i> {{ addr.phone_number }}
                                 </div>
                             </div>
                         </label>
                         {% empty %}
-                        <div class="sm:col-span-2 py-10 sm:py-12 text-center border-2 border-dashed border-slate-200 rounded-sm bg-slate-50">
-                            <i class="fa-solid fa-map-location-dot text-3xl sm:text-4xl text-slate-200 mb-4 block"></i>
-                            <p class="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-5">No Shipping Records Found</p>
-                            <a href="{% url 'add_address' %}" class="inline-block bg-slate-900 text-white px-6 sm:px-8 py-3 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-colors shadow-md">Create Entry</a>
+                        <div class="sm:col-span-2 py-10 sm:py-12 text-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-sm bg-slate-50 dark:bg-slate-800/30 transition-colors">
+                            <i class="fa-solid fa-map-location-dot text-3xl sm:text-4xl text-slate-200 dark:text-slate-700 mb-4 block transition-colors"></i>
+                            <p class="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-5 transition-colors">No Shipping Records Found</p>
+                            <a href="{% url 'add_address' %}" class="inline-block bg-slate-900 dark:bg-blue-600 text-white px-6 sm:px-8 py-3 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-colors shadow-md">Create Entry</a>
                         </div>
                         {% endfor %}
                     </div>
                 </section>
 
-                <section class="glass p-5 sm:p-6 md:p-8 shadow-sm">
-                    <div class="flex items-center gap-3 mb-6 md:mb-8 border-b border-slate-100 pb-4">
+                <section class="glass p-5 sm:p-6 md:p-8 shadow-sm transition-colors">
+                    <div class="flex items-center gap-3 mb-6 md:mb-8 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
                         <span class="text-xs font-black text-white bg-blue-600 w-6 h-6 flex items-center justify-center rounded-sm">02</span>
-                        <h2 class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-900">Payment Authorization</h2>
+                        <h2 class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors">Payment Authorization</h2>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <label class="flex items-center p-4 sm:p-5 border-2 rounded-sm transition-all cursor-pointer group" id="label-cod" for="payment-cod">
+                        <label class="payment-label flex items-center p-4 sm:p-5 border-2 rounded-sm cursor-pointer group" id="label-cod" for="payment-cod">
                             <input type="radio" name="payment_method" value="cod" id="payment-cod" class="sr-only" checked>
                             <div class="flex items-center gap-3 sm:gap-4 flex-1">
-                                <div class="w-10 h-10 bg-slate-100 rounded-sm flex items-center justify-center group-hover:bg-blue-50 transition-colors shrink-0">
-                                    <i class="fa-solid fa-hand-holding-dollar text-slate-400 group-hover:text-blue-600 text-lg"></i>
+                                <div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-sm flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-slate-700 transition-colors shrink-0">
+                                    <i class="fa-solid fa-hand-holding-dollar text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 text-lg transition-colors"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-black uppercase text-[10px] tracking-widest text-slate-900">Cash on Delivery</h4>
-                                    <p class="text-[9px] font-bold text-emerald-600 mt-0.5">Pay at Destination</p>
+                                    <h4 class="font-black uppercase text-[10px] tracking-widest text-slate-900 dark:text-white transition-colors">Cash on Delivery</h4>
+                                    <p class="text-[9px] font-bold text-emerald-600 dark:text-emerald-500 mt-0.5 transition-colors">Pay at Destination</p>
                                 </div>
                             </div>
                         </label>
 
-                        <label class="flex items-center p-4 sm:p-5 border-2 rounded-sm transition-all cursor-pointer group" id="label-online" for="payment-online">
+                        <label class="payment-label flex items-center p-4 sm:p-5 border-2 rounded-sm cursor-pointer group" id="label-online" for="payment-online">
                             <input type="radio" name="payment_method" value="online" id="payment-online" class="sr-only">
                             <div class="flex items-center gap-3 sm:gap-4 flex-1">
-                                <div class="w-10 h-10 bg-slate-100 rounded-sm flex items-center justify-center group-hover:bg-blue-50 transition-colors shrink-0">
-                                    <i class="fa-solid fa-globe text-slate-400 group-hover:text-blue-600 text-lg"></i>
+                                <div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-sm flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-slate-700 transition-colors shrink-0">
+                                    <i class="fa-solid fa-globe text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 text-lg transition-colors"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-black uppercase text-[10px] tracking-widest text-slate-900">Online Gateway</h4>
-                                    <p class="text-[9px] font-bold text-blue-600 mt-0.5">Cards / UPI / NetBanking</p>
+                                    <h4 class="font-black uppercase text-[10px] tracking-widest text-slate-900 dark:text-white transition-colors">Online Gateway</h4>
+                                    <p class="text-[9px] font-bold text-blue-600 dark:text-blue-400 mt-0.5 transition-colors">Cards / UPI / NetBanking</p>
                                 </div>
                             </div>
                         </label>
                     </div>
 
                     <div id="online-payment-fields" class="payment-fields">
-                        <div class="p-5 sm:p-6 bg-slate-50 border border-slate-200 rounded-sm">
+                        <div class="p-5 sm:p-6 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-sm transition-colors">
                             <div class="flex gap-3 sm:gap-4 mb-5 sm:mb-6">
-                                <div class="flex-1 p-3 sm:p-4 bg-white border border-slate-200 rounded-sm text-center cursor-pointer hover:border-blue-600 transition-all" data-subtype="card">
-                                    <i class="fa-solid fa-credit-card text-blue-600 mb-2 text-lg"></i>
-                                    <p class="text-[9px] font-black uppercase tracking-widest">Card</p>
+                                <div class="flex-1 p-3 sm:p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-sm text-center cursor-pointer hover:border-blue-600 dark:hover:border-blue-500 transition-all" data-subtype="card">
+                                    <i class="fa-solid fa-credit-card text-blue-600 dark:text-blue-400 mb-2 text-lg transition-colors"></i>
+                                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors">Card</p>
                                 </div>
-                                <div class="flex-1 p-3 sm:p-4 bg-white border border-slate-200 rounded-sm text-center cursor-pointer hover:border-blue-600 transition-all" data-subtype="upi">
-                                    <i class="fa-solid fa-mobile-screen text-blue-600 mb-2 text-lg"></i>
-                                    <p class="text-[9px] font-black uppercase tracking-widest">UPI</p>
+                                <div class="flex-1 p-3 sm:p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-sm text-center cursor-pointer hover:border-blue-600 dark:hover:border-blue-500 transition-all" data-subtype="upi">
+                                    <i class="fa-solid fa-mobile-screen text-blue-600 dark:text-blue-400 mb-2 text-lg transition-colors"></i>
+                                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors">UPI</p>
                                 </div>
                             </div>
                             <div id="card-fields" class="online-fields space-y-4">
@@ -195,65 +253,65 @@
             </div>
 
             <div class="lg:col-span-5 order-last mt-4 lg:mt-0">
-                <div class="glass p-6 sm:p-8 lg:sticky lg:top-28 shadow-lg border-t-4 border-t-blue-600">
-                    <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-6 border-b border-slate-100 pb-4">Manifest Review</h3>
+                <div class="glass p-6 sm:p-8 lg:sticky lg:top-28 shadow-lg border-t-4 border-t-blue-600 dark:border-t-blue-500 transition-colors">
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">Manifest Review</h3>
                     
                     <div class="space-y-3 mb-6 max-h-[350px] overflow-y-auto no-scrollbar pr-1">
                         {% for item in cart_data %}
-                        <div class="flex items-center gap-3 sm:gap-4 p-3 border border-slate-100 rounded-sm bg-slate-50/50 hover:bg-slate-50 transition-colors" data-item-id="{{ item.id }}">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-sm overflow-hidden bg-white border border-slate-200 flex-shrink-0">
+                        <div class="flex items-center gap-3 sm:gap-4 p-3 border border-slate-100 dark:border-slate-700 rounded-sm bg-slate-50/50 dark:bg-slate-800/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" data-item-id="{{ item.id }}">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-sm overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 flex-shrink-0 transition-colors">
                                 
                                 {% for img in item.variant.images.all %}
                                     {% if img.is_primary %}
                                         <img src="{{ img.images.url }}" alt="{{ item.variant.product.name }}" class="w-full h-full object-cover" loading="lazy">
                                     {% endif %}
                                 {% empty %}
-                                    <div class="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                                    <div class="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center transition-colors">
                                         <i class="fa-solid fa-image text-slate-400 text-xl"></i>
                                     </div>
                                 {% endfor %}
 
                             </div>
                             <div class="flex-1 min-w-0 py-1">
-                                <h4 class="text-[10px] sm:text-xs font-black text-slate-900 uppercase truncate pr-2">{{ item.variant.product.name }}</h4>
-                                <p class="text-[9px] font-bold text-slate-400 mt-0.5 uppercase">Units: <span class="text-slate-900" id="qty-{{ item.id }}">{{ item.quantity }}</span></p>
+                                <h4 class="text-[10px] sm:text-xs font-black text-slate-900 dark:text-white uppercase truncate pr-2 transition-colors">{{ item.variant.product.name }}</h4>
+                                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 mt-0.5 uppercase transition-colors">Units: <span class="text-slate-900 dark:text-white transition-colors" id="qty-{{ item.id }}">{{ item.quantity }}</span></p>
                                 
                                 <div class="flex items-center gap-1.5 mt-2">
                                     {% if not is_single_checkout %}
-                                    <button type="button" class="qty-btn w-6 h-6 bg-white border border-slate-200 text-slate-900 rounded-sm flex items-center justify-center text-[8px] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors" data-item="{{ item.id }}" data-action="decrease"><i class="fa-solid fa-minus"></i></button>
-                                    <button type="button" class="qty-btn w-6 h-6 bg-white border border-slate-200 text-slate-900 rounded-sm flex items-center justify-center text-[8px] hover:bg-green-50 hover:text-green-600 hover:border-green-200 transition-colors" data-item="{{ item.id }}" data-action="increase"><i class="fa-solid fa-plus"></i></button>
+                                    <button type="button" class="qty-btn w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white rounded-sm flex items-center justify-center text-[8px] hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-800 transition-colors" data-item="{{ item.id }}" data-action="decrease"><i class="fa-solid fa-minus"></i></button>
+                                    <button type="button" class="qty-btn w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white rounded-sm flex items-center justify-center text-[8px] hover:bg-green-50 dark:hover:bg-emerald-900/30 hover:text-green-600 dark:hover:text-emerald-400 hover:border-green-200 dark:hover:border-emerald-800 transition-colors" data-item="{{ item.id }}" data-action="increase"><i class="fa-solid fa-plus"></i></button>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="text-right flex flex-col justify-between h-full py-1 shrink-0">
-                                <p class="text-xs sm:text-sm font-black text-slate-900" id="item-total-{{ item.id }}">${{ item.item_total|floatformat:0 }}</p>
-                                <p class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mt-auto">Valuation</p>
+                                <p class="text-xs sm:text-sm font-black text-slate-900 dark:text-white transition-colors" id="item-total-{{ item.id }}">${{ item.item_total|floatformat:0 }}</p>
+                                <p class="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter mt-auto transition-colors">Valuation</p>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <div class="space-y-3 sm:space-y-4 pt-5 sm:pt-6 border-t border-slate-200">
-                        <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-500">
+                    <div class="space-y-3 sm:space-y-4 pt-5 sm:pt-6 border-t border-slate-200 dark:border-slate-700 transition-colors">
+                        <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 transition-colors">
                             <span>Manifest Subtotal</span>
-                            <span class="text-slate-900 font-black" id="subtotal-amount">${{ total_amount|floatformat:2 }}</span>
+                            <span class="text-slate-900 dark:text-white font-black transition-colors" id="subtotal-amount">${{ total_amount|floatformat:2 }}</span>
                         </div>
-                        <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold uppercase tracking-widest text-blue-600">
+                        <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 transition-colors">
                             <span>Logistics Protocol</span>
-                            <span class="bg-blue-50 px-2 py-0.5 rounded text-[9px] font-black">COMPLIMENTARY</span>
+                            <span class="bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded text-[9px] font-black transition-colors">COMPLIMENTARY</span>
                         </div>
-                        <div class="flex justify-between items-end text-xl sm:text-2xl font-black tracking-tighter text-slate-900 pt-4 sm:pt-6 border-t border-slate-100">
-                            <span class="uppercase text-[10px] sm:text-xs tracking-widest text-slate-500 mb-1">Grand Total</span>
+                        <div class="flex justify-between items-end text-xl sm:text-2xl font-black tracking-tighter text-slate-900 dark:text-white pt-4 sm:pt-6 border-t border-slate-100 dark:border-slate-700 transition-colors">
+                            <span class="uppercase text-[10px] sm:text-xs tracking-widest text-slate-500 dark:text-slate-400 mb-1 transition-colors">Grand Total</span>
                             <span id="grand-total">${{ total_amount|floatformat:2 }}</span>
                         </div>
                     </div>
 
                     <div class="mt-8 sm:mt-10 space-y-3">
-                        <button type="submit" class="w-full bg-slate-900 text-white py-4 sm:py-5 rounded-sm font-black uppercase text-[10px] sm:text-[11px] tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl shadow-slate-900/10 disabled:opacity-50 disabled:hover:bg-slate-900" id="submit-btn" disabled>
+                        <button type="submit" class="w-full bg-slate-900 dark:bg-blue-600 text-white py-4 sm:py-5 rounded-sm font-black uppercase text-[10px] sm:text-[11px] tracking-[0.2em] hover:bg-blue-600 dark:hover:bg-blue-500 transition-all shadow-xl shadow-slate-900/10 dark:shadow-none disabled:opacity-50 disabled:hover:bg-slate-900 dark:disabled:hover:bg-blue-600" id="submit-btn" disabled>
                             Authorize Transaction
                         </button>
-                        <p class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase text-center tracking-widest flex items-center justify-center gap-1.5 pt-2">
-                            <i class="fa-solid fa-shield-check text-blue-500"></i> AES-256 Data Encryption Active
+                        <p class="text-[8px] sm:text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase text-center tracking-widest flex items-center justify-center gap-1.5 pt-2 transition-colors">
+                            <i class="fa-solid fa-shield-check text-blue-500 dark:text-blue-400 transition-colors"></i> AES-256 Data Encryption Active
                         </p>
                     </div>
                 </div>
@@ -293,7 +351,7 @@
                 });
             });
 
-            // Payment Selection Logic
+            // Payment Selection Logic (Fixed for Dark Mode Compatibility)
             const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
             const onlineFields = document.getElementById('online-payment-fields');
 
@@ -301,16 +359,14 @@
                 paymentRadios.forEach(radio => {
                     const label = document.getElementById(`label-${radio.value}`);
                     if (radio.checked) {
-                        label.style.borderColor = '#2563eb';
-                        label.style.backgroundColor = '#eff6ff';
+                        label.classList.add('selected');
                         if (radio.value === 'online') {
                             onlineFields.classList.add('visible');
                         } else {
                             onlineFields.classList.remove('visible');
                         }
                     } else {
-                        label.style.borderColor = '#e2e8f0';
-                        label.style.backgroundColor = 'transparent';
+                        label.classList.remove('selected');
                     }
                 });
                 checkFormReady();
@@ -338,6 +394,22 @@
                 r.addEventListener('change', checkFormReady);
             });
         });
+    </script>
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

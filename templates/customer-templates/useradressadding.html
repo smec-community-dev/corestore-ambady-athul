@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,19 +16,33 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Unified Glassmorphism */
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px; /* Sharp Edges */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
         }
 
-        /* Technical Input Field */
+        /* Technical Input Field (Fixed for Dark Mode) */
         .input-field { 
             background-color: #ffffff; 
             border: 1px solid #e2e8f0; 
@@ -37,15 +51,29 @@
             font-size: 12px; 
             font-weight: 600; 
             width: 100%; 
-            transition: all 0.2s ease; 
-            color: var(--primary);
+            transition: all 0.3s ease; 
+            color: #0f172a;
             text-transform: uppercase;
         }
+        html.dark .input-field {
+            background-color: #0f172a; /* slate-950 */
+            border-color: #334155; /* slate-700 */
+            color: #ffffff;
+        }
+        html.dark .input-field::placeholder {
+            color: #64748b; /* slate-500 */
+        }
+        
         .input-field:focus { 
             outline: none; 
             border-color: var(--accent); 
-            ring: 2px var(--accent);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
             background-color: #fafafa; 
+        }
+        html.dark .input-field:focus {
+            background-color: #1e293b; /* slate-800 */
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
 
         .label-text { 
@@ -53,10 +81,14 @@
             font-weight: 800; 
             text-transform: uppercase; 
             letter-spacing: 0.15em; 
-            color: #64748b; 
+            color: #64748b; /* slate-500 */
             margin-bottom: 0.5rem; 
             display: block; 
             margin-left: 2px;
+            transition: color 0.3s ease;
+        }
+        html.dark .label-text {
+            color: #94a3b8; /* slate-400 */
         }
 
         .loader { 
@@ -68,14 +100,20 @@
             animation: spin 1s linear infinite; 
             display: none; 
         }
+        html.dark .loader { border-color: #334155; border-top-color: var(--accent); }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Type Toggles */
+        /* Type Toggles (Fixed Invisible Text Bug in Dark Mode) */
         .type-radio:checked + label { 
-            background-color: var(--primary); 
+            background-color: #0f172a; 
             color: white; 
-            border-color: var(--primary); 
+            border-color: #0f172a; 
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        html.dark .type-radio:checked + label {
+            background-color: var(--accent); /* Sleek blue instead of white */
+            border-color: var(--accent);
+            color: white;
         }
 
         .btn-main {
@@ -89,20 +127,20 @@
 </head>
 <body class="min-h-screen py-12 px-4 md:px-6 flex items-center justify-center">
 
-    <div class="fixed inset-0 z-[-1] bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f8fafc]"></div>
+    <div class="fixed inset-0 z-[-1] bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f8fafc] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-500"></div>
 
     <div class="max-w-xl w-full animate__animated animate__fadeIn">
-        <header class="mb-10 flex flex-col items-center">
-            <div class="bg-blue-600 p-2 rounded-sm text-white mb-4 shadow-lg">
+        <header class="mb-10 flex flex-col items-center transition-colors">
+            <div class="bg-blue-600 p-2 rounded-sm text-white mb-4 shadow-lg transition-colors">
                 <i class="fa-solid fa-map-location-dot text-xl"></i>
             </div>
-            <h1 class="text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">
-                Register New <span class="text-blue-600">Endpoint</span>
+            <h1 class="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter leading-none transition-colors">
+                Register New <span class="text-blue-600 dark:text-blue-400">Endpoint</span>
             </h1>
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em] mt-3">Logistics Registry Management</p>
+            <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.4em] mt-3 transition-colors">Logistics Registry Management</p>
         </header>
 
-        <form method="POST" class="glass p-8 md:p-10 shadow-xl relative">
+        <form method="POST" class="glass p-8 md:p-10 shadow-xl relative transition-colors">
             {% csrf_token %}
             
             <div class="space-y-6">
@@ -117,14 +155,14 @@
                     </div>
                 </div>
 
-                <div class="h-px bg-slate-100"></div>
+                <div class="h-px bg-slate-100 dark:bg-slate-700 transition-colors"></div>
 
                 <div class="space-y-5">
                     <div class="relative">
                         <label class="label-text flex items-center gap-2">
                             Regional Pincode <span id="pin-loader" class="loader"></span>
                         </label>
-                        <input type="text" name="pincode" id="pincode" maxlength="6" required placeholder="000000" class="input-field border-blue-100 bg-blue-50/30">
+                        <input type="text" name="pincode" id="pincode" maxlength="6" required placeholder="000000" class="input-field border-blue-100 dark:border-slate-600 bg-blue-50/30 dark:bg-slate-900">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -161,32 +199,32 @@
                         <div class="flex gap-2">
                             <div class="flex-1">
                                 <input type="radio" name="address_type" id="HOME" value="HOME" class="hidden type-radio" checked>
-                                <label for="HOME" class="block text-center py-3 border border-slate-200 rounded-sm text-[10px] font-black uppercase cursor-pointer transition-all hover:bg-slate-50">Residential</label>
+                                <label for="HOME" class="block text-center py-3 border border-slate-200 dark:border-slate-700 rounded-sm text-[10px] font-black uppercase cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300">Residential</label>
                             </div>
                             <div class="flex-1">
                                 <input type="radio" name="address_type" id="WORK" value="WORK" class="hidden type-radio">
-                                <label for="WORK" class="block text-center py-3 border border-slate-200 rounded-sm text-[10px] font-black uppercase cursor-pointer transition-all hover:bg-slate-50">Commercial</label>
+                                <label for="WORK" class="block text-center py-3 border border-slate-200 dark:border-slate-700 rounded-sm text-[10px] font-black uppercase cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300">Commercial</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-3 px-1">
                         <input type="checkbox" name="is_default" id="is_default" class="w-4 h-4 rounded-sm accent-blue-600 cursor-pointer">
-                        <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer hover:text-blue-600 transition-colors">Set as Primary Endpoint</label>
+                        <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Set as Primary Endpoint</label>
                     </div>
                 </div>
 
-                <div class="pt-6 space-y-3">
-                    <button type="submit" class="btn-main w-full bg-slate-900 text-white py-4 text-[11px] tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
+                <div class="pt-6 space-y-3 transition-colors">
+                    <button type="submit" class="btn-main w-full bg-slate-900 dark:bg-blue-600 text-white py-4 text-[11px] tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-all shadow-lg active:scale-95">
                         Commit Destination to Registry
                     </button>
-                    <button type="button" onclick="window.history.back()" class="btn-main w-full bg-white text-slate-400 py-4 text-[11px] tracking-widest border border-slate-200 hover:text-slate-900 hover:border-slate-900 transition-all">
+                    <button type="button" onclick="window.history.back()" class="btn-main w-full bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500 py-4 text-[11px] tracking-widest border border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white hover:border-slate-900 dark:hover:border-slate-500 transition-all">
                         Abort Entry
                     </button>
                 </div>
             </div>
         </form>
-        <p class="text-center text-[8px] font-bold text-slate-300 uppercase tracking-[0.6em] mt-10">Secure Data Transmit Protocol v2.6</p>
+        <p class="text-center text-[8px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-[0.6em] mt-10 transition-colors">Secure Data Transmit Protocol v2.6</p>
     </div>
 
     <script>
@@ -232,6 +270,22 @@
         cityInput.addEventListener('input', () => {
             if (cityInput.value.length > 0) pinInput.value = "";
         });
+    </script>
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

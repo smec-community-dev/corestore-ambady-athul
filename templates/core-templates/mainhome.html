@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,11 +15,18 @@
         --bg-main: #ffffff; 
       }
 
+      /* Dark Mode Core Variable */
+      html.dark {
+        --bg-main: #0f172a; /* Tailwind slate-950 equivalent */
+        --primary: #f8fafc;
+      }
+
       body {
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
         overflow-x: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       /* Noticeable Smooth Reveal */
@@ -37,11 +44,11 @@
       .hide-scrollbar::-webkit-scrollbar { display: none; }
       .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-      /* Category Item Styling - FIXED STACKING CONTEXT */
+      /* Category Item Styling */
       .cat-item {
         transition: all 0.3s ease;
         position: relative; 
-        z-index: 1; /* Base layer */
+        z-index: 1; 
       }
       .cat-circle {
         position: relative;
@@ -50,15 +57,13 @@
       }
       @media (min-width: 1024px) {
         .cat-item:hover {
-          z-index: 999; /* Pops the entire item above the hero section */
+          z-index: 999; 
         }
         .cat-item:hover .cat-circle {
-          position: relative;
           z-index: 1000;
           border-color: var(--accent);
           box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
           transform: scale(1.1);
-          background-color: #ffffff; /* Ensures solid background when overlapping */
         }
       }
 
@@ -78,7 +83,7 @@
           border-color: var(--accent);
           box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.08);
           transform: translateY(-4px);
-          z-index: 40; /* Adjusted slightly lower than categories so they don't fight */
+          z-index: 40; 
         }
       }
 
@@ -88,6 +93,19 @@
         overflow: hidden; 
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
+      }
+
+      /* Perfect Dark Mode Logic for Pro Card */
+      html.dark .pro-card {
+        background: #1e293b; /* slate-800 */
+        border-color: #334155; /* slate-700 */
+      }
+      html.dark .pro-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+      }
+      html.dark .pro-card .img-box {
+        background: #0f172a; /* slate-900 */
       }
       
       /* Carousel crossfade logic */
@@ -107,6 +125,14 @@
         border-top: 1px solid #e2e8f0;
         border-bottom-left-radius: 3px;
         border-bottom-right-radius: 3px;
+      }
+      html.dark .card-footer-ambient {
+        background: linear-gradient(to bottom, #1e293b, #0f172a);
+        border-top-color: #334155;
+      }
+
+      html.dark .cat-item:hover .cat-circle {
+        background-color: #1e293b;
       }
     </style>
 </head>
@@ -144,8 +170,8 @@
         </div>
 
         <div class="grid grid-cols-2 lg:flex lg:flex-col gap-3 sm:gap-4">
-          <div class="flex-1 bg-slate-50 border border-slate-200 rounded-sm p-4 sm:p-5 lg:p-6 flex flex-col justify-between hover:border-blue-400 transition-colors cursor-pointer group shadow-sm">
-            <h3 class="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-800">Special Bundles</h3>
+          <div class="flex-1 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-sm p-4 sm:p-5 lg:p-6 flex flex-col justify-between hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer group shadow-sm">
+            <h3 class="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-800 dark:text-white">Special Bundles</h3>
             <span class="text-blue-600 text-[9px] sm:text-[10px] font-black group-hover:translate-x-2 transition-transform inline-block uppercase mt-4 lg:mt-0 tracking-widest">View All <i class="fa-solid fa-arrow-right ml-1"></i></span>
           </div>
           
@@ -163,25 +189,25 @@
       <div class="flex flex-row md:flex-wrap justify-start md:justify-center gap-4 sm:gap-6 md:gap-10 overflow-x-auto hide-scrollbar snap-x pb-4 md:pb-0 px-2 sm:px-0">
         {% for category in categories %}
         <a href="{% url 'category_view' category.slug %}" class="cat-item group flex flex-col items-center shrink-0 snap-start w-[76px] sm:w-auto">
-          <div class="cat-circle w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full border border-slate-200 bg-white flex items-center justify-center p-1 sm:p-1.5 overflow-hidden transition-all duration-300 shadow-sm">
-            <div class="w-full h-full rounded-full overflow-hidden bg-slate-50 flex items-center justify-center">
+          <div class="cat-circle w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center p-1 sm:p-1.5 overflow-hidden transition-all duration-300 shadow-sm">
+            <div class="w-full h-full rounded-full overflow-hidden bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
                 {% if category.image %}
                 <img src="{{ category.image.url }}" class="w-full h-full object-cover">
                 {% else %}
-                <span class="font-black text-slate-300 text-sm sm:text-base uppercase">{{ category.name|first }}</span>
+                <span class="font-black text-slate-300 dark:text-slate-600 text-sm sm:text-base uppercase">{{ category.name|first }}</span>
                 {% endif %}
             </div>
           </div>
-          <span class="mt-2.5 sm:mt-3 text-[9px] sm:text-[10px] font-black text-slate-600 group-hover:text-blue-600 transition-colors uppercase tracking-widest text-center leading-tight line-clamp-2 w-full">{{ category.name }}</span>
+          <span class="mt-2.5 sm:mt-3 text-[9px] sm:text-[10px] font-black text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors uppercase tracking-widest text-center leading-tight line-clamp-2 w-full">{{ category.name }}</span>
         </a>
         {% endfor %}
       </div>
     </section>
 
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20 md:pb-24 reveal relative z-10">
-      <div class="flex items-center justify-between mb-6 sm:mb-8 border-b border-slate-100 pb-4">
-        <h2 class="text-base sm:text-lg md:text-xl font-black tracking-tighter uppercase border-l-4 border-blue-600 pl-3 leading-none text-slate-900">New Arrivals</h2>
-        <a href="{% url 'products' %}" class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-blue-600 transition-colors flex items-center">View All <i class="fa-solid fa-angle-right ml-1"></i></a>
+      <div class="flex items-center justify-between mb-6 sm:mb-8 border-b border-slate-100 dark:border-slate-800 pb-4 transition-colors">
+        <h2 class="text-base sm:text-lg md:text-xl font-black tracking-tighter uppercase border-l-4 border-blue-600 pl-3 leading-none text-slate-900 dark:text-white transition-colors">New Arrivals</h2>
+        <a href="{% url 'products' %}" class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center">View All <i class="fa-solid fa-angle-right ml-1"></i></a>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
@@ -193,12 +219,12 @@
                 {% if images %}
                   <img src="{{ images.0.images.url }}" class="main-img w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" alt="{{ product.product.name }}">
                 {% else %}
-                  <div class="w-full h-full flex items-center justify-center bg-slate-50"><i class="fa-solid fa-image text-2xl text-slate-200"></i></div>
+                  <div class="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-900"><i class="fa-solid fa-image text-2xl text-slate-200 dark:text-slate-700"></i></div>
                 {% endif %}
               {% endwith %}
               
               <div class="absolute inset-x-0 bottom-0 overflow-hidden z-20">
-                <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="cart-slide translate-y-0 lg:translate-y-full lg:group-hover:translate-y-0 w-full bg-blue-600/95 backdrop-blur-sm text-white transition-transform duration-300 m-0 p-0 border-0 flex">
+                <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="cart-slide translate-y-0 lg:translate-y-full lg:group-hover:translate-y-0 w-full bg-blue-600/95 backdrop-blur-sm text-white transition-transform duration-300 m-0 p-0 border-0 flex" onclick="event.stopPropagation();">
                     {% csrf_token %}
                     <input type="hidden" name="quantity" value="1">
                     <button type="submit" class="w-full py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] cursor-pointer hover:bg-blue-700 transition-colors text-center border-0 outline-none m-0">
@@ -208,14 +234,14 @@
               </div>
             </div>
 
-            <div class="p-3 sm:p-4 card-footer-ambient flex-1 flex flex-col justify-end">
+            <div class="p-3 sm:p-4 card-footer-ambient flex-1 flex flex-col justify-end transition-colors">
               <div class="mb-2">
-                <span class="text-[8px] sm:text-[9px] font-bold text-blue-500 uppercase tracking-widest block mb-1 truncate">{{ product.product.category.name }}</span>
-                <h3 class="text-[11px] sm:text-xs font-bold text-slate-800 line-clamp-2 group-hover:text-blue-600 transition-colors uppercase tracking-tight leading-snug">{{ product.product.name }}</h3>
+                <span class="text-[8px] sm:text-[9px] font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest block mb-1 truncate">{{ product.product.category.name }}</span>
+                <h3 class="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors uppercase tracking-tight leading-snug">{{ product.product.name }}</h3>
               </div>
               
               <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-auto gap-1 sm:gap-0">
-                <p class="text-sm sm:text-base font-black text-slate-900 tracking-tighter">${{ product.selling_price|floatformat:0 }}</p>
+                <p class="text-sm sm:text-base font-black text-slate-900 dark:text-white transition-colors tracking-tighter">${{ product.selling_price|floatformat:0 }}</p>
                 <div class="flex items-center">
                   {% include 'core-templates/partials/product-rating.html' with product=product %}
                 </div>
@@ -228,17 +254,17 @@
       </div>
 
       {% if products_page.has_other_pages %}
-      <div class="mt-10 sm:mt-12 flex justify-center items-center gap-4 sm:gap-6 bg-slate-50 border border-slate-100 rounded-sm py-3 px-6 w-fit mx-auto shadow-sm">
+      <div class="mt-10 sm:mt-12 flex justify-center items-center gap-4 sm:gap-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-sm py-3 px-6 w-fit mx-auto shadow-sm transition-colors">
         {% if products_page.has_previous %}
-          <a href="?page={{ products_page.previous_page_number }}" class="w-8 h-8 flex items-center justify-center rounded-sm bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><i class="fa-solid fa-angle-left"></i></a>
+          <a href="?page={{ products_page.previous_page_number }}" class="w-8 h-8 flex items-center justify-center rounded-sm bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-500 transition-all shadow-sm"><i class="fa-solid fa-angle-left"></i></a>
         {% endif %}
         
-        <span class="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
-            Pg <span class="text-blue-600">{{ products_page.number }}</span> of {{ products_page.paginator.num_pages }}
+        <span class="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-[0.2em] transition-colors">
+            Pg <span class="text-blue-600 dark:text-blue-400">{{ products_page.number }}</span> of {{ products_page.paginator.num_pages }}
         </span>
         
         {% if products_page.has_next %}
-          <a href="?page={{ products_page.next_page_number }}" class="w-8 h-8 flex items-center justify-center rounded-sm bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><i class="fa-solid fa-angle-right"></i></a>
+          <a href="?page={{ products_page.next_page_number }}" class="w-8 h-8 flex items-center justify-center rounded-sm bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-500 transition-all shadow-sm"><i class="fa-solid fa-angle-right"></i></a>
         {% endif %}
       </div>
       {% endif %}
@@ -255,7 +281,7 @@
         });
       }
       window.addEventListener("scroll", reveal);
-      reveal(); // Trigger immediately on load
+      reveal(); 
 
       // Carousel Logic
       let currentIdx = 0;
@@ -277,7 +303,6 @@
         currentIdx = index;
       }
       
-      // Auto-advance
       if(slides.length > 1) {
           setInterval(() => {
             currentIdx = (currentIdx + 1) % slides.length;
@@ -285,8 +310,20 @@
           }, 5000);
       }
       
-      // Initialize first slide indicators
       showSlide(0);
+
+      // Theme Initialization
+      function applyTheme() {
+        const themeData = document.documentElement.getAttribute('data-theme');
+        if (themeData === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      
+      document.addEventListener('DOMContentLoaded', applyTheme);
+      applyTheme();
     </script>
 
     {% include 'core-templates/footer.html' %}

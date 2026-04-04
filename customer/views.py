@@ -43,6 +43,12 @@ def home(request):
     
     if request.user.is_authenticated:
         context['data'] = request.user
+        try:
+            context['user_theme'] = request.user.settings.theme_preference
+        except:
+            context['user_theme'] = 'light'
+    else:
+        context['user_theme'] = 'light'
     
     return render(request, 'core-templates/mainhome.html', context)
 
@@ -1001,7 +1007,7 @@ def order_detail(request, order_id):
 def my_reviews(request):
     reviews = Review.objects.filter(
         user=request.user
-).select_related('product').prefetch_related('product__variants__images').order_by('-created_at')
+).select_related('product').prefetch_related('product__variants__images', 'images').order_by('-created_at')
     
     paginator = Paginator(reviews, 10)
     page = request.GET.get('page')
@@ -1039,12 +1045,18 @@ def submit_review(request):
             messages.error(request, 'You have already reviewed this product.')
             return redirect('order_detail', order_id=order_id)
 
-        Review.objects.create(
+        review = Review.objects.create(
             user=request.user,
             product=product,
             rating=rating,
             comment=comment
         )
+
+        # Limit to 5 photos
+        photos = request.FILES.getlist('review_photos')[:5]
+        for photo in photos:
+            if photo:
+                ReviewImage.objects.create(review=review, image=photo)
 
         messages.success(request, 'Review created successfully!')
 
@@ -1072,6 +1084,21 @@ def edit_review(request, review_id):
             review.comment = comment
             review.is_edited = True
             review.save()
+
+            # Handle photo removal
+            photos_to_remove = request.POST.getlist('remove_photos')
+            if photos_to_remove:
+                ReviewImage.objects.filter(id__in=photos_to_remove, review=review).delete()
+
+            # Add new photos, but limit total to 5
+            current_photo_count = review.images.count()
+            new_photos = request.FILES.getlist('review_photos')
+            
+            # Only add photos if we haven't reached the limit
+            photos_to_add = min(len(new_photos), 5 - current_photo_count)
+            for i in range(photos_to_add):
+                ReviewImage.objects.create(review=review, image=new_photos[i])
+
             messages.success(request, 'Review updated successfully!')
             return redirect('my_reviews')
         else:
@@ -1080,8 +1107,39 @@ def edit_review(request, review_id):
     context = {
         'review': review,
         'product': product,
+        'remaining_photo_slots': 5 - review.images.count(),
     }
     return render(request, 'customer-templates/edit-review.html', context)
+
+
+@customer_required
+def delete_review_image(request, review_id):
+    if request.method == 'POST':
+        review = get_object_or_404(Review, id=review_id, user=request.user)
+        image_id = request.POST.get('image_id')
+        
+        if image_id:
+            try:
+                image = ReviewImage.objects.get(id=image_id, review=review)
+                image.delete()
+                messages.success(request, 'Photo deleted successfully!')
+            except ReviewImage.DoesNotExist:
+                messages.error(request, 'Photo not found.')
+        
+        return redirect('edit_review', review_id=review_id)
+    
+    return redirect('my_reviews')
+
+
+@customer_required
+def delete_review(request, review_id):
+    if request.method == 'POST':
+        review = get_object_or_404(Review, id=review_id, user=request.user)
+        review.delete()
+        messages.success(request, 'Review deleted successfully!')
+        return redirect('my_reviews')
+    
+    return redirect('my_reviews')
 
 
 @customer_required
@@ -1119,14 +1177,18 @@ def cancel_order(request, order_id):
 
 @customer_required
 def user_account(request):
-    if not hasattr(request, 'user') or not request.user.is_authenticated or not request.user.is_active:
-        messages.warning(request, 'Session expired. Please log in.')
-        return redirect('login')
+    if not request.user.is_authenticated:
+        return render(request, 'customer-templates/useraccount.html', {'not_logged_in': True})
     
     data = request.user
     addresses = Address.objects.filter(user=request.user)
     orders_count = Order.objects.filter(user=request.user).count()
     reviews_count = Review.objects.filter(user=request.user).count()
+    
+    try:
+        current_theme = data.settings.theme_preference
+    except:
+        current_theme = 'light'
     
     if request.method == 'POST' and 'deactivate_account' in request.POST:
         data.is_active = False
@@ -1140,5 +1202,23 @@ def user_account(request):
         'addresses': addresses,
         'orders_count': orders_count,
         'reviews_count': reviews_count,
+        'current_theme': current_theme,
     }
     return render(request, 'customer-templates/useraccount.html', context)
+
+
+@login_required(login_url='login')
+def toggle_theme(request):
+    """Toggle user's theme preference between light and dark mode"""
+    user = request.user
+    if request.method == 'POST':
+        new_theme = request.POST.get('theme', 'light')
+        if new_theme in ['light', 'dark']:
+            settings, created = UserSettings.objects.get_or_create(user=user)
+            settings.theme_preference = new_theme
+            settings.save()
+            messages.success(request, f'Theme changed to {new_theme} mode!')
+        else:
+            messages.error(request, 'Invalid theme option.')
+    
+    return redirect(request.META.get('HTTP_REFERER', 'home'))

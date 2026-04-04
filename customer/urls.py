@@ -53,5 +53,8 @@ urlpatterns = [
     path('review/submit/', views.submit_review, name='submit_review'),
     path('my-reviews/', views.my_reviews, name='my_reviews'),
     path('review/edit/<uuid:review_id>/', views.edit_review, name='edit_review'),
-    path('account/', views.user_account, name='user_account'),
+    path('review/delete-image/<uuid:review_id>/', views.delete_review_image, name='delete_review_image'),
+    path('review/delete/<uuid:review_id>/', views.delete_review, name='delete_review'),
+    path('settings/', views.user_account, name='settings'),
+    path('toggle-theme/', views.toggle_theme, name='toggle_theme'),
 ]

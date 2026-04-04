@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Management | CORE STORE</title>
+    <title>Settings | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,12 +16,20 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
             scroll-behavior: smooth;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         /* Sharp Glassmorphism */
@@ -29,6 +37,12 @@
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px; 
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        html.dark .glass {
+            background-color: #1e293b; /* slate-800 */
+            border-color: #334155; /* slate-700 */
         }
         
         .reveal { 
@@ -60,11 +74,19 @@
             background: rgba(37, 99, 235, 0.05); 
             color: #2563eb;
         }
+
+        html.dark .sidebar-nav.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+        }
+
         @media (min-width: 1024px) {
             .sidebar-nav.active { border-left: 3px solid #2563eb; border-bottom: none; }
+            html.dark .sidebar-nav.active { border-left-color: #3b82f6; }
         }
         @media (max-width: 1023px) {
             .sidebar-nav.active { border-bottom: 3px solid #2563eb; border-left: none; }
+            html.dark .sidebar-nav.active { border-bottom-color: #3b82f6; }
         }
 
         /* Hide Scrollbar for mobile horizontal tabs */
@@ -86,42 +108,53 @@
 
     <div class="h-20 sm:h-24"></div>
 
+    {% if not_logged_in %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-10">
-        <a href="{% url 'profile' %}" class="inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest mb-4">
-            <i class="fa-solid fa-arrow-left"></i> Back to Profile
-        </a>
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter text-slate-900 leading-none">
-            Control <span class="text-blue-600">Panel</span>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter text-slate-900 dark:text-white leading-none transition-colors">
+            Settings
         </h1>
     </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass p-8 text-center transition-colors">
+            <i class="fa-solid fa-user-xmark text-6xl text-slate-400 dark:text-slate-500 mb-4 transition-colors"></i>
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2 transition-colors">You don't have an account</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6 transition-colors">Please sign in or sign up to access your settings.</p>
+            <div class="flex gap-4 justify-center">
+                <a href="{% url 'login' %}" class="bg-blue-600 text-white px-6 py-2 rounded-sm font-black uppercase tracking-widest text-xs hover:bg-blue-700 transition-colors shadow-md">Sign In</a>
+                <a href="{% url 'register' %}" class="bg-slate-900 dark:bg-slate-700 text-white px-6 py-2 rounded-sm font-black uppercase tracking-widest text-xs hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors shadow-md">Sign Up</a>
+            </div>
+        </div>
+    </main>
+    
+    {% else %}
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10">
             
-            <aside class="lg:col-span-3 sidebar reveal z-40 bg-[#f8fafc] lg:bg-transparent py-2 lg:py-0 -mx-4 px-4 lg:mx-0 lg:px-0 shadow-sm lg:shadow-none">
-                <div class="glass p-2 sm:p-4 lg:p-6 shadow-sm">
-                    <h3 class="hidden lg:flex text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6 border-b border-slate-100 pb-3 items-center gap-2">
+            <aside class="lg:col-span-3 sidebar reveal z-40 bg-[#f8fafc] dark:bg-[#0f172a] lg:bg-transparent lg:dark:bg-transparent py-2 lg:py-0 -mx-4 px-4 lg:mx-0 lg:px-0 shadow-sm lg:shadow-none transition-colors">
+                <div class="glass p-2 sm:p-4 lg:p-6 shadow-sm transition-colors">
+                    <h3 class="hidden lg:flex text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-6 border-b border-slate-100 dark:border-slate-700 pb-3 items-center gap-2 transition-colors">
                         <i class="fa-solid fa-bars"></i> System Modules
                     </h3>
                     
                     <nav class="flex lg:flex-col overflow-x-auto hide-scrollbar snap-x gap-2 lg:gap-1">
-                        <a href="#general" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:bg-slate-50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
+                        <a href="#general" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
                             <i class="fa-solid fa-cube mr-2 lg:mr-3 w-4 text-center"></i> General
                         </a>
                         
-                        <a href="#account" class="sidebar-nav active flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:bg-slate-50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
+                        <a href="#account" class="sidebar-nav active flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
                             <i class="fa-solid fa-user mr-2 lg:mr-3 w-4 text-center"></i> Account
                         </a>
                         
-                        <a href="#addresses" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:bg-slate-50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
+                        <a href="#addresses" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
                             <i class="fa-solid fa-map-location-dot mr-2 lg:mr-3 w-4 text-center"></i> Addresses
                         </a>
 
-                        <a href="#notifications" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:bg-slate-50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
+                        <a href="#notifications" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
                             <i class="fa-solid fa-bell mr-2 lg:mr-3 w-4 text-center"></i> Notifications
                         </a>
                         
-                        <a href="#settings" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 hover:bg-slate-50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
+                        <a href="#settings" class="sidebar-nav flex-shrink-0 snap-start flex items-center p-3 lg:p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all border-b-2 lg:border-b-0 lg:border-l-2 border-transparent">
                             <i class="fa-solid fa-gear mr-2 lg:mr-3 w-4 text-center"></i> Settings
                         </a>
                     </nav>
@@ -130,27 +163,51 @@
 
             <div class="lg:col-span-9 space-y-6 sm:space-y-8 lg:space-y-12">
                 
-                <section id="general" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal">
-                    <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 mb-4 sm:mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
-                        <i class="fa-solid fa-cube text-slate-400"></i> General Operations
+                <section id="general" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal transition-colors">
+                    <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
+                        <i class="fa-solid fa-cube text-slate-400 dark:text-slate-500"></i> General Operations
                     </h2>
-                    <div class="py-8 sm:py-12 text-center border-2 border-dashed border-slate-100 rounded-sm bg-slate-50/50">
-                        <i class="fa-solid fa-microchip text-3xl sm:text-4xl text-slate-300 mb-4 block"></i>
-                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">System modules operating normally.</p>
-                        <p class="text-[9px] sm:text-[10px] font-medium text-slate-400 mt-2">Global settings and widgets will populate here.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="p-4 sm:p-6 border border-slate-100 dark:border-slate-700 rounded-sm bg-slate-50/50 dark:bg-slate-800/30 hover:border-blue-200 dark:hover:border-blue-500/50 transition-colors shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="flex-1">
+                                    <h3 class="text-sm sm:text-base font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-1.5 flex items-center gap-2 transition-colors">
+                                        <i class="fa-solid fa-moon text-slate-400 dark:text-slate-500"></i> Display Theme
+                                    </h3>
+                                    <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-medium transition-colors">Toggle between light and dark mode across all pages</p>
+                                </div>
+                                <form action="{% url 'toggle_theme' %}" method="POST" class="flex items-center gap-3">
+                                    {% csrf_token %}
+                                    <div class="flex gap-2">
+                                        <button type="submit" name="theme" value="light" class="px-4 py-2 rounded-sm text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all {% if current_theme == 'light' %}bg-blue-600 text-white shadow-md{% else %}bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:border-blue-200 dark:hover:border-blue-500/50{% endif %}">
+                                            <i class="fa-solid fa-sun mr-1.5"></i> Light
+                                        </button>
+                                        <button type="submit" name="theme" value="dark" class="px-4 py-2 rounded-sm text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all {% if current_theme == 'dark' %}bg-slate-900 dark:bg-blue-600 text-white shadow-md{% else %}bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:border-blue-200 dark:hover:border-blue-500/50{% endif %}">
+                                            <i class="fa-solid fa-moon mr-1.5"></i> Dark
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="py-6 sm:py-8 text-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-sm bg-slate-50/50 dark:bg-slate-800/30 transition-colors">
+                            <i class="fa-solid fa-microchip text-2xl sm:text-3xl text-slate-300 dark:text-slate-600 mb-3 block transition-colors"></i>
+                            <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">Additional system modules coming soon.</p>
+                        </div>
                     </div>
                 </section>
 
-                <section id="account" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal">
-                    <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 mb-6 sm:mb-8 flex items-center gap-3 border-b border-slate-100 pb-4">
-                        <i class="fa-solid fa-user-shield text-blue-600"></i> Identity & Access
+                <section id="account" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal transition-colors">
+                    <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-6 sm:mb-8 flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
+                        <i class="fa-solid fa-user-shield text-blue-600 dark:text-blue-400"></i> Identity & Access
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
                         <div class="space-y-4">
-                            <div class="flex items-center gap-4 sm:gap-5 p-4 sm:p-5 bg-slate-50 border border-slate-100 rounded-sm">
+                            <div class="flex items-center gap-4 sm:gap-5 p-4 sm:p-5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-sm transition-colors">
                                 <div class="relative shrink-0">
-                                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-sm bg-slate-900 flex items-center justify-center text-white text-xl font-black shadow-md overflow-hidden border-2 border-white">
+                                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-sm bg-slate-900 dark:bg-slate-800 flex items-center justify-center text-white text-xl font-black shadow-md overflow-hidden border-2 border-white dark:border-slate-700 transition-colors">
                                         {% if data.profile_image %}
                                             <img src="{{ data.profile_image.url }}" class="w-full h-full object-cover">
                                         {% else %}
@@ -159,14 +216,14 @@
                                     </div>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <h3 class="text-base sm:text-lg lg:text-xl font-black text-slate-900 uppercase tracking-tight truncate">
+                                    <h3 class="text-base sm:text-lg lg:text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight truncate transition-colors">
                                         {% if data.first_name and data.last_name %}
                                             {{ data.first_name }} {{ data.last_name }}
                                         {% else %}
                                             {{ data.username }}
                                         {% endif %}
                                     </h3>
-                                    <p class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Registry: {{ data.date_joined|date:"M Y" }}</p>
+                                    <p class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1 transition-colors">Registry: {{ data.date_joined|date:"M Y" }}</p>
                                 </div>
                             </div>
                         </div>
@@ -174,48 +231,48 @@
                         <div class="space-y-3 sm:space-y-4">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
-                                    <label class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">Username</label>
-                                    <p class="bg-slate-50 border border-slate-100 px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold text-slate-700 rounded-sm truncate">{{ data.username }}</p>
+                                    <label class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-1.5 transition-colors">Username</label>
+                                    <p class="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-300 rounded-sm truncate transition-colors">{{ data.username }}</p>
                                 </div>
                                 <div>
-                                    <label class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">Email</label>
-                                    <p class="bg-slate-50 border border-slate-100 px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold text-slate-700 rounded-sm truncate">{{ data.email }}</p>
+                                    <label class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-1.5 transition-colors">Email</label>
+                                    <p class="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-300 rounded-sm truncate transition-colors">{{ data.email }}</p>
                                 </div>
                             </div>
                             <div>
-                                <label class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">Phone</label>
-                                <p class="bg-slate-50 border border-slate-100 px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold text-slate-700 rounded-sm truncate">
-                                    {% if data.phone_number %}{{ data.phone_number }}{% else %}<i class="fa-solid fa-minus text-slate-400"></i>{% endif %}
+                                <label class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-1.5 transition-colors">Phone</label>
+                                <p class="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-3 sm:px-4 py-2.5 text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-300 rounded-sm truncate transition-colors">
+                                    {% if data.phone_number %}{{ data.phone_number }}{% else %}<i class="fa-solid fa-minus text-slate-400 dark:text-slate-600"></i>{% endif %}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 pt-6 sm:pt-8 border-t border-slate-100">
-                        <div class="text-center p-4 sm:p-6 bg-blue-50/50 border border-blue-100 rounded-sm hover:bg-blue-50 transition-colors group">
-                            <i class="fa-solid fa-box-open text-2xl sm:text-3xl text-blue-600 mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></i>
-                            <h4 class="text-xs sm:text-sm font-black uppercase tracking-tight text-slate-900 mb-1">{{ orders_count|default:0 }}</h4>
-                            <a href="{% url 'orders' %}" class="text-[9px] sm:text-[10px] font-bold uppercase text-blue-600 tracking-widest mt-1 block">View Orders</a>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 pt-6 sm:pt-8 border-t border-slate-100 dark:border-slate-700 transition-colors">
+                        <div class="text-center p-4 sm:p-6 bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group">
+                            <i class="fa-solid fa-box-open text-2xl sm:text-3xl text-blue-600 dark:text-blue-500 mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xs sm:text-sm font-black uppercase tracking-tight text-slate-900 dark:text-white mb-1 transition-colors">{{ orders_count|default:0 }}</h4>
+                            <a href="{% url 'orders' %}" class="text-[9px] sm:text-[10px] font-bold uppercase text-blue-600 dark:text-blue-400 tracking-widest mt-1 block transition-colors">View Orders</a>
                         </div>
-                        <div class="text-center p-4 sm:p-6 bg-emerald-50/50 border border-emerald-100 rounded-sm hover:bg-emerald-50 transition-colors group">
-                            <i class="fa-solid fa-star text-2xl sm:text-3xl text-emerald-600 mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></i>
-                            <h4 class="text-xs sm:text-sm font-bold uppercase tracking-tight text-slate-900 mb-1">{{ reviews_count|default:0 }}</h4>
-                            <a href="{% url 'my_reviews' %}" class="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-600 tracking-widest mt-1 block">View Reviews</a>
+                        <div class="text-center p-4 sm:p-6 bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-sm hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors group">
+                            <i class="fa-solid fa-star text-2xl sm:text-3xl text-emerald-600 dark:text-emerald-500 mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xs sm:text-sm font-bold uppercase tracking-tight text-slate-900 dark:text-white mb-1 transition-colors">{{ reviews_count|default:0 }}</h4>
+                            <a href="{% url 'my_reviews' %}" class="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400 tracking-widest mt-1 block transition-colors">View Reviews</a>
                         </div>
-                        <div class="col-span-2 sm:col-span-1 text-center p-4 sm:p-6 bg-slate-50/50 border border-slate-100 rounded-sm hover:bg-slate-50 transition-colors group">
-                            <i class="fa-solid fa-map-pin text-2xl sm:text-3xl text-slate-400 mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></i>
-                            <h4 class="text-xs sm:text-sm font-bold uppercase tracking-tight text-slate-900 mb-1">{{ addresses|length|default:0 }}</h4>
-                            <a href="#addresses" class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-500 tracking-widest mt-1 block">Locations</a>
+                        <div class="col-span-2 sm:col-span-1 text-center p-4 sm:p-6 bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-700/50 rounded-sm hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                            <i class="fa-solid fa-map-pin text-2xl sm:text-3xl text-slate-400 dark:text-slate-500 mb-2 sm:mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xs sm:text-sm font-bold uppercase tracking-tight text-slate-900 dark:text-white mb-1 transition-colors">{{ addresses|length|default:0 }}</h4>
+                            <a href="#addresses" class="text-[9px] sm:text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-widest mt-1 block transition-colors">Locations</a>
                         </div>
                     </div>
                 </section>
 
-                <section id="addresses" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8 border-b border-slate-100 pb-4">
-                        <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 flex items-center gap-3">
-                            <i class="fa-solid fa-map-location-dot text-green-600"></i> Delivery Vectors
+                <section id="addresses" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal transition-colors">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
+                        <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white flex items-center gap-3 transition-colors">
+                            <i class="fa-solid fa-map-location-dot text-emerald-600 dark:text-emerald-500"></i> Delivery Vectors
                         </h2>
-                        <a href="{% url 'user_addresses' %}" class="bg-slate-900 text-white px-4 py-2 sm:py-2.5 rounded-sm text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-colors text-center w-fit">
+                        <a href="{% url 'user_addresses' %}" class="bg-slate-900 dark:bg-emerald-600 text-white px-4 py-2 sm:py-2.5 rounded-sm text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-emerald-500 transition-colors text-center w-fit shadow-md">
                             Add Address +
                         </a>
                     </div>
@@ -223,51 +280,51 @@
                     {% if addresses %}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                             {% for address in addresses %}
-                            <div class="border border-slate-200 rounded-sm p-5 sm:p-6 hover:shadow-md transition-all flex flex-col h-full bg-white group">
+                            <div class="border border-slate-200 dark:border-slate-700 rounded-sm p-5 sm:p-6 hover:shadow-md transition-all flex flex-col h-full bg-white dark:bg-slate-800/50 group">
                                 <div class="flex justify-between items-start mb-3 sm:mb-4">
-                                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-slate-100 px-2 py-1 rounded-sm">{{ address.address_type|default:"Home"|upper }}</span>
+                                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-sm transition-colors">{{ address.address_type|default:"Home"|upper }}</span>
                                     {% if address.is_default %}
-                                        <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-sm"><i class="fa-solid fa-check mr-1"></i> Default</span>
+                                        <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 px-2 py-1 rounded-sm transition-colors"><i class="fa-solid fa-check mr-1"></i> Default</span>
                                     {% endif %}
                                 </div>
-                                <p class="font-black text-slate-900 text-xs sm:text-sm uppercase tracking-tight mb-2">{{ address.house_info }}</p>
-                                <p class="text-[10px] sm:text-xs text-slate-500 mb-4 sm:mb-6 font-medium leading-relaxed flex-1">
+                                <p class="font-black text-slate-900 dark:text-white text-xs sm:text-sm uppercase tracking-tight mb-2 transition-colors">{{ address.house_info }}</p>
+                                <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-4 sm:mb-6 font-medium leading-relaxed flex-1 transition-colors">
                                     {{ address.locality }}<br>
                                     {{ address.city }}, {{ address.state }} - {{ address.pincode }}
                                 </p>
-                                <div class="mt-auto border-t border-slate-100 pt-3 flex items-center justify-between">
-                                    <a href="{% url 'update_address' address.id %}" class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-slate-900 transition-colors">Edit Route <i class="fa-solid fa-angle-right ml-1"></i></a>
+                                <div class="mt-auto border-t border-slate-100 dark:border-slate-700 pt-3 flex items-center justify-between transition-colors">
+                                    <a href="{% url 'update_address' address.id %}" class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 hover:text-slate-900 dark:hover:text-white transition-colors">Edit Route <i class="fa-solid fa-angle-right ml-1"></i></a>
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="text-center py-10 sm:py-12 border-2 border-dashed border-slate-200 rounded-sm bg-slate-50/50">
-                            <i class="fa-solid fa-route text-slate-300 text-3xl sm:text-4xl mb-4 block"></i>
-                            <p class="text-xs sm:text-sm font-bold text-slate-600 mb-2 uppercase tracking-widest">No Vectors Found</p>
-                            <p class="text-[9px] sm:text-[10px] font-medium text-slate-400 mb-5">Please establish a delivery location.</p>
-                            <a href="{% url 'user_addresses' %}" class="bg-blue-600 text-white px-6 py-2.5 rounded-sm text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-slate-900 transition-colors inline-block">Add First Address</a>
+                        <div class="text-center py-10 sm:py-12 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-sm bg-slate-50/50 dark:bg-slate-800/30 transition-colors">
+                            <i class="fa-solid fa-route text-slate-300 dark:text-slate-600 text-3xl sm:text-4xl mb-4 block transition-colors"></i>
+                            <p class="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-widest transition-colors">No Vectors Found</p>
+                            <p class="text-[9px] sm:text-[10px] font-medium text-slate-400 dark:text-slate-500 mb-5 transition-colors">Please establish a delivery location.</p>
+                            <a href="{% url 'user_addresses' %}" class="bg-blue-600 text-white px-6 py-2.5 rounded-sm text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-slate-900 dark:hover:bg-blue-500 transition-colors inline-block">Add First Address</a>
                         </div>
                     {% endif %}
                 </section>
 
-                <section id="notifications" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal">
-                    <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 mb-4 sm:mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+                <section id="notifications" class="glass p-6 sm:p-8 md:p-10 shadow-sm reveal transition-colors">
+                    <h2 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
                         <i class="fa-solid fa-bell text-amber-500"></i> Communications
                     </h2>
-                    <div class="py-8 sm:py-12 text-center bg-slate-50/50 rounded-sm border border-slate-100">
-                        <i class="fa-regular fa-bell-slash text-3xl sm:text-4xl text-slate-300 mb-4 block"></i>
-                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Zero Pending Alerts</p>
+                    <div class="py-8 sm:py-12 text-center bg-slate-50/50 dark:bg-slate-800/30 rounded-sm border border-slate-100 dark:border-slate-700 transition-colors">
+                        <i class="fa-regular fa-bell-slash text-3xl sm:text-4xl text-slate-300 dark:text-slate-600 mb-4 block transition-colors"></i>
+                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">Zero Pending Alerts</p>
                     </div>
                 </section>
 
                 <section id="settings" class="space-y-6">
-                    <div class="glass p-6 sm:p-8 text-center reveal border-red-100">
-                        <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="glass p-6 sm:p-8 text-center reveal border-red-100 dark:border-red-900/50 transition-colors">
+                        <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
                             <i class="fa-solid fa-triangle-exclamation text-red-500 text-lg"></i>
                         </div>
-                        <h3 class="text-sm font-black uppercase tracking-tighter text-slate-900 mb-2">Danger Zone</h3>
-                        <p class="text-[9px] sm:text-[10px] text-slate-500 mb-6 max-w-md mx-auto leading-relaxed font-medium uppercase tracking-widest">
+                        <h3 class="text-sm font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">Danger Zone</h3>
+                        <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto leading-relaxed font-medium uppercase tracking-widest transition-colors">
                             This will irrevocably wipe your account protocols. Core Store limits data recovery to 30 days post-termination.
                         </p>
                         <form method="POST" id="delete-form" class="inline-block w-full sm:w-auto">
@@ -282,10 +339,25 @@
             </div>
         </div>
     </main>
+    {% endif %}
 
     {% include 'core-templates/footer.html' %}
 
     <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
+
         // Reveal animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
@@ -293,54 +365,58 @@
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // Delete confirm
-        document.getElementById('delete-form').addEventListener('submit', function(e) {
-            if (!confirm('CRITICAL WARNING: Are you sure you want to terminate your account? This action cannot be undone. Do you want to proceed?')) {
-                e.preventDefault();
-            }
-        });
+        const deleteForm = document.getElementById('delete-form');
+        if (deleteForm) {
+            deleteForm.addEventListener('submit', function(e) {
+                if (!confirm('CRITICAL WARNING: Are you sure you want to terminate your account? This action cannot be undone. Do you want to proceed?')) {
+                    e.preventDefault();
+                }
+            });
+        }
 
         // Smooth scroll and active tab logic
         const sections = document.querySelectorAll("section[id]");
         const navLinks = document.querySelectorAll(".sidebar-nav");
 
-        // Click to scroll
-        navLinks.forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                // Remove active from all, add to clicked
-                navLinks.forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
+        if (navLinks.length > 0 && sections.length > 0) {
+            // Click to scroll
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    // Remove active from all, add to clicked
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
 
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Update active tab on scroll
-        window.addEventListener('scroll', () => {
-            let current = "";
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                // Offset calculation (header height + buffer)
-                if (pageYOffset >= (sectionTop - 150)) { 
-                    current = section.getAttribute("id");
-                }
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                });
             });
 
-            navLinks.forEach(link => {
-                link.classList.remove("active");
-                if (link.getAttribute("href") === `#${current}`) {
-                    link.classList.add("active");
-                    // If on mobile, scroll the horizontal nav to the active item
-                    if(window.innerWidth < 1024) {
-                        link.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            // Update active tab on scroll
+            window.addEventListener('scroll', () => {
+                let current = "";
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // Offset calculation (header height + buffer)
+                    if (pageYOffset >= (sectionTop - 150)) { 
+                        current = section.getAttribute("id");
                     }
-                }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href") === `#${current}`) {
+                        link.classList.add("active");
+                        // If on mobile, scroll the horizontal nav to the active item
+                        if(window.innerWidth < 1024) {
+                            link.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                        }
+                    }
+                });
             });
-        });
+        }
     </script>
 
 </body>

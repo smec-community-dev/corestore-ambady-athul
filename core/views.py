@@ -83,7 +83,7 @@ def product_single(request, slug):
     
     # Reviews section
     # Reviews
-    reviews = product.product.reviews.select_related('user').order_by('-created_at')[:12]
+    reviews = product.product.reviews.select_related('user').prefetch_related('images').order_by('-created_at')[:12]
     avg_result = reviews.aggregate(avg_rating=Avg('rating'))
     avg_rating = avg_result['avg_rating'] or 0
     review_count = reviews.count()

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,19 +16,34 @@
             --bg-main: #f8fafc;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
+            overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px; /* Sharp Edges */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        /* Form Styling */
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
+        }
+
+        /* Custom Form Field Styling with Dark Mode Support */
         .input-field {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -36,16 +51,31 @@
             padding: 1rem 1.25rem;
             font-size: 12px;
             font-weight: 600;
-            color: var(--primary);
+            color: #0f172a;
             width: 100%;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+        }
+        
+        html.dark .input-field {
+            background: #0f172a; /* slate-950 */
+            border-color: #334155; /* slate-700 */
+            color: #ffffff;
+        }
+        html.dark .input-field::placeholder {
+            color: #64748b; /* slate-500 */
         }
 
         .input-field:focus {
             border-color: var(--accent);
-            ring: 2px var(--accent);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
             outline: none;
             background: #fafafa;
+        }
+        
+        html.dark .input-field:focus {
+            background: #1e293b; /* slate-800 */
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
 
         .label-sm {
@@ -53,10 +83,15 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            color: #64748b;
+            color: #64748b; /* slate-500 */
             margin-left: 2px;
             margin-bottom: 8px;
             display: block;
+            transition: color 0.3s ease;
+        }
+        
+        html.dark .label-sm {
+            color: #94a3b8; /* slate-400 */
         }
 
         select.input-field {
@@ -78,26 +113,26 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-6 md:p-12">
 
-    <div class="fixed inset-0 z-[-1] bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f8fafc]"></div>
+    <div class="fixed inset-0 z-[-1] bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f8fafc] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-500"></div>
 
     <main class="max-w-3xl w-full animate__animated animate__fadeIn">
         
-        <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-l-4 border-blue-600 pl-6">
+        <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-l-4 border-blue-600 pl-6 transition-colors">
             <div>
-                <a href="{% url 'user_addresses' %}" class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-blue-600 mb-2 flex items-center gap-2 transition-colors">
+                <a href="{% url 'user_addresses' %}" class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 mb-2 flex items-center gap-2 transition-colors">
                     <i class="fa-solid fa-chevron-left"></i> Return to Registry
                 </a>
-                <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">
-                    Modify <span class="text-blue-600">Endpoint</span>
+                <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none transition-colors">
+                    Modify <span class="text-blue-600 dark:text-blue-400">Endpoint</span>
                 </h1>
             </div>
             <div class="hidden md:block text-right">
-                <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest leading-relaxed">Registry Record ID</p>
-                <p class="text-xs font-black text-slate-900 uppercase">#ADR-{{ address.id|default:"000" }}</p>
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest leading-relaxed transition-colors">Registry Record ID</p>
+                <p class="text-xs font-black text-slate-900 dark:text-white uppercase transition-colors">#ADR-{{ address.id|default:"000" }}</p>
             </div>
         </div>
 
-        <div class="glass p-8 md:p-12 shadow-xl relative">
+        <div class="glass p-8 md:p-12 shadow-xl relative transition-colors">
             <form method="POST" class="space-y-8">
                 {% csrf_token %}
                 
@@ -159,26 +194,41 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-4 py-4 px-2 bg-slate-50 border border-slate-100 rounded-sm">
+                <div class="flex items-center gap-4 py-4 px-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-sm transition-colors">
                     <input type="checkbox" name="is_default" id="is_default" class="w-4 h-4 accent-blue-600 cursor-pointer" {% if address.is_default %}checked{% endif %}>
-                    <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-slate-900 cursor-pointer">
+                    <label for="is_default" class="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-slate-200 cursor-pointer transition-colors">
                         Set as Primary Dispatch Endpoint
                     </label>
                 </div>
 
-                <div class="pt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button type="submit" class="btn-action bg-slate-900 text-white px-8 py-4 text-[10px] tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
+                <div class="pt-8 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-700 transition-colors">
+                    <button type="submit" class="btn-action bg-slate-900 dark:bg-blue-600 text-white px-8 py-4 text-[10px] tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-colors shadow-lg active:scale-95">
                         Commit Registry Update
                     </button>
-                    <a href="{% url 'user_addresses' %}" class="btn-action bg-white text-slate-400 border border-slate-200 px-8 py-4 text-[10px] tracking-widest text-center hover:text-slate-900 hover:border-slate-900 transition-all">
+                    <a href="{% url 'user_addresses' %}" class="btn-action bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-8 py-4 text-[10px] tracking-widest text-center hover:text-slate-900 dark:hover:text-white hover:border-slate-900 dark:hover:border-slate-500 transition-colors shadow-sm">
                         Abort Changes
                     </a>
                 </div>
             </form>
         </div>
         
-        <p class="text-center text-[8px] font-bold text-slate-300 uppercase tracking-[0.5em] mt-12">System Core Dispatch v2.6</p>
+        <p class="text-center text-[8px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-[0.5em] mt-12 transition-colors">System Core Dispatch v2.6</p>
     </main>
 
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
+    </script>
 </body>
 </html>

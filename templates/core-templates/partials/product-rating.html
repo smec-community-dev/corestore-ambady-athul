@@ -2,64 +2,64 @@
   
   <div class="relative group/rating inline-block">
     
-    <div class="{% if product.review_count > 0 %}bg-amber-500{% else %}bg-gray-400{% endif %} text-white px-1.5 py-[2px] rounded-[3px] text-[11px] font-bold flex items-center gap-1 cursor-pointer w-max">
+    <div class="{% if product.review_count > 0 %}bg-amber-500{% else %}bg-slate-400 dark:bg-slate-600{% endif %} text-white px-1.5 py-[2px] rounded-[3px] text-[11px] font-bold flex items-center gap-1 cursor-pointer w-max transition-colors shadow-sm">
       {{ product.avg_rating|floatformat:1|default:"0" }}
       <i class="fas fa-star text-[8px]"></i>
     </div>
 
-    <div class="absolute bottom-full left-0 mb-2 hidden group-hover/rating:block w-48 bg-white text-gray-800 border border-gray-200 shadow-2xl rounded-md z-[100] p-3 cursor-default">
+    <div class="absolute bottom-full left-0 mb-2 opacity-0 invisible group-hover/rating:opacity-100 group-hover/rating:visible transition-all duration-200 w-48 bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-2xl dark:shadow-slate-900/50 rounded-md z-[100] p-3 cursor-default">
       
-      <div class="flex items-center gap-3 mb-2 border-b pb-2">
+      <div class="flex items-center gap-3 mb-2 border-b border-slate-100 dark:border-slate-700 pb-2 transition-colors">
         <div class="text-2xl font-light flex items-center gap-1">
-          {{ product.avg_rating|floatformat:1|default:"0" }} <i class="fas fa-star text-sm text-gray-300"></i>
+          {{ product.avg_rating|floatformat:1|default:"0" }} <i class="fas fa-star text-sm text-amber-400"></i>
         </div>
-        <div class="text-[10px] leading-tight text-gray-500 flex flex-col gap-0.5">
-          <span><strong class="text-gray-700">{{ product.review_count|default:"0" }}</strong> Ratings</span>
-          <span><strong class="text-gray-700">{{ product.review_count|default:"0" }}</strong> Reviews</span>
+        <div class="text-[10px] leading-tight text-slate-500 dark:text-slate-400 flex flex-col gap-0.5 transition-colors">
+          <span><strong class="text-slate-900 dark:text-white transition-colors">{{ product.review_count|default:"0" }}</strong> Ratings</span>
+          <span><strong class="text-slate-900 dark:text-white transition-colors">{{ product.review_count|default:"0" }}</strong> Reviews</span>
         </div>
       </div>
 
-      <div class="flex flex-col gap-1 text-[10px] text-gray-600 font-medium">
+      <div class="flex flex-col gap-1 text-[10px] text-slate-600 dark:text-slate-300 font-medium transition-colors">
         
         <div class="flex items-center gap-1.5">
-          <span class="w-3 flex justify-between items-center">5 <i class="fas fa-star text-[6px] text-gray-400"></i></span>
-          <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-green-500" 
+          <span class="w-3 flex justify-between items-center">5 <i class="fas fa-star text-[6px] text-slate-400 dark:text-slate-500"></i></span>
+          <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden transition-colors">
+            <div class="h-full bg-emerald-500" 
                  style="width: {% if product.review_count > 0 %}{% widthratio product.star_5 product.review_count 100 %}{% else %}0{% endif %}%;">
             </div>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5">
-          <span class="w-3 flex justify-between items-center">4 <i class="fas fa-star text-[6px] text-gray-400"></i></span>
-          <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-green-500" 
+          <span class="w-3 flex justify-between items-center">4 <i class="fas fa-star text-[6px] text-slate-400 dark:text-slate-500"></i></span>
+          <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden transition-colors">
+            <div class="h-full bg-emerald-400" 
                  style="width: {% if product.review_count > 0 %}{% widthratio product.star_4 product.review_count 100 %}{% else %}0{% endif %}%;">
             </div>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5">
-          <span class="w-3 flex justify-between items-center">3 <i class="fas fa-star text-[6px] text-gray-400"></i></span>
-          <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-green-500" 
+          <span class="w-3 flex justify-between items-center">3 <i class="fas fa-star text-[6px] text-slate-400 dark:text-slate-500"></i></span>
+          <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden transition-colors">
+            <div class="h-full bg-amber-400" 
                  style="width: {% if product.review_count > 0 %}{% widthratio product.star_3 product.review_count 100 %}{% else %}0{% endif %}%;">
             </div>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5">
-          <span class="w-3 flex justify-between items-center">2 <i class="fas fa-star text-[6px] text-gray-400"></i></span>
-          <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-yellow-500" 
+          <span class="w-3 flex justify-between items-center">2 <i class="fas fa-star text-[6px] text-slate-400 dark:text-slate-500"></i></span>
+          <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden transition-colors">
+            <div class="h-full bg-orange-400" 
                  style="width: {% if product.review_count > 0 %}{% widthratio product.star_2 product.review_count 100 %}{% else %}0{% endif %}%;">
             </div>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5">
-          <span class="w-3 flex justify-between items-center">1 <i class="fas fa-star text-[6px] text-gray-400"></i></span>
-          <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-3 flex justify-between items-center">1 <i class="fas fa-star text-[6px] text-slate-400 dark:text-slate-500"></i></span>
+          <div class="flex-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden transition-colors">
             <div class="h-full bg-red-500" 
                  style="width: {% if product.review_count > 0 %}{% widthratio product.star_1 product.review_count 100 %}{% else %}0{% endif %}%;">
             </div>
@@ -71,7 +71,7 @@
     </div>
   </div>
 
-  <span class="text-[11px] text-slate-500 font-medium tracking-wide">
+  <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium tracking-wide transition-colors">
     ({{ product.review_count|default:"0" }})
   </span>
 

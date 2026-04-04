@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,22 +16,44 @@
             --bg-main: #ffffff;
         }
 
+        /* Dark Mode Core Variables */
+        html.dark {
+            --primary: #ffffff;
+            --accent: #3b82f6;
+            --bg-main: #0f172a; /* Tailwind slate-950 */
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); 
             color: var(--primary); 
             overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
+        /* Unified Glassmorphism with Flawless Dark Mode */
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        /* THE BUG FIX: Forcing background to stay dark on hover */
+        html.dark .glass {
+            background-color: #1e293b !important; /* slate-800 */
+            border-color: #334155 !important; /* slate-700 */
+        }
+        html.dark a.glass:hover, html.dark button.glass:hover {
+            background-color: #1e293b !important; /* STOPS THE WHITE FLASH */
+            border-color: var(--accent) !important;
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5) !important;
         }
 
         /* Image Zoom Styling */
         .main-img-container { cursor: zoom-in; overflow: hidden; border-radius: 4px; border: 1px solid #e2e8f0; }
-        /* Disabled zoom hover on small mobile devices to prevent touch issues */
+        html.dark .main-img-container { border-color: #334155; }
+        
         @media (min-width: 768px) {
             .main-img-container:hover .main-img { transform: scale(1.8); }
         }
@@ -42,6 +64,7 @@
 
         .thumbnail-btn { border-radius: 4px; transition: all 0.2s ease; border: 1px solid #e2e8f0; }
         .thumbnail-active { border-color: var(--accent) !important; box-shadow: 0 0 0 2px var(--accent); }
+        html.dark .thumbnail-btn { border-color: #334155; }
         
         .tab-btn { transition: all 0.2s ease; border-bottom: 2px solid transparent; }
         .tab-active { color: var(--accent) !important; border-bottom-color: var(--accent) !important; }
@@ -67,39 +90,13 @@
 <body class="min-h-screen">
 
     <div id="wishlist-toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs px-4 hidden">
-        <div class="p-4 glass border-l-4 border-blue-600 shadow-2xl animate__animated animate__fadeInDown text-center">
-            <p id="toast-text" class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-900"></p>
+        <div class="p-4 glass border-l-4 border-blue-600 shadow-2xl animate__animated animate__fadeInDown text-center transition-colors">
+            <p id="toast-text" class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white transition-colors"></p>
         </div>
     </div>
 
     {% include 'includes/message-toast.html' %}
-
-    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-3">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div class="flex items-center gap-3 sm:gap-4">
-                <button onclick="window.history.back()" class="w-8 h-8 sm:w-9 sm:h-9 border border-blue-400/30 text-blue-100 flex items-center justify-center hover:bg-blue-600 transition-all rounded-sm">
-                    <i class="fa-solid fa-arrow-left text-[10px] sm:text-xs"></i>
-                </button>
-                <a href="{% url 'home' %}" class="text-lg sm:text-xl font-black tracking-tighter flex items-center gap-2 group text-white">
-                    <div class="bg-blue-600 p-1 rounded-sm group-hover:bg-blue-50 transition-transform">
-                        <i class="fa-solid fa-bolt-lightning text-[10px] sm:text-xs group-hover:text-blue-600"></i>
-                    </div>
-                    <span>CORE<span class="text-blue-400 hidden sm:inline">STORE</span></span>
-                </a>
-            </div>
-            <div class="flex items-center gap-2 sm:gap-3">
-                <a href="/wishlist/" class="w-8 h-8 sm:w-9 sm:h-9 border border-blue-400/30 flex items-center justify-center text-blue-100 hover:text-white transition-all rounded-sm">
-                    <i class="fa-solid fa-heart text-[10px] sm:text-xs"></i>
-                </a>
-                <a href="/cart" class="relative w-8 h-8 sm:w-9 sm:h-9 border border-blue-400/30 flex items-center justify-center text-blue-100 hover:text-white transition-all rounded-sm">
-                    <i class="fa-solid fa-shopping-bag text-[10px] sm:text-xs"></i>
-                    {% if cart_count > 0 %}
-                    <span class="absolute -top-1.5 -right-1.5 w-4 h-4 sm:w-4 sm:h-4 bg-blue-600 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-slate-900">{{ cart_count }}</span>
-                    {% endif %}
-                </a>
-            </div>
-        </div>
-    </nav>
+    {% include 'core-templates/navbar.html' %}
 
     <div class="h-16 sm:h-20 lg:h-24"></div>
 
@@ -110,19 +107,19 @@
                 
                 <div class="flex md:flex-col gap-3 order-2 md:order-1 overflow-x-auto md:overflow-y-auto hide-scrollbar max-h-[500px] w-full md:w-auto pb-2 md:pb-0 snap-x">
                     {% for img in data.images.all %}
-                        <button onclick="changeHero('{{ img.images.url }}', this)" class="thumbnail-btn shrink-0 w-16 h-16 sm:w-20 sm:h-20 glass overflow-hidden snap-start {% if img.is_primary %}thumbnail-active{% endif %}">
+                        <button onclick="changeHero('{{ img.images.url }}', this)" class="thumbnail-btn shrink-0 w-16 h-16 sm:w-20 sm:h-20 glass overflow-hidden snap-start {% if img.is_primary %}thumbnail-active{% endif %} transition-colors">
                             <img src="{{ img.images.url }}" class="w-full h-full object-cover">
                         </button>
                     {% endfor %}
                 </div>
 
                 <div class="flex-1 order-1 md:order-2 w-full">
-                    <div class="main-img-container relative aspect-square sm:aspect-[4/5] shadow-sm bg-slate-50" onmousemove="zoom(event)">
+                    <div class="main-img-container relative aspect-square sm:aspect-[4/5] shadow-sm bg-slate-50 dark:bg-slate-900/50 transition-colors" onmousemove="zoom(event)">
                         {% with primary=data.images.all|dictsortreversed:"is_primary"|first %}
                             {% if primary %}
                                 <img id="mainHero" src="{{ primary.images.url }}" class="main-img w-full h-full object-cover">
                             {% else %}
-                                <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                <div class="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600 transition-colors">
                                     <i class="fa-solid fa-image text-4xl"></i>
                                 </div>
                             {% endif %}
@@ -130,7 +127,7 @@
                         
                         <button onclick="toggleWishlist(this, '{{ data.slug }}')" 
                             data-is-authenticated="{{ request.user.is_authenticated|yesno:'true,false' }}"
-                            class="absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 bg-white shadow-lg flex items-center justify-center text-slate-900 hover:scale-110 transition-all rounded-sm group z-10">
+                            class="absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-slate-900 dark:text-white hover:scale-110 transition-all rounded-sm group z-10">
                             <i class="fa-solid fa-heart transition-colors duration-300 {% if is_in_wishlist %}heart-filled{% endif %}"></i>
                         </button>
                     </div>
@@ -141,44 +138,44 @@
                 
                 <div class="space-y-4">
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <span class="text-[9px] sm:text-[10px] font-bold text-blue-600 uppercase tracking-widest border border-blue-100 px-2 py-1 bg-blue-50 rounded-sm">
+                        <span class="text-[9px] sm:text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest border border-blue-100 dark:border-blue-900/50 px-2 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-sm transition-colors">
                             SKU: {{ data.sku_code }}
                         </span>
                         {% if data.stock_quantity <= 0 %}
-                            <span class="text-[9px] sm:text-[10px] font-bold text-red-600 uppercase flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i> Out of Stock</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-red-600 dark:text-red-500 uppercase flex items-center gap-1 transition-colors"><i class="fa-solid fa-circle-exclamation"></i> Out of Stock</span>
                         {% else %}
-                            <span class="text-[9px] sm:text-[10px] font-bold text-emerald-600 uppercase flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> In Stock</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase flex items-center gap-1 transition-colors"><i class="fa-solid fa-circle-check"></i> In Stock</span>
                         {% endif %}
                     </div>
                     
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase leading-tight">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-tight transition-colors">
                         {{ data.product.name }}
                     </h1>
                     
                     <div class="flex items-end gap-3 sm:gap-4">
-                        <span class="text-3xl sm:text-4xl font-black text-slate-900 leading-none">${{ data.selling_price }}</span>
+                        <span class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white leading-none transition-colors">${{ data.selling_price }}</span>
                         {% if data.mrp > data.selling_price %}
-                            <span class="text-lg sm:text-xl text-slate-400 line-through font-medium leading-none mb-1">${{ data.mrp }}</span>
+                            <span class="text-lg sm:text-xl text-slate-400 dark:text-slate-500 line-through font-medium leading-none mb-1 transition-colors">${{ data.mrp }}</span>
                             <span class="bg-red-500 text-white text-[9px] sm:text-[10px] font-black px-2 py-1.5 rounded-sm uppercase mb-1 shadow-sm">SALE</span>
                         {% endif %}
                     </div>
                 </div>
 
-                <div class="border-b border-slate-200 flex gap-6 sm:gap-8 overflow-x-auto hide-scrollbar">
+                <div class="border-b border-slate-200 dark:border-slate-700 flex gap-6 sm:gap-8 overflow-x-auto hide-scrollbar transition-colors">
                     <button onclick="switchTab('desc', this)" class="tab-btn pb-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest tab-active shrink-0">Overview</button>
-                    <button onclick="switchTab('spec', this)" class="tab-btn pb-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400 shrink-0">Specifications</button>
+                    <button onclick="switchTab('spec', this)" class="tab-btn pb-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0 transition-colors">Specifications</button>
                 </div>
                 
                 <div class="min-h-[100px]">
                     <div id="desc-content" class="tab-pane block">
-                        <p class="text-sm sm:text-base font-medium leading-relaxed text-slate-600 italic">
+                        <p class="text-sm sm:text-base font-medium leading-relaxed text-slate-600 dark:text-slate-300 italic transition-colors">
                             {{ data.product.description|default:"Precision engineered for peak performance." }}
                         </p>
                     </div>
                     <div id="spec-content" class="tab-pane hidden space-y-3">
-                        <div class="grid grid-cols-2 py-2 border-b border-slate-100 text-[10px] sm:text-xs font-bold uppercase">
-                            <span class="text-slate-400">Dimensions</span>
-                            <span class="text-right text-slate-800">{{ data.length }} x {{ data.width }} x {{ data.height }} cm</span>
+                        <div class="grid grid-cols-2 py-2 border-b border-slate-100 dark:border-slate-700 text-[10px] sm:text-xs font-bold uppercase transition-colors">
+                            <span class="text-slate-400 dark:text-slate-500 transition-colors">Dimensions</span>
+                            <span class="text-right text-slate-800 dark:text-slate-200 transition-colors">{{ data.length }} x {{ data.width }} x {{ data.height }} cm</span>
                         </div>
                     </div>
                 </div>
@@ -186,7 +183,7 @@
                 <div class="space-y-6 pt-4 sm:pt-6">
                     
                     {% if avg_rating > 0 %}
-                    <div class="flex items-center gap-4 p-4 bg-emerald-50 border border-emerald-100 rounded-sm">
+                    <div class="flex items-center gap-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50 rounded-sm transition-colors">
                         <div class="flex text-lg sm:text-xl">
                             {% for i in "12345"|make_list %}
                                 {% if forloop.counter <= avg_rating %}
@@ -197,32 +194,32 @@
                             {% endfor %}
                         </div>
                         <div>
-                            <p class="font-bold text-emerald-800 text-xs sm:text-sm">{{ avg_rating }}/5 ({{ review_count }} reviews)</p>
+                            <p class="font-bold text-emerald-800 dark:text-emerald-400 text-xs sm:text-sm transition-colors">{{ avg_rating }}/5 ({{ review_count }} reviews)</p>
                         </div>
                     </div>
                     {% endif %}
                     
-                    <div class="flex flex-col sm:flex-row sm:items-center bg-slate-50 p-3 sm:p-4 border border-slate-100 rounded-sm gap-3 sm:gap-0">
-                        <span class="text-[10px] font-black uppercase text-slate-500 sm:mr-4">Quantity</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 border border-slate-100 dark:border-slate-700 rounded-sm gap-3 sm:gap-0 transition-colors">
+                        <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 sm:mr-4 transition-colors">Quantity</span>
                         <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto">
-                            <div class="flex items-center bg-white border border-slate-200 p-1 rounded-sm shadow-sm">
-                                <button type="button" class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-slate-50 text-slate-600 transition-colors" id="qty-decrease">
+                            <div class="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 p-1 rounded-sm shadow-sm transition-colors">
+                                <button type="button" class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" id="qty-decrease">
                                     <i class="fa-solid fa-minus text-[10px]"></i>
                                 </button>
                                 <input type="number" id="shared-qty-input" min="1" max="{{ data.stock_quantity }}" value="1" 
-                                       class="w-12 sm:w-14 text-center text-sm sm:text-base font-black text-slate-900 border-0 outline-none bg-transparent" readonly>
-                                <button type="button" class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-slate-50 text-slate-600 transition-colors" id="qty-increase">
+                                       class="w-12 sm:w-14 text-center text-sm sm:text-base font-black text-slate-900 dark:text-white border-0 outline-none bg-transparent transition-colors" readonly>
+                                <button type="button" class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" id="qty-increase">
                                     <i class="fa-solid fa-plus text-[10px]"></i>
                                 </button>
                             </div>
-                            <span class="sm:ml-4 text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ data.stock_quantity }} Available</span>
+                            <span class="sm:ml-4 text-[9px] sm:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter transition-colors">{{ data.stock_quantity }} Available</span>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-4">
                         {% if is_in_cart %}
                             <a href="{% url 'cart' %}" class="col-span-2">
-                                <button class="btn-action w-full h-14 bg-blue-600 text-white hover:bg-slate-900 shadow-lg shadow-blue-600/20 text-[10px] sm:text-[11px]">
+                                <button class="btn-action w-full h-14 bg-blue-600 text-white hover:bg-slate-900 dark:hover:bg-blue-500 shadow-lg shadow-blue-600/20 text-[10px] sm:text-[11px] transition-colors">
                                     <i class="fa-solid fa-arrow-right mr-2"></i> Review Cart
                                 </button>
                             </a>
@@ -231,7 +228,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="quantity" id="cart-form-qty" value="1">
                                 <button type="submit" {% if data.stock_quantity <= 0 %}disabled{% endif %} 
-                                        class="btn-action w-full h-14 bg-slate-900 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-md text-[10px] sm:text-[11px]">
+                                        class="btn-action w-full h-14 bg-slate-900 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md text-[10px] sm:text-[11px] transition-colors">
                                     Add to Bag
                                 </button>
                             </form>
@@ -241,7 +238,7 @@
                             {% csrf_token %}
                             <input type="hidden" name="quantity" id="buy-form-qty" value="1">
                             <button type="submit" {% if data.stock_quantity <= 0 %}disabled{% endif %} 
-                                    class="btn-action w-full h-14 bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-[10px] sm:text-[11px]">
+                                    class="btn-action w-full h-14 bg-white dark:bg-transparent border-2 border-slate-900 dark:border-slate-600 text-slate-900 dark:text-white hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-[10px] sm:text-[11px] transition-colors">
                                 Buy Now
                             </button>
                         </form>
@@ -251,41 +248,41 @@
         </div>
 
         <section class="mt-20 sm:mt-24">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-8 sm:mb-12 text-center uppercase tracking-tighter">Related Items</h2>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8 sm:mb-12 text-center uppercase tracking-tighter transition-colors">Related Items</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                 {% for related in related_products %}
                 <a href="{{ related.get_absolute_url }}" class="group glass p-3 sm:p-4 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 flex flex-col h-full">
-                    <div class="aspect-[4/5] overflow-hidden rounded-sm mb-3 group-hover:scale-105 transition-transform bg-slate-50 relative">
+                    <div class="aspect-[4/5] overflow-hidden rounded-sm mb-3 group-hover:scale-105 transition-transform bg-slate-50 dark:bg-slate-900/50 relative">
                         {% with primary=related.images.all|dictsortreversed:"is_primary"|first %}
                             {% if primary %}
                                 <img src="{{ primary.images.url }}" alt="{{ related.product.name }}" class="w-full h-full object-cover absolute inset-0">
                             {% else %}
-                                <div class="w-full h-full flex items-center justify-center absolute inset-0 text-slate-200">
+                                <div class="w-full h-full flex items-center justify-center absolute inset-0 text-slate-200 dark:text-slate-700 transition-colors">
                                     <i class="fa-solid fa-box text-2xl"></i>
                                 </div>
                             {% endif %}
                         {% endwith %}
                     </div>
                     <div class="flex flex-col flex-1">
-                        <h3 class="font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 mb-2 group-hover:text-blue-600">{{ related.product.name }}</h3>
-                        <p class="text-base sm:text-lg font-black text-slate-900 mt-auto">${{ related.selling_price }}</p>
+                        <h3 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-slate-200 line-clamp-2 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ related.product.name }}</h3>
+                        <p class="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-auto transition-colors">${{ related.selling_price }}</p>
                     </div>
                 </a>
                 {% empty %}
-                <div class="col-span-full text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-sm py-12">
-                    <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">No related products found.</p>
+                <div class="col-span-full text-center bg-slate-50 dark:bg-slate-800/30 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-sm py-12 transition-colors">
+                    <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">No related products found.</p>
                 </div>
                 {% endfor %}
             </div>
         </section>
 
-        <section class="mt-20 sm:mt-24 border-t border-slate-200 pt-12 sm:pt-16">
+        <section class="mt-20 sm:mt-24 border-t border-slate-200 dark:border-slate-800 pt-12 sm:pt-16 transition-colors">
             <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-10 sm:mb-12">
-                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 uppercase tracking-tighter text-center">Customer Reviews</h2>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter text-center transition-colors">Customer Reviews</h2>
                 {% if review_count > 0 %}
-                <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-sm shadow-sm">
-                    <span class="font-bold text-lg text-emerald-800">{{ avg_rating }}/5</span>
-                    <span class="text-xs sm:text-sm font-bold text-emerald-600/70">({{ review_count }} Total)</span>
+                <div class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50 px-4 py-2 rounded-sm shadow-sm transition-colors">
+                    <span class="font-bold text-lg text-emerald-800 dark:text-emerald-400 transition-colors">{{ avg_rating }}/5</span>
+                    <span class="text-xs sm:text-sm font-bold text-emerald-600/70 dark:text-emerald-500/70 transition-colors">({{ review_count }} Total)</span>
                 </div>
                 {% endif %}
             </div>
@@ -301,19 +298,19 @@
                     
                     <div class="flex items-center gap-3 sm:gap-4">
                         <div class="flex items-center justify-end gap-1.5 sm:gap-2 w-12 sm:w-16">
-                            <span class="text-[10px] sm:text-xs font-black text-slate-700">{{ dist.rating }}</span>
+                            <span class="text-[10px] sm:text-xs font-black text-slate-700 dark:text-slate-300 transition-colors">{{ dist.rating }}</span>
                             <i class="fas fa-star text-amber-400 text-[9px] sm:text-[10px]"></i>
                         </div>
 
-                        <div class="flex-1 h-2.5 sm:h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                        <div class="flex-1 h-2.5 sm:h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden border border-slate-200 dark:border-slate-600 transition-colors">
                             <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-700 ease-out" 
                                  style="width: {{ percent }}%">
                             </div>
                         </div>
 
                         <div class="w-16 sm:w-20 text-right">
-                            <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">{{ percent }}%</span>
-                            <span class="text-[9px] sm:text-[10px] text-slate-400 ml-1">({{ dist.count }})</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase transition-colors">{{ percent }}%</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 ml-1 transition-colors">({{ dist.count }})</span>
                         </div>
                     </div>
                 {% endfor %}
@@ -322,36 +319,45 @@
 
             <div class="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
                 {% for review in reviews %}
-                <div class="glass p-5 sm:p-6 hover:shadow-lg transition-all border border-slate-200">
+                <div class="glass p-5 sm:p-6 hover:shadow-lg transition-all border border-slate-200 dark:border-slate-700">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2 sm:gap-0">
                         <div class="flex text-amber-400 gap-1 text-xs sm:text-sm">
                             {% for i in "12345"|make_list %}
                                 {% if forloop.counter <= review.rating %}
                                     <i class="fas fa-star"></i>
                                 {% else %}
-                                    <i class="far fa-star text-slate-200"></i>
+                                    <i class="far fa-star text-slate-200 dark:text-slate-600 transition-colors"></i>
                                 {% endif %}
                             {% endfor %}
                         </div>
-                        <span class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <span class="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">
                             {{ review.created_at|date:"M d, Y" }}
                         </span>
                     </div>
-                    <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-medium">{{ review.comment }}</p>
-                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
-                        <div class="w-8 h-8 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] font-black text-slate-700 shadow-sm border border-slate-200 shrink-0">
+                    <p class="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300 font-medium transition-colors">{{ review.comment }}</p>
+                    {% if review.images.exists %}
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+                        {% for image in review.images.all %}
+                        <div class="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors review-image" data-review-id="{{ review.id }}" data-image-index="{{ forloop.counter0 }}" data-images="{% for img in review.images.all %}{{ img.image.url }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                            <img src="{{ image.image.url }}" alt="Review photo" class="w-full h-28 object-cover hover:scale-105 transition-transform">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-3 transition-colors">
+                        <div class="w-8 h-8 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] font-black text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-600 shrink-0 transition-colors">
                             {{ review.user.get_full_name|slice:":1"|default:review.user.username|slice:":1"|upper }}
                         </div>
                         <div class="flex flex-col">
-                            <span class="text-xs sm:text-sm font-bold text-slate-800 tracking-tight">{{ review.user.get_full_name|default:review.user.username }}</span>
-                            <span class="text-[9px] sm:text-[10px] font-bold text-emerald-600 uppercase tracking-wider"><i class="fa-solid fa-check-circle mr-1"></i> Verified Purchase</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white tracking-tight transition-colors">{{ review.user.get_full_name|default:review.user.username }}</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-wider transition-colors"><i class="fa-solid fa-check-circle mr-1"></i> Verified Purchase</span>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="text-center py-16 sm:py-20 bg-slate-50 rounded-sm border-2 border-dashed border-slate-200 px-4">
-                    <i class="far fa-comment-dots text-3xl sm:text-4xl text-slate-300 mb-4"></i>
-                    <p class="text-slate-500 font-bold uppercase tracking-widest text-[10px] sm:text-xs">No reviews yet for this variant</p>
+                <div class="text-center py-16 sm:py-20 bg-slate-50 dark:bg-slate-800/30 rounded-sm border-2 border-dashed border-slate-200 dark:border-slate-700 px-4 transition-colors">
+                    <i class="far fa-comment-dots text-3xl sm:text-4xl text-slate-300 dark:text-slate-600 mb-4 transition-colors"></i>
+                    <p class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs transition-colors">No reviews yet for this variant</p>
                 </div>
                 {% endfor %}
             </div>
@@ -449,6 +455,164 @@
                 }
             } catch (error) { console.error("Wishlist error:", error); }
         }
+    </script>
+
+    <!-- Image Viewer Modal -->
+    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-95 hidden z-50 flex items-center justify-center">
+        <div class="relative w-full h-full flex items-center justify-center p-4">
+            <!-- Close button -->
+            <button id="close-modal" class="absolute top-4 right-4 text-white hover:text-gray-300 z-20 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center transition-all">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
+            <!-- Main image container -->
+            <div class="relative overflow-hidden w-[45vw] max-w-[320px] aspect-[9/16] bg-slate-950 rounded-xl">
+                <img id="modal-image" src="" alt="Review photo" class="w-full h-full object-cover cursor-pointer select-none transition-transform duration-300" style="transform-origin: center center; transform: scale(1);">
+            </div>
+
+            <!-- Navigation buttons -->
+            <button id="prev-image" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center transition-all">
+                <i class="fas fa-chevron-left text-xl"></i>
+            </button>
+            <button id="next-image" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center transition-all">
+                <i class="fas fa-chevron-right text-xl"></i>
+            </button>
+
+            <!-- Image counter -->
+            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm font-medium bg-black bg-opacity-50 px-3 py-1 rounded-full">
+                <span id="current-image">1</span> / <span id="total-images">1</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image Viewer Functionality with Click-to-Zoom
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let isZoomed = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const closeModal = document.getElementById('close-modal');
+            const prevBtn = document.getElementById('prev-image');
+            const nextBtn = document.getElementById('next-image');
+            const currentCounter = document.getElementById('current-image');
+            const totalCounter = document.getElementById('total-images');
+
+            // Open modal when clicking review images
+            document.querySelectorAll('.review-image').forEach(img => {
+                img.addEventListener('click', function() {
+                    const images = this.dataset.images.split(',');
+                    const startIndex = parseInt(this.dataset.imageIndex);
+
+                    currentImages = images;
+                    currentImageIndex = startIndex;
+                    isZoomed = false;
+
+                    showImage();
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', closeImageModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeImageModal();
+                }
+            });
+
+            // Click image to toggle zoom
+            modalImage.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent modal close
+                toggleZoom();
+            });
+
+            // Navigation
+            prevBtn.addEventListener('click', showPrevImage);
+            nextBtn.addEventListener('click', showNextImage);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (modal.classList.contains('hidden')) return;
+
+                if (e.key === 'Escape') {
+                    closeImageModal();
+                } else if (e.key === 'ArrowLeft') {
+                    showPrevImage();
+                } else if (e.key === 'ArrowRight') {
+                    showNextImage();
+                }
+            });
+
+            function showImage() {
+                modalImage.src = currentImages[currentImageIndex];
+                currentCounter.textContent = currentImageIndex + 1;
+                totalCounter.textContent = currentImages.length;
+
+                // Update navigation buttons
+                prevBtn.disabled = currentImageIndex === 0;
+                nextBtn.disabled = currentImageIndex === currentImages.length - 1;
+
+                // Reset zoom when changing images
+                resetZoom();
+            }
+
+            function showPrevImage() {
+                if (currentImageIndex > 0) {
+                    currentImageIndex--;
+                    showImage();
+                }
+            }
+
+            function showNextImage() {
+                if (currentImageIndex < currentImages.length - 1) {
+                    currentImageIndex++;
+                    showImage();
+                }
+            }
+
+            function toggleZoom() {
+                isZoomed = !isZoomed;
+                if (isZoomed) {
+                    modalImage.style.transform = 'scale(2)';
+                    modalImage.style.cursor = 'zoom-out';
+                } else {
+                    modalImage.style.transform = 'scale(1)';
+                    modalImage.style.cursor = 'zoom-in';
+                }
+            }
+
+            function resetZoom() {
+                isZoomed = false;
+                modalImage.style.transform = 'scale(1)';
+                modalImage.style.cursor = 'zoom-in';
+            }
+
+            function closeImageModal() {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                resetZoom();
+            }
+        });
+    </script>
+
+    <script>
+        // Theme Initialization
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+        applyTheme();
     </script>
 </body>
 </html>

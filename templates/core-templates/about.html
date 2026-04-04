@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,12 +15,20 @@
         --bg-main: #ffffff; 
       }
 
+      /* Dark Mode Base Variables */
+      html.dark {
+        --primary: #ffffff;
+        --accent: #3b82f6;
+        --bg-main: #0f172a; /* Tailwind slate-950 */
+      }
+
       body {
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
         /* Prevent horizontal scroll on mobile due to absolute positioned decorative elements */
         overflow-x: hidden; 
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       /* Noticeable Smooth Reveal */
@@ -41,12 +49,23 @@
         border-radius: 4px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        height: 100%; /* Ensures all cards stretch to equal height in grid */
+        height: 100%; 
       }
       .pro-card:hover {
         border-color: var(--accent);
         box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.08);
         transform: translateY(-4px);
+      }
+
+      /* Flawless Dark Mode Pro-Card Support */
+      html.dark .pro-card {
+        background: #1e293b; /* Tailwind slate-800 */
+        border-color: #334155; /* Tailwind slate-700 */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      }
+      html.dark .pro-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
       }
     </style>
 </head>
@@ -73,74 +92,74 @@
         <div class="order-1 lg:order-2">
           <div class="border-l-4 border-blue-600 pl-4 sm:pl-5 mb-6 md:mb-8">
             <span class="text-blue-600 font-bold tracking-widest text-[10px] sm:text-xs uppercase block mb-2">Our Mission</span>
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 leading-none">Redefining the<br /> Standard.</h2>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 dark:text-white leading-none transition-colors">Redefining the<br /> Standard.</h2>
           </div>
           <div class="space-y-4 mb-8">
-            <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed transition-colors">
               CORE STORE was founded on a simple principle: professionals shouldn't have to compromise on their tools. Whether you are building the next big app, designing the future, or dominating in esports, the hardware you use dictates your ceiling.
             </p>
-            <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed transition-colors">
               We meticulously curate every item in our inventory, partnering only with brands that share our obsession with quality, durability, and bleeding-edge technology.
             </p>
           </div>
           
-          <div class="flex flex-wrap gap-6 sm:gap-10 border-t border-slate-200 pt-6 md:pt-8">
+          <div class="flex flex-wrap gap-6 sm:gap-10 border-t border-slate-200 dark:border-slate-800 pt-6 md:pt-8 transition-colors">
             <div class="flex-1 min-w-[120px]">
-              <h4 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-1 md:mb-2">10K+</h4>
-              <span class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">Global Customers</span>
+              <h4 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-1 md:mb-2 transition-colors">10K+</h4>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest transition-colors">Global Customers</span>
             </div>
             <div class="flex-1 min-w-[120px]">
-              <h4 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-1 md:mb-2">99%</h4>
-              <span class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">Satisfaction Rate</span>
+              <h4 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-1 md:mb-2 transition-colors">99%</h4>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest transition-colors">Satisfaction Rate</span>
             </div>
           </div>
         </div>
 
         <div class="order-2 lg:order-1 relative mt-8 lg:mt-0 px-4 sm:px-0">
-          <div class="absolute -inset-3 sm:-inset-4 bg-slate-100 rounded-sm transform -rotate-2 scale-105"></div>
-          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800" alt="Workspace" class="relative z-10 w-full h-auto object-cover rounded-sm shadow-2xl border border-slate-200 aspect-[4/3] lg:aspect-auto">
+          <div class="absolute -inset-3 sm:-inset-4 bg-slate-100 dark:bg-slate-800 rounded-sm transform -rotate-2 scale-105 transition-colors"></div>
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800" alt="Workspace" class="relative z-10 w-full h-auto object-cover rounded-sm shadow-2xl border border-slate-200 dark:border-slate-700 aspect-[4/3] lg:aspect-auto transition-colors">
         </div>
 
       </div>
     </section>
 
-    <section class="bg-slate-50 border-y border-slate-200 py-16 md:py-24 reveal">
+    <section class="bg-slate-50 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 py-16 md:py-24 reveal transition-colors">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
           <span class="text-blue-600 font-bold tracking-widest text-[10px] sm:text-xs uppercase block mb-2 md:mb-3">The Foundation</span>
-          <h2 class="text-3xl sm:text-4xl font-black tracking-tighter uppercase text-slate-900">Our Core Values</h2>
+          <h2 class="text-3xl sm:text-4xl font-black tracking-tighter uppercase text-slate-900 dark:text-white transition-colors">Our Core Values</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <div class="pro-card p-6 sm:p-8 flex flex-col items-center text-center group">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
               <i class="fa-solid fa-microchip text-2xl sm:text-3xl text-blue-600 group-hover:text-white transition-colors duration-300"></i>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 uppercase tracking-wide mb-3 md:mb-4">Uncompromising Quality</h3>
-            <p class="text-sm text-slate-600 font-medium leading-relaxed">We rigorously test every product line. If it doesn't meet our elite standards for performance and longevity, it doesn't make it to our store.</p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-3 md:mb-4 transition-colors">Uncompromising Quality</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed transition-colors">We rigorously test every product line. If it doesn't meet our elite standards for performance and longevity, it doesn't make it to our store.</p>
           </div>
 
           <div class="pro-card p-6 sm:p-8 flex flex-col items-center text-center group">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
               <i class="fa-solid fa-truck-fast text-2xl sm:text-3xl text-blue-600 group-hover:text-white transition-colors duration-300"></i>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 uppercase tracking-wide mb-3 md:mb-4">Rapid Fulfillment</h3>
-            <p class="text-sm text-slate-600 font-medium leading-relaxed">When you order gear, you need it yesterday. Our streamlined logistics ensure your equipment is packed and shipped with ruthless efficiency.</p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-3 md:mb-4 transition-colors">Rapid Fulfillment</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed transition-colors">When you order gear, you need it yesterday. Our streamlined logistics ensure your equipment is packed and shipped with ruthless efficiency.</p>
           </div>
 
           <div class="pro-card p-6 sm:p-8 flex flex-col items-center text-center group md:col-span-2 lg:col-span-1">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
               <i class="fa-solid fa-headset text-2xl sm:text-3xl text-blue-600 group-hover:text-white transition-colors duration-300"></i>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 uppercase tracking-wide mb-3 md:mb-4">Elite Support</h3>
-            <p class="text-sm text-slate-600 font-medium leading-relaxed">Our relationship doesn't end at checkout. Our technical support team is available 24/7 to ensure your gear operates at peak performance.</p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-3 md:mb-4 transition-colors">Elite Support</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed transition-colors">Our relationship doesn't end at checkout. Our technical support team is available 24/7 to ensure your gear operates at peak performance.</p>
           </div>
         </div>
       </div>
     </section>
 
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 reveal">
-        <div class="bg-slate-900 rounded-sm p-8 sm:p-12 md:p-16 lg:p-20 text-center text-white relative overflow-hidden flex flex-col items-center justify-center">
+        <div class="bg-slate-900 rounded-sm p-8 sm:p-12 md:p-16 lg:p-20 text-center text-white relative overflow-hidden flex flex-col items-center justify-center shadow-xl">
             <div class="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-blue-600 rounded-full blur-[100px] opacity-20 md:opacity-30 transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-400 rounded-full blur-[80px] opacity-10 transform -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
             
@@ -156,7 +175,7 @@
     </section>
 
     <script>
-      // Reveal Animation - Untouched logic, just slightly smoothed CSS
+      // Reveal Animation
       function reveal() {
         const reveals = document.querySelectorAll(".reveal");
         reveals.forEach(el => {
@@ -166,7 +185,23 @@
         });
       }
       window.addEventListener("scroll", reveal);
-      reveal(); // Trigger once on load
+      reveal(); 
+    </script>
+
+    <script>
+      // Theme Initialization
+      function applyTheme() {
+        const themeData = document.documentElement.getAttribute('data-theme');
+        if (themeData === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      
+      // Apply theme on page load
+      document.addEventListener('DOMContentLoaded', applyTheme);
+      applyTheme();
     </script>
 
     {% include 'core-templates/footer.html' %}
