@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{ user_theme }}">
+<html lang="en" data-theme="{% if request.user.is_authenticated %}{{ request.user.theme_preference }}{% else %}light{% endif %}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CORE STORE | {{ category.name }}</title>
+    
+    <!-- Hydrate theme BEFORE Tailwind loads -->
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
@@ -16,11 +34,54 @@
         --bg-main: #f8fafc;
       }
 
-      /* Dark Mode Base Variables */
+      /* Dark Mode Support */
       html.dark {
         --primary: #ffffff;
         --accent: #3b82f6;
-        --bg-main: #0f172a; /* Tailwind slate-950 */
+        --bg-main: #0f172a;
+      }
+
+      html.dark body {
+        background-color: #0f172a;
+        color: #ffffff;
+      }
+
+      html.dark .glass {
+        background: #1e293b;
+        border-color: #334155;
+      }
+
+      html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+        color: #ffffff;
+      }
+
+      html.dark .product-card {
+        background: #1e293b;
+        border-color: #334155;
+      }
+
+      html.dark .text-slate-600 {
+        color: #cbd5e1;
+      }
+
+      html.dark .text-slate-400 {
+        color: #94a3b8;
+      }
+
+      html.dark .text-slate-500 {
+        color: #94a3b8;
+      }
+
+      html.dark .text-slate-900 {
+        color: #ffffff;
+      }
+
+      html.dark .border-slate-100, html.dark .border-slate-200 {
+        border-color: #334155;
+      }
+
+      html.dark .bg-slate-50 {
+        background-color: #1e293b;
       }
 
       body {
@@ -28,7 +89,6 @@
         background-color: var(--bg-main);
         color: var(--primary);
         overflow-x: hidden;
-        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       /* Sharp UI Elements */
@@ -36,11 +96,6 @@
         background: white;
         border: 1px solid #e2e8f0;
         border-radius: 4px;
-      }
-      
-      html.dark .glass {
-        background: #1e293b; /* slate-800 */
-        border-color: #334155; /* slate-700 */
       }
 
       .reveal {
@@ -66,17 +121,7 @@
         transform: translateY(-4px);
       }
 
-      html.dark .product-card {
-        background: #1e293b; /* slate-800 */
-        border-color: #334155; /* slate-700 */
-      }
-      html.dark .product-card:hover {
-        border-color: var(--accent);
-        box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
-      }
-
       .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
       .cat-pill {
         border-radius: 4px;
@@ -91,7 +136,6 @@
   <body>
 
     {% include 'core-templates/navbar.html' %}
-    {% include 'includes/message-toast.html' %}
 
     <section class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] py-16 border-b border-blue-400/20">
       <div class="container mx-auto px-4 md:px-8">
@@ -109,19 +153,14 @@
       </div>
     </section>
 
-    <section class="bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 sticky top-[64px] lg:top-[80px] z-40 transition-colors">
-      <div class="container mx-auto px-4 md:px-8 py-4 flex items-center gap-4 overflow-x-auto no-scrollbar snap-x">
-        <a href="/products" class="cat-pill px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-900 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white shrink-0 snap-start transition-colors">
+    <section class="bg-white border-b border-slate-200 sticky top-[72px] z-40">
+      <div class="container mx-auto px-4 md:px-8 py-4 flex items-center gap-4 overflow-x-auto no-scrollbar">
+        <a href="/products" class="cat-pill px-5 py-2 bg-slate-100 text-slate-500 hover:bg-slate-900 hover:text-white shrink-0">
           <i class="fa-solid fa-layer-group mr-2"></i> Full Inventory
         </a>
         {% for cat in categories %}
         <a href="{% url 'category_view' cat.slug %}" 
-           class="cat-pill px-5 py-2 shrink-0 snap-start transition-colors
-           {% if cat.id == category.id %}
-              bg-blue-600 text-white shadow-lg shadow-blue-600/20 dark:shadow-none
-           {% else %}
-              bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-200
-           {% endif %}">
+           class="cat-pill px-5 py-2 shrink-0 {% if cat.id == category.id %}bg-blue-600 text-white shadow-lg shadow-blue-200{% else %}bg-slate-50 text-slate-400 hover:bg-slate-200 hover:text-slate-900{% endif %}">
           {{ cat.name }}
         </a>
         {% endfor %}
@@ -132,16 +171,15 @@
       {% if subcategories_with_products %}
         {% for item in subcategories_with_products %}
         <div class="mb-20 reveal">
-          
-          <div class="flex items-end justify-between mb-10 border-b border-slate-100 dark:border-slate-800 pb-4 transition-colors">
+          <div class="flex items-end justify-between mb-10 border-b border-slate-100 pb-4">
             <div>
-              <h2 class="text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white transition-colors">
+              <h2 class="text-2xl font-black uppercase tracking-tighter text-slate-900">
                 {{ item.subcategory.name }} <span class="text-blue-600">Series</span>
               </h2>
-              <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1 transition-colors">Classification: Premium Tier</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-1">Classification: Premium Tier</p>
             </div>
             {% if item.total_count > 0 %}
-            <a href="{% url 'subcategory_products' category.slug item.subcategory.slug %}" class="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2">
+            <a href="{% url 'subcategory_products' category.slug item.subcategory.slug %}" class="text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-blue-600 transition-all flex items-center gap-2">
               Browse All Units <i class="fa-solid fa-arrow-right-long text-blue-600"></i>
             </a>
             {% endif %}
@@ -150,60 +188,54 @@
           {% if item.products %}
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {% for product in item.products %}
-            <a href="{% url 'product_single' product.slug %}" class="product-card p-2 group block flex flex-col h-full">
-              <div class="relative aspect-square overflow-hidden rounded-sm bg-slate-50 dark:bg-slate-900/50 mb-3 transition-colors">
-                
+            <a href="{% url 'product_single' product.slug %}" class="product-card p-2 group block">
+              <div class="relative aspect-square overflow-hidden rounded-sm bg-slate-50 mb-3">
                 {% with product.images.all|first as img %}
                   {% if img %}
                     <img src="{{ img.images.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ product.product.name }}" />
                   {% else %}
-                    <div class="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 transition-colors"><i class="fa-solid fa-image text-slate-200 dark:text-slate-600 text-xl"></i></div>
+                    <div class="w-full h-full flex items-center justify-center bg-slate-100"><i class="fa-solid fa-image text-slate-200 text-xl"></i></div>
                   {% endif %}
                 {% endwith %}
                 
                 {% if product.stock_quantity <= 0 %}
-                <div class="absolute top-2 left-2 bg-red-600 text-white text-[8px] font-black uppercase px-2 py-1 rounded-sm shadow-lg z-10">
+                <div class="absolute top-2 left-2 bg-red-600 text-white text-[8px] font-black uppercase px-2 py-1 rounded-sm shadow-lg">
                   ZERO STOCK
                 </div>
                 {% endif %}
 
-                <div class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20">
-                    <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="w-full m-0" onclick="event.stopPropagation();">
+                <div class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="w-full" onclick="event.stopPropagation();">
                       {% csrf_token %}
                       <input type="hidden" name="quantity" value="1">
-                      <button type="submit" class="w-full bg-blue-600/95 backdrop-blur-sm text-white py-2.5 text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-slate-950 transition-colors cursor-pointer outline-none border-0">
+                      <button type="submit" class="w-full bg-blue-600 text-white py-2 text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 transition-colors cursor-pointer">
                           Add to Cart +
                       </button>
                     </form>
                 </div>
               </div>
-              
-              <div class="px-1 flex-1 flex flex-col justify-end">
-                <h3 class="text-[9px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-tighter truncate mb-1.5 transition-colors">{{ product.product.name }}</h3>
-                <div class="flex items-center justify-between mt-auto">
-                    <p class="text-xs font-black text-slate-900 dark:text-white transition-colors">${{ product.selling_price|floatformat:0 }}</p>
-                    {% include 'core-templates/partials/product-rating.html' with product=product %}
-                </div>
+              <div class="px-1">
+                <h3 class="text-[9px] font-bold text-slate-900 uppercase tracking-tighter truncate mb-1">{{ product.product.name }}</h3>
+                <p class="text-xs font-black text-slate-900">${{ product.selling_price|floatformat:0 }}</p>
+                {% include 'core-templates/partials/product-rating.html' with product=product %}
               </div>
             </a>
             {% endfor %}
           </div>
-          
           {% else %}
-          <div class="bg-slate-50 dark:bg-slate-800/30 border border-dashed border-slate-200 dark:border-slate-700 rounded-sm p-12 text-center transition-colors">
-            <i class="fa-solid fa-database text-slate-200 dark:text-slate-600 text-3xl mb-4 transition-colors"></i>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">No Registry entries found for this subcategory</p>
+          <div class="bg-slate-50 border border-dashed border-slate-200 rounded-sm p-12 text-center">
+            <i class="fa-solid fa-database text-slate-200 text-3xl mb-4"></i>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">No Registry entries found for this subcategory</p>
           </div>
           {% endif %}
         </div>
         {% endfor %}
-      
       {% else %}
-      <div class="glass dark:bg-slate-800/50 p-16 text-center shadow-sm reveal active transition-colors">
-        <i class="fa-solid fa-box-archive text-6xl text-slate-100 dark:text-slate-700 mb-8 transition-colors"></i>
-        <h2 class="text-3xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-4 transition-colors">Registry Empty</h2>
-        <p class="text-slate-400 dark:text-slate-500 text-sm max-w-md mx-auto mb-10 uppercase font-bold tracking-widest leading-relaxed transition-colors">No subcategories or products have been indexed for this classification yet.</p>
-        <a href="/" class="inline-flex items-center gap-3 bg-slate-900 dark:bg-blue-600 text-white px-10 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-blue-500 transition-all shadow-xl">
+      <div class="bg-white border border-slate-200 rounded-sm p-16 text-center shadow-sm">
+        <i class="fa-solid fa-box-archive text-6xl text-slate-100 mb-8"></i>
+        <h2 class="text-3xl font-black uppercase tracking-tighter text-slate-900 mb-4">Registry Empty</h2>
+        <p class="text-slate-400 text-sm max-w-md mx-auto mb-10 uppercase font-bold tracking-widest leading-relaxed">No subcategories or products have been indexed for this classification yet.</p>
+        <a href="/" class="inline-flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl">
           <i class="fa-solid fa-arrow-left"></i> Return to Main Registry
         </a>
       </div>
@@ -238,7 +270,6 @@
       
       // Apply theme on page load
       document.addEventListener('DOMContentLoaded', applyTheme);
-      // Fallback application to prevent flash if DOM is fast
       applyTheme();
     </script>
   </body>

@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{ user_theme }}">
+<html lang="en" data-theme="{% if request.user.is_authenticated %}{{ request.user.theme_preference }}{% else %}light{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shipping Information | CORE STORE</title>
+    
+    <!-- Hydrate theme BEFORE Tailwind loads -->
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
@@ -15,19 +33,38 @@
         --bg-main: #ffffff; 
       }
 
-      /* Dark Mode Core Variables */
+      /* Dark Mode Support */
       html.dark {
         --primary: #ffffff;
         --accent: #3b82f6;
-        --bg-main: #0f172a; /* Tailwind slate-950 */
+        --bg-main: #0f172a;
+      }
+
+      html.dark body {
+        background-color: #0f172a;
+        color: #ffffff;
+      }
+
+      html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+        color: #ffffff;
+      }
+
+      html.dark .text-slate-600 {
+        color: #cbd5e1;
+      }
+
+      html.dark .text-slate-400 {
+        color: #94a3b8;
+      }
+
+      html.dark .text-slate-900 {
+        color: #ffffff;
       }
 
       body {
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
-        overflow-x: hidden;
-        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       /* Noticeable Smooth Reveal */
@@ -54,18 +91,6 @@
         box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.08);
         transform: translateY(-4px);
       }
-
-      /* THE BUG FIX: Forcing the background to stay dark on hover */
-      html.dark .pro-card {
-        background-color: #1e293b !important; /* slate-800 */
-        border-color: #334155 !important; /* slate-700 */
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
-      }
-      html.dark .pro-card:hover {
-        background-color: #1e293b !important; /* STOPS THE WHITE FLASH */
-        border-color: var(--accent) !important;
-        box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5) !important;
-      }
     </style>
 </head>
 <body>
@@ -73,7 +98,7 @@
     {% include 'includes/message-toast.html' %}
 
     <header class="container mx-auto px-4 md:px-6 py-4">
-      <div class="relative overflow-hidden rounded-sm bg-slate-900 h-[250px] md:h-[300px] flex items-center justify-center text-center transition-colors">
+      <div class="relative overflow-hidden rounded-sm bg-slate-900 h-[250px] md:h-[300px] flex items-center justify-center text-center">
         <div class="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700 via-slate-900 to-slate-900"></div>
         <i class="fa-solid fa-plane-up absolute -left-10 bottom-10 text-[150px] text-white opacity-5 transform -rotate-12"></i>
         
@@ -86,56 +111,56 @@
     </header>
 
     <section class="container mx-auto px-4 md:px-6 py-16 reveal">
-      <div class="border-l-4 border-blue-600 pl-4 mb-8 transition-colors">
+      <div class="border-l-4 border-blue-600 pl-4 mb-8">
         <span class="text-blue-600 font-bold tracking-widest text-[10px] uppercase block mb-1">Domestic Services</span>
-        <h2 class="text-2xl font-black tracking-tighter uppercase text-slate-900 dark:text-white transition-colors">Delivery Options</h2>
+        <h2 class="text-2xl font-black tracking-tighter uppercase text-slate-900">Delivery Options</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <div class="pro-card p-8 flex flex-col group relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-bl-full flex items-start justify-end p-4 group-hover:bg-blue-50 dark:group-hover:bg-slate-700/50 transition-colors">
-            <i class="fa-solid fa-truck text-slate-300 dark:text-slate-600 group-hover:text-blue-400 transition-colors"></i>
+          <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 rounded-bl-full flex items-start justify-end p-4 group-hover:bg-blue-50 transition-colors">
+            <i class="fa-solid fa-truck text-slate-300 group-hover:text-blue-400 transition-colors"></i>
           </div>
-          <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight mb-1 transition-colors">Standard</h3>
-          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4 transition-colors">3 - 5 Business Days</p>
-          <div class="text-3xl font-light text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
-            $5.99 <span class="text-xs text-slate-400 dark:text-slate-500 font-medium tracking-normal transition-colors">or Free over $100</span>
+          <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight mb-1">Standard</h3>
+          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">3 - 5 Business Days</p>
+          <div class="text-3xl font-light text-slate-900 mb-4 border-b border-slate-100 pb-4">
+            $5.99 <span class="text-xs text-slate-400 font-medium tracking-normal">or Free over $100</span>
           </div>
-          <ul class="text-xs text-slate-500 dark:text-slate-400 font-medium space-y-2 flex-1 transition-colors">
+          <ul class="text-xs text-slate-500 font-medium space-y-2 flex-1">
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Full end-to-end tracking</li>
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Carbon neutral delivery</li>
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> P.O. Box eligible</li>
           </ul>
         </div>
 
-        <div class="pro-card p-8 flex flex-col group relative overflow-hidden border-blue-200 dark:border-slate-600 shadow-md">
+        <div class="pro-card p-8 flex flex-col group relative overflow-hidden border-blue-200 shadow-md">
           <div class="absolute top-0 inset-x-0 h-1 bg-blue-600"></div>
-          <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-bl-full flex items-start justify-end p-4 group-hover:bg-blue-50 dark:group-hover:bg-slate-700/50 transition-colors">
-            <i class="fa-solid fa-bolt text-slate-300 dark:text-slate-600 group-hover:text-blue-400 transition-colors"></i>
+          <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 rounded-bl-full flex items-start justify-end p-4 group-hover:bg-blue-50 transition-colors">
+            <i class="fa-solid fa-bolt text-slate-300 group-hover:text-blue-400 transition-colors"></i>
           </div>
-          <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight mb-1 transition-colors">Expedited</h3>
-          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4 transition-colors">2 Business Days</p>
-          <div class="text-3xl font-light text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
-            $14.99 <span class="text-xs text-slate-400 dark:text-slate-500 font-medium tracking-normal transition-colors">Flat Rate</span>
+          <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight mb-1">Expedited</h3>
+          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">2 Business Days</p>
+          <div class="text-3xl font-light text-slate-900 mb-4 border-b border-slate-100 pb-4">
+            $14.99 <span class="text-xs text-slate-400 font-medium tracking-normal">Flat Rate</span>
           </div>
-          <ul class="text-xs text-slate-500 dark:text-slate-400 font-medium space-y-2 flex-1 transition-colors">
+          <ul class="text-xs text-slate-500 font-medium space-y-2 flex-1">
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Priority warehouse processing</li>
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Full end-to-end tracking</li>
-            <li><i class="fa-solid fa-xmark text-slate-300 dark:text-slate-600 mr-2 transition-colors"></i> No P.O. Boxes</li>
+            <li><i class="fa-solid fa-xmark text-slate-300 mr-2"></i> No P.O. Boxes</li>
           </ul>
         </div>
 
         <div class="pro-card p-8 flex flex-col group relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-bl-full flex items-start justify-end p-4 group-hover:bg-blue-50 dark:group-hover:bg-slate-700/50 transition-colors">
-            <i class="fa-solid fa-rocket text-slate-300 dark:text-slate-600 group-hover:text-blue-400 transition-colors"></i>
+          <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 rounded-bl-full flex items-start justify-end p-4 group-hover:bg-blue-50 transition-colors">
+            <i class="fa-solid fa-rocket text-slate-300 group-hover:text-blue-400 transition-colors"></i>
           </div>
-          <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight mb-1 transition-colors">Overnight</h3>
-          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4 transition-colors">Next Business Day</p>
-          <div class="text-3xl font-light text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
-            $29.99 <span class="text-xs text-slate-400 dark:text-slate-500 font-medium tracking-normal transition-colors">Flat Rate</span>
+          <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight mb-1">Overnight</h3>
+          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">Next Business Day</p>
+          <div class="text-3xl font-light text-slate-900 mb-4 border-b border-slate-100 pb-4">
+            $29.99 <span class="text-xs text-slate-400 font-medium tracking-normal">Flat Rate</span>
           </div>
-          <ul class="text-xs text-slate-500 dark:text-slate-400 font-medium space-y-2 flex-1 transition-colors">
+          <ul class="text-xs text-slate-500 font-medium space-y-2 flex-1">
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Front-of-line processing</li>
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Delivery by 10:30 AM (most areas)</li>
             <li><i class="fa-solid fa-check text-blue-500 mr-2"></i> Signature required</li>
@@ -148,32 +173,32 @@
     <section class="container mx-auto px-4 md:px-6 pb-20 reveal">
       <div class="grid md:grid-cols-2 gap-6">
         
-        <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-sm p-8 md:p-10 transition-colors">
-          <div class="w-12 h-12 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center shadow-sm mb-6 text-slate-800 dark:text-slate-200 transition-colors">
+        <div class="bg-slate-50 border border-slate-200 rounded-sm p-8 md:p-10">
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-slate-800">
             <i class="fa-solid fa-clock-rotate-left text-xl"></i>
           </div>
-          <h3 class="text-base font-black text-slate-900 dark:text-white uppercase tracking-wide mb-3 transition-colors">Order Processing</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-4 transition-colors">
-            We know you need your gear fast. Orders placed before <strong class="dark:text-white">2:00 PM EST (Monday - Friday)</strong> are processed and shipped the exact same day.
+          <h3 class="text-base font-black text-slate-900 uppercase tracking-wide mb-3">Order Processing</h3>
+          <p class="text-sm text-slate-600 font-medium leading-relaxed mb-4">
+            We know you need your gear fast. Orders placed before <strong>2:00 PM EST (Monday - Friday)</strong> are processed and shipped the exact same day.
           </p>
-          <p class="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed transition-colors">
+          <p class="text-sm text-slate-600 font-medium leading-relaxed">
             Orders placed after the cutoff, on weekends, or during federal holidays will be processed the following business day. You will receive a tracking link via email the moment your shipping label is printed.
           </p>
         </div>
 
-        <div class="bg-slate-900 dark:bg-slate-800 rounded-sm p-8 md:p-10 text-white relative overflow-hidden transition-colors border border-transparent dark:border-slate-700">
-          <i class="fa-solid fa-globe absolute -right-4 -bottom-4 text-9xl text-slate-800 dark:text-slate-900/50 opacity-50 transition-colors"></i>
+        <div class="bg-slate-900 rounded-sm p-8 md:p-10 text-white relative overflow-hidden">
+          <i class="fa-solid fa-globe absolute -right-4 -bottom-4 text-9xl text-slate-800 opacity-50"></i>
           <div class="relative z-10">
-            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-sm mb-6 text-white transition-colors">
+            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-sm mb-6 text-white">
               <i class="fa-solid fa-earth-americas text-xl"></i>
             </div>
-            <h3 class="text-base font-black text-white uppercase tracking-wide mb-3 transition-colors">Global Shipping</h3>
-            <p class="text-sm text-slate-300 dark:text-slate-400 font-medium leading-relaxed mb-4 transition-colors">
+            <h3 class="text-base font-black text-white uppercase tracking-wide mb-3">Global Shipping</h3>
+            <p class="text-sm text-slate-300 font-medium leading-relaxed mb-4">
               Core Store proudly ships to over 50 countries worldwide. International shipping rates are dynamically calculated at checkout based on your cart weight and destination.
             </p>
-            <div class="bg-slate-800 dark:bg-slate-900 border border-slate-700 dark:border-slate-800 p-4 rounded-sm mt-6 transition-colors">
-              <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-1 transition-colors">Important Note</span>
-              <p class="text-xs text-slate-400 dark:text-slate-500 transition-colors">Customs duties, taxes, and import fees are not included in the checkout price and are the sole responsibility of the customer upon arrival.</p>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-sm mt-6">
+              <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-1">Important Note</span>
+              <p class="text-xs text-slate-400">Customs duties, taxes, and import fees are not included in the checkout price and are the sole responsibility of the customer upon arrival.</p>
             </div>
           </div>
         </div>
@@ -182,12 +207,12 @@
     </section>
 
     <section class="container mx-auto px-4 md:px-6 pb-20 reveal">
-      <div class="border border-blue-100 dark:border-slate-700 bg-blue-50 dark:bg-slate-800/50 rounded-sm p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors shadow-sm">
+      <div class="border border-blue-100 bg-blue-50 rounded-sm p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <h3 class="text-lg font-black tracking-tighter uppercase text-slate-900 dark:text-white mb-1 transition-colors">Where is my gear?</h3>
-          <p class="text-xs text-slate-600 dark:text-slate-400 font-medium transition-colors">Have an order number? You can track your package in real-time through your account dashboard.</p>
+          <h3 class="text-lg font-black tracking-tighter uppercase text-slate-900 mb-1">Where is my gear?</h3>
+          <p class="text-xs text-slate-600 font-medium">Have an order number? You can track your package in real-time through your account dashboard.</p>
         </div>
-        <a href="{% url 'orders' %}" class="bg-blue-600 text-white px-8 py-3 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 dark:hover:bg-slate-950 transition-colors whitespace-nowrap shadow-md">
+        <a href="{% url 'orders' %}" class="bg-blue-600 text-white px-8 py-3 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-colors whitespace-nowrap">
           Track My Order
         </a>
       </div>

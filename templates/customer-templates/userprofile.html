@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Settings | CORE STORE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>My Settings | CORE STORE</title>    
+    <!-- Hydrate theme BEFORE Tailwind loads -->
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -226,15 +242,15 @@
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">Contact Number</label>
-                                <input type="tel" name="phone_number" value="{{ data.phone_number|default:'' }}" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-4 py-3.5 text-xs font-bold transition-colors">
+                                <input type="tel" name="phone_number" value="{{ data.phone_number|default:'' }}" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-4 py-3.5 text-xs font-bold transition-colors">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">Legal First Name</label>
-                                <input type="text" name="first_name" value="{{ data.first_name }}" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-4 py-3.5 text-xs font-bold transition-colors">
+                                <input type="text" name="first_name" value="{{ data.first_name }}" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-4 py-3.5 text-xs font-bold transition-colors">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 transition-colors">Legal Last Name</label>
-                                <input type="text" name="last_name" value="{{ data.last_name }}" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-4 py-3.5 text-xs font-bold transition-colors">
+                                <input type="text" name="last_name" value="{{ data.last_name }}" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-4 py-3.5 text-xs font-bold transition-colors">
                             </div>
                         </div>
                         <div class="pt-6 border-t border-slate-100 dark:border-slate-700 flex justify-end transition-colors">

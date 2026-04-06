@@ -1,318 +1,141 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{ user_theme }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order #{{ order.order_number }} | CORE STORE</title>
+    <title>Order Details | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        
-        :root {
-            --primary: #0f172a; 
-            --accent: #2563eb; 
-            --bg-main: #f8fafc;
-        }
-
-        /* Dark Mode Core Variables */
-        html.dark {
-            --primary: #ffffff;
-            --accent: #3b82f6;
-            --bg-main: #0f172a; /* Tailwind slate-950 */
-        }
-
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-main);
-            color: var(--primary);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Unified Glassmorphism */
-        .glass { 
-            background: white; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 4px; 
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        
-        html.dark .glass {
-            background-color: #1e293b !important; /* slate-800 */
-            border-color: #334155 !important; /* slate-700 */
-        }
-
-        /* Star Styling (Locked to Yellow) */
-        .star { 
-            cursor: pointer; 
-            transition: opacity 0.2s, color 0.2s; 
-            color: #fbbf24 !important; 
-            opacity: 0.4; 
-        }
-        html.dark .star { 
-            color: #f59e0b !important; 
-            opacity: 0.3; 
-        }
-        .star.filled { 
-            opacity: 1 !important; 
-        }
-        .star.hovered { 
-            opacity: 1 !important; 
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .label-caps { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(62, 39, 35, 0.4); margin-bottom: 4px; display: block; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-[#FAF9F6] pb-20">
 
-    {% include 'core-templates/order-navbar.html' %}
+    <main class="container mx-auto px-4 py-10 max-w-5xl">
+        <nav class="mb-10">
+            <a href="userorders.html" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40 hover:text-[#00796B] transition">
+                <i class="fa-solid fa-arrow-left"></i> My Orders
+            </a>
+        </nav>
 
-    <div class="h-20 lg:h-24"></div>
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+    <div>
+        <div class="flex items-center gap-3 mb-2">
+            <h1 class="text-3xl font-black italic uppercase tracking-tighter text-[#3E2723]">Order <span class="text-[#00796B]">#CS-9921</span></h1>
+            <span class="bg-[#00796B]/10 text-[#00796B] text-[8px] px-3 py-1 rounded-full font-black uppercase tracking-widest">In Transit</span>
+        </div>
+        <p class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40">Placed on February 15, 2026 • 10:30 AM</p>
+    </div>
+    
+    <div class="flex flex-wrap gap-3 w-full md:w-auto">
+        <button class="flex-1 md:flex-none border border-[#3E2723]/10 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-white transition">Invoice</button>
+        
+        <a href="buyagain.html" class="flex-1 md:flex-none">
+            <button class="w-full bg-[#00796B] text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:opacity-90 transition shadow-lg shadow-[#00796B]/10 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Buy Again
+            </button>
+        </a>
 
-    <main class="max-w-6xl mx-auto px-4 md:px-8 py-12">
-        <div class="glass shadow-sm transition-colors">
+        <a href="usertrack.html" class="flex-1 md:flex-none">
+            <button class="w-full bg-[#3E2723] text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-[#4E342E] transition shadow-lg shadow-[#3E2723]/10">Track Shipment</button>
+        </a>
+    </div>
+</header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-8 rounded-t-sm">
-                <div class="flex flex-wrap items-center gap-6">
-                    <h1 class="text-3xl font-black uppercase tracking-tight">Order Registry</h1>
-                    <span class="bg-white/20 px-4 py-2 rounded-sm text-sm font-bold uppercase tracking-wider border border-white/30">
-                        #{{ order.order_number }}
-                    </span>
-                    <span class="text-xs uppercase font-bold px-3 py-1 rounded-full {% if order.order_status == 'delivered' %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% elif order.order_status == 'shipped' %}bg-blue-500/20 text-blue-300 border border-blue-500/30{% else %}bg-slate-500/20 text-slate-300 border border-slate-500/30{% endif %}">
-                        {{ order.order_status|title }}
-                    </span>
-                    <div class="ml-auto text-right">
-                        <p class="text-2xl font-black tracking-tight">${{ order.total_amount|floatformat:2 }}</p>
-                        <p class="text-xs opacity-75 uppercase tracking-wider">{{ order.ordered_at|date:"M d, Y h:i A" }}</p>
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass rounded-[2.5rem] overflow-hidden">
+                    <div class="p-8 border-b border-[#3E2723]/5">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest">Shipment Items (1)</h3>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-6">
+                            <div class="w-24 h-24 bg-white rounded-2xl overflow-hidden border border-[#3E2723]/5 shrink-0">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-black uppercase text-[#00796B] mb-1">SKU: VRX-9920</p>
+                                <h4 class="text-lg font-black uppercase tracking-tighter text-[#3E2723]">Vortex Racer X1</h4>
+                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase mt-1">Color: Neon Teal • Size: 42</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg font-black text-[#3E2723]">$149.00</p>
+                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase">Qty: 1</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-8 rounded-[2.5rem]">
+                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-6 pb-4 border-b border-[#3E2723]/5">Calculated Total</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-[10px] font-bold uppercase">
+                            <span class="opacity-40">Subtotal</span>
+                            <span>$149.00</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold uppercase">
+                            <span class="opacity-40">Shipping (Express)</span>
+                            <span class="text-[#00796B]">Free</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold uppercase">
+                            <span class="opacity-40">Estimated Tax</span>
+                            <span>$12.50</span>
+                        </div>
+                        <div class="flex justify-between pt-4 border-t border-[#3E2723]/5">
+                            <span class="text-[11px] font-black uppercase tracking-widest">Total Amount</span>
+                            <span class="text-xl font-black text-[#3E2723]">$161.50</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 overflow-hidden">
-                <h3 class="text-lg font-black uppercase tracking-tighter mb-6 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-3 transition-colors">Order Contents</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-slate-200 dark:border-slate-700 transition-colors">
-                                <th class="text-left py-4 font-bold uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400 pr-4 w-16 transition-colors">Item</th>
-                                <th class="text-left py-4 font-bold uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400 transition-colors">Product</th>
-                                <th class="text-right py-4 font-bold uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400 w-24 transition-colors">Qty</th>
-                                <th class="text-right py-4 font-bold uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400 w-28 transition-colors">Unit Price</th>
-                                <th class="text-right py-4 font-bold uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400 w-28 transition-colors">Total</th>
-                                <th class="text-center py-4 font-bold uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400 w-32 transition-colors">Review</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in order.items.all %}
-                            <tr class="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                <td class="py-4 pr-4 w-16">
-                                    {% with first_img=item.variant.images.first %}
-                                        {% if first_img %}
-                                            <img src="{{ first_img.images.url }}" class="w-16 h-16 object-cover rounded-sm border border-slate-200 dark:border-slate-600 transition-colors">
-                                        {% else %}
-                                            <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 flex items-center justify-center rounded-sm border border-slate-200 dark:border-slate-600 text-xs text-slate-400 dark:text-slate-500 transition-colors">
-                                                <i class="fa-solid fa-box"></i>
-                                            </div>
-                                        {% endif %}
-                                    {% endwith %}
-                                </td>
-                                <td class="py-4">
-                                    <p class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-tight transition-colors">
-                                        <a href="{% url 'product_single' item.variant.slug %}" class="hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors">{{ item.variant.product.name }}</a>
-                                    </p>
-                                    <p class="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-tight transition-colors">SKU: {{ item.variant.sku_code }}</p>
-                                </td>
-                                <td class="py-4 text-right font-mono font-bold text-slate-900 dark:text-white transition-colors">{{ item.quantity }}</td>
-                                <td class="py-4 text-right font-mono font-bold text-slate-900 dark:text-white transition-colors">${{ item.price_at_purchase|floatformat:2 }}</td>
-                                <td class="py-4 text-right font-mono font-bold text-slate-900 dark:text-white transition-colors">${{ item.subtotal|floatformat:2 }}</td>
-                                <td class="py-4 text-center">
-                                    {% if order.order_status != 'delivered' %}
-                                        <button onclick="alert('Review only after product is delivered')" class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-sm border border-slate-300 dark:border-slate-600 transition-colors">
-                                            Locked
-                                        </button>
-                                    {% else %}
-                                        {% if item.review %}
-                                            <a href="{% url 'edit_review' item.review.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-sm transition-all shadow-sm inline-flex items-center">
-                                                <i class="fa-solid fa-edit mr-1"></i>Edit Review
-                                            </a>
-                                        {% else %}
-                                            <button onclick="openReviewModal('{{ item.variant.product.id }}', '{{ item.variant.product.slug }}', '{{ order.id }}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-sm transition-all shadow-sm inline-flex items-center">
-                                                <i class="fa-solid fa-star mr-1"></i>Write Review
-                                            </button>
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot class="border-t-2 border-slate-200 dark:border-slate-700 transition-colors mt-4">
-                            <tr>
-                                <td colspan="{% if eligible_items %}5{% else %}4{% endif %}" class="text-right py-4">
-                                    <span class="text-[12px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 transition-colors">Grand Total:</span>
-                                </td>
-                                <td class="py-4 text-right">
-                                    <span class="text-2xl font-black text-slate-900 dark:text-white transition-colors">${{ order.total_amount|floatformat:2 }}</span>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-8 rounded-[2.5rem]">
+                    <div class="mb-8">
+                        <span class="label-caps">Shipping To</span>
+                        <p class="text-xs font-black uppercase">James Carter</p>
+                        <p class="text-[10px] font-bold text-[#3E2723]/60 uppercase leading-relaxed mt-1">
+                            1224 Coastal Drive<br>
+                            Suite 402<br>
+                            Malibu, CA 90265
+                        </p>
+                    </div>
 
-                <div class="mt-12 pt-8 border-t-2 border-slate-200 dark:border-slate-700 transition-colors">
-                    <h3 class="text-lg font-black uppercase tracking-tighter mb-8 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-3 transition-colors">
-                        <i class="fa-solid fa-truck text-blue-600 dark:text-blue-400"></i>
-                        Order Tracking
-                    </h3>
-                    
-                    <div class="relative max-w-2xl mx-auto overflow-hidden px-2 sm:px-0">
-                        <div class="flex items-center justify-between mb-4">
-                            <div></div>
-                            <div class="text-center">
-                                <div class="w-20 h-20 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl flex items-center justify-center shadow-xl border border-slate-700 mx-auto mb-2 font-black text-sm tracking-tight uppercase">
-                                    {% if order.order_status == 'delivered' %} Delivered {% elif order.order_status == 'shipped' %} Shipped {% elif order.order_status == 'processing' %} Processing {% else %} Placed {% endif %}
-                                </div>
-                            </div>
-                            <div></div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between relative">
-                            <div class="flex flex-col items-center w-1/4">
-                                <div class="{% if order.order_status != 'placed' %}bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 border-transparent{% else %}bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-slate-200 dark:border-slate-600{% endif %} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-sm transition-colors mx-auto mb-2">
-                                    <i class="fa-solid fa-check {% if order.order_status == 'placed' %}text-slate-400 dark:text-slate-500{% else %}text-white{% endif %} transition-colors"></i>
-                                </div>
-                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center text-slate-900 dark:text-white transition-colors">Order Placed</span>
-                                <span class="text-[9px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 transition-colors">{{ order.ordered_at|date:"M d, Y" }}</span>
-                            </div>
-
-                            <div class="absolute left-1/4 top-16 sm:top-20 h-20 w-px bg-gradient-to-b {% if order.order_status != 'placed' %}from-emerald-400 to-emerald-500{% else %}bg-slate-200 dark:bg-slate-700{% endif %} transition-colors"></div>
-
-                            <div class="flex flex-col items-center w-1/4 z-10">
-                                <div class="{% if order.order_status == 'processing' or order.order_status == 'shipped' or order.order_status == 'delivered' %}bg-blue-500 text-white shadow-lg shadow-blue-500/30 border-transparent{% else %}bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-slate-200 dark:border-slate-600{% endif %} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-sm transition-colors mx-auto mb-2">
-                                    <i class="fa-solid fa-spinner {% if order.order_status == 'processing' %}fa-spin{% endif %} {% if order.order_status == 'processing' or order.order_status == 'shipped' or order.order_status == 'delivered' %}text-white{% else %}text-slate-400 dark:text-slate-500{% endif %} transition-colors"></i>
-                                </div>
-                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center text-slate-900 dark:text-white transition-colors">Processing</span>
-                                <span class="text-[9px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 transition-colors">In Progress</span>
-                            </div>
-
-                            <div class="absolute right-1/2 top-16 sm:top-20 h-20 w-px bg-gradient-to-b {% if order.order_status != 'processing' %}bg-slate-200 dark:bg-slate-700 opacity-50{% elif order.order_status == 'processing' or order.order_status == 'shipped' or order.order_status == 'delivered' %}from-blue-400 to-blue-500 opacity-100{% else %}bg-slate-200 dark:bg-slate-700 opacity-100{% endif %} transition-colors"></div>
-
-                            <div class="flex flex-col items-center w-1/4 z-20">
-                                <div class="{% if order.order_status == 'shipped' or order.order_status == 'delivered' %}bg-purple-500 text-white shadow-lg shadow-purple-500/30 border-transparent{% else %}bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-slate-200 dark:border-slate-600{% endif %} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-sm transition-colors mx-auto mb-2">
-                                    <i class="fa-solid fa-truck {% if order.order_status == 'shipped' or order.order_status == 'delivered' %}text-white{% else %}text-slate-400 dark:text-slate-500{% endif %} transition-colors"></i>
-                                </div>
-                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center text-slate-900 dark:text-white transition-colors">Shipped</span>
-                                <span class="text-[9px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 transition-colors">On the way</span>
-                            </div>
-
-                            <div class="absolute right-1/4 top-16 sm:top-20 h-20 w-px bg-gradient-to-b {% if order.order_status == 'delivered' %}from-purple-400 to-purple-500{% else %}bg-slate-200 dark:bg-slate-700{% endif %} transition-colors"></div>
-
-                            <div class="flex flex-col items-center w-1/4">
-                                <div class="{% if order.order_status == 'delivered' %}bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 border-transparent{% else %}bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-slate-200 dark:border-slate-600{% endif %} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-sm transition-colors mx-auto mb-2">
-                                    <i class="fa-solid fa-home {% if order.order_status == 'delivered' %}text-white{% else %}text-slate-400 dark:text-slate-500{% endif %} transition-colors"></i>
-                                </div>
-                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center text-slate-900 dark:text-white transition-colors">Delivered</span>
-                                <span class="text-[9px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 transition-colors">Completed</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8 pt-6 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-6 border border-slate-100 dark:border-slate-700 transition-colors">
-                            <div class="flex flex-col sm:flex-row items-center justify-between text-sm gap-3 sm:gap-0">
-                                <span class="font-bold uppercase tracking-wider text-slate-900 dark:text-white transition-colors">Current Status:</span>
-                                <span class="font-black px-4 py-1.5 rounded-sm uppercase tracking-wider text-sm {% if order.order_status == 'delivered' %}bg-emerald-600 text-white{% elif order.order_status == 'shipped' %}bg-purple-500 text-white{% elif order.order_status == 'processing' %}bg-blue-500 text-white{% else %}bg-slate-500 text-white{% endif %} transition-colors">
-                                    {{ order.order_status|title }}
-                                </span>
-                            </div>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 text-center sm:text-left mt-4 leading-relaxed transition-colors">
-                                Your order is being handled by our logistics partner. You will receive SMS/email updates for each step.
-                            </p>
+                    <div class="mb-8">
+                        <span class="label-caps">Payment Method</span>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-brands fa-cc-visa text-xl text-[#3E2723]/20"></i>
+                            <p class="text-[10px] font-black uppercase">Visa Ending in •••• 4412</p>
                         </div>
                     </div>
+
+                    <div>
+                        <span class="label-caps">Merchant Details</span>
+                        <div class="flex items-center gap-3 mt-2">
+                            <div class="w-8 h-8 rounded-lg bg-[#3E2723] flex items-center justify-center text-white">
+                                <i class="fa-solid fa-anchor text-[10px]"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black uppercase">Coastal Gear Co.</p>
+                                <p class="text-[8px] font-bold text-[#00796B] uppercase">Official Partner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-8 rounded-[2.5rem] bg-[#3E2723] text-white">
+                    <h4 class="text-[10px] font-black uppercase tracking-widest mb-2">Something wrong?</h4>
+                    <p class="text-[9px] font-bold text-white/50 uppercase leading-normal mb-6">Return window is open until March 15, 2026.</p>
+                    <button class="w-full bg-white/10 hover:bg-white/20 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition">Contact Support</button>
                 </div>
             </div>
         </div>
-
-        <div id="review-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4 transition-all duration-300" onclick="closeReviewModal()">
-            <div class="glass max-w-md w-full p-8 relative max-h-[90vh] overflow-y-auto shadow-2xl transition-colors" onclick="event.stopPropagation()">
-                <button onclick="closeReviewModal()" class="absolute top-4 right-4 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white text-xl transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <form method="POST" action="{% url 'submit_review' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="hidden" id="review-product-id" name="product_id">
-                    <input type="hidden" id="review-product-slug" name="product_slug">
-                    <input type="hidden" name="order_id" id="review-order-id">
-                    <h3 class="text-xl font-black uppercase tracking-tight mb-6 text-slate-900 dark:text-white text-center transition-colors">Product Review</h3>
-                    
-                    <div class="mb-8">
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 transition-colors">Rating</label>
-                        <div class="flex justify-center gap-1 mb-3">
-                            {% for star in "12345" %}
-                            <i class="star fas fa-star text-3xl" data-rating="{{ star }}" onclick="setRating(this)"></i>
-                            {% endfor %}
-                            <input type="hidden" name="rating" id="review-rating" value="0">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-8">
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 transition-colors">Feedback</label>
-                        <textarea name="comment" rows="4" class="w-full p-4 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-sm text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:placeholder-slate-500 resize-none transition-colors shadow-inner" placeholder="Share your experience with this product..."></textarea>
-                    </div>
-                    
-                    <div class="mb-8">
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 transition-colors">Add Photos</label>
-                        <input type="file" name="review_photos" accept="image/*" multiple class="w-full text-sm text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-black file:uppercase file:tracking-wider file:bg-blue-600 file:text-white hover:file:bg-blue-700 transition-colors" />
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 transition-colors">Upload up to 5 photos to show your experience with this product.</p>
-                    </div>
-                    
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-sm font-black uppercase text-[11px] tracking-wider shadow-lg transition-all">
-                        Submit Review
-                    </button>
-                </form>
-            </div>
-        </div>
-
     </main>
 
-    <script>
-        function openReviewModal(productId, productSlug, orderId) {
-            document.getElementById('review-product-id').value = productId;
-            document.getElementById('review-product-slug').value = productSlug;
-            document.getElementById('review-order-id').value = orderId;
-            document.getElementById('review-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeReviewModal() {
-            document.getElementById('review-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-            resetStars();
-        }
-        function setRating(star) {
-            const rating = star.dataset.rating;
-            document.getElementById('review-rating').value = rating;
-            document.querySelectorAll('.star').forEach((s, idx) => {
-                if (idx < rating) s.classList.add('filled');
-                else s.classList.remove('filled');
-            });
-        }
-        function resetStars() {
-            document.querySelectorAll('.star').forEach(s => s.classList.remove('filled'));
-            document.getElementById('review-rating').value = '0';
-        }
-    </script>
-
-    <script>
-        // Theme Initialization
-        function applyTheme() {
-            const themeData = document.documentElement.getAttribute('data-theme');
-            if (themeData === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-        
-        // Apply theme on page load
-        document.addEventListener('DOMContentLoaded', applyTheme);
-        applyTheme();
-    </script>
 </body>
 </html>
