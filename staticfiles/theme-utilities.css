@@ -1,0 +1,104 @@
+/**
+ * Universal Dark Mode Theme Utilities
+ * Apply these classes in templates for consistent dark mode support
+ */
+
+:root {
+  --primary-light: #0f172a;
+  --primary-dark: #ffffff;
+  --bg-light: #ffffff;
+  --bg-dark: #0f172a;
+  --bg-secondary-light: #f8fafc;
+  --bg-secondary-dark: #1e293b;
+  --border-light: #e2e8f0;
+  --border-dark: #334155;
+  --text-light: #64748b;
+  --text-dark: #cbd5e1;
+}
+
+/* Container with theme support */
+.theme-container {
+  background-color: var(--bg-secondary-light);
+  color: var(--primary-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark .theme-container {
+  background-color: var(--bg-secondary-dark);
+  color: var(--primary-dark);
+}
+
+/* Card with theme support */
+.theme-card {
+  background-color: var(--bg-light);
+  border-color: var(--border-light);
+  color: var(--primary-light);
+  transition: all 0.3s ease;
+}
+
+html.dark .theme-card {
+  background-color: var(--bg-secondary-dark);
+  border-color: var(--border-dark);
+  color: var(--primary-dark);
+}
+
+/* Input with theme support */
+.theme-input {
+  background-color: var(--bg-light);
+  border-color: var(--border-light);
+  color: var(--primary-light);
+  transition: all 0.2s ease;
+}
+
+html.dark .theme-input {
+  background-color: var(--bg-secondary-dark);
+  border-color: var(--border-dark);
+  color: var(--primary-dark);
+}
+
+html.dark .theme-input::placeholder {
+  color: var(--text-dark);
+}
+
+/* Label with theme support */
+.theme-label {
+  color: var(--text-light);
+  transition: color 0.3s ease;
+}
+
+html.dark .theme-label {
+  color: var(--text-dark);
+}
+
+/* Button with theme support */
+.theme-button-secondary {
+  background-color: var(--bg-secondary-light);
+  color: var(--primary-light);
+  border-color: var(--border-light);
+  transition: all 0.2s ease;
+}
+
+html.dark .theme-button-secondary {
+  background-color: var(--bg-secondary-dark);
+  color: var(--primary-dark);
+  border-color: var(--border-dark);
+}
+
+/* Text with theme support */
+.theme-text {
+  color: var(--primary-light);
+  transition: color 0.3s ease;
+}
+
+html.dark .theme-text {
+  color: var(--primary-dark);
+}
+
+.theme-text-secondary {
+  color: var(--text-light);
+  transition: color 0.3s ease;
+}
+
+html.dark .theme-text-secondary {
+  color: var(--text-dark);
+}
