@@ -7,7 +7,7 @@ from seller.models import SellerProfile, Product, ProductVariant ,SubCategory
 from customer.models import OrderItem 
 from django.db.models import Prefetch
 from django.db.models import Q, Min, Sum 
-from core.models import Category , SubCategory
+from core.models import Category, SubCategory, Banner
 
 
 
@@ -354,3 +354,28 @@ def delete_subcategory(request, id):
     sub = SubCategory.objects.get(id=id)
     sub.delete()
     return redirect('subcategory_management')
+
+def banner_management(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        image_url = request.POST.get("image_url")
+        redirect_url = request.POST.get("redirect_url")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        if title and image_url and start_date and end_date:
+            Banner.objects.create(
+                title=title,
+                image_url=image_url,
+                redirect_url=redirect_url,
+                start_date=start_date,
+                end_date=end_date
+            )
+        return redirect('banner_management')
+
+    banners = Banner.objects.all().order_by('-start_date')
+    return render(request, 'admin-templates/banner.html', {'banners': banners})
+
+def delete_banner(request, id):
+    Banner.objects.filter(id=id).delete()
+    return redirect('banner_management')

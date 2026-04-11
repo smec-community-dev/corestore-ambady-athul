@@ -587,30 +587,50 @@ def verify_email(request):
 def user_login(request):
     error_msg = ''
     saved_username = ''
+    
     if request.method == "POST":
         username_or_email = request.POST.get("username")
         password = request.POST.get("password")
-        saved_username = username_or_email  
+        saved_username = username_or_email
         
+        # 1. Handle Email vs Username lookup
         try:
             user_obj = User.objects.get(email=username_or_email)
             username = user_obj.username
         except User.DoesNotExist:
             username = username_or_email
             
-        data = authenticate(request, username=username, password=password)
+        # 2. Authenticate the user
+        user = authenticate(request, username=username, password=password)
         
-        if data is not None:
-            login(request, data)
+        if user is not None:
+            login(request, user)
+            
+            # 3. Priority Redirection (Check 'next' parameter first)
             next_url = request.GET.get('next')
             if next_url:
                 return redirect(next_url)
+            
+            # 4. Role-Based Redirection Logic
+            # This assumes your User model has a 'role' field
+            if hasattr(user, 'role'):
+                if user.role == "ADMIN":
+                    return redirect("/adminhome/")
+                elif user.role == "SELLER":
+                    return redirect("/sellerhome/")
+            
+            # Default redirect for CUSTOMER or users without specific roles
             return redirect("home")
+            
         else:
-            error_msg = "Invalid username/email or password"  
+            error_msg = "Invalid username/email or password"
 
-    return render(request, 'core-templates/login.html', {'error_message': error_msg, 'saved_username': saved_username})
-
+    return render(request, 'core-templates/login.html', {
+        'error_message': error_msg, 
+        'saved_username': saved_username
+    })
+    
+    
 def user_logout(request):
     logout(request)
     messages.error(request, 'Logout from account')

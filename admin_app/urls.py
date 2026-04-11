@@ -24,5 +24,7 @@ urlpatterns = [
     # path('subcategoriestoggle/<uuid:id>/', views.toggle_subcategory_status, name='toggle_subcategory'),
     path('subcategoriesdelete/<uuid:id>/', views.delete_subcategory, name='delete_subcategory'),
     # path('subcategoriesedit/<uuid:id>/', views.edit_subcategory, name='edit_subcategory'),
+    path('banners/', views.banner_management, name='banner_management'),
+    path('bannerdelete/<uuid:id>/', views.delete_banner, name='delete_banner'),
 
 ]
