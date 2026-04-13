@@ -191,6 +191,9 @@ def buy_again(request, order_id, item_id):
     })
 
 
+def privacypolicy(request):
+    return render(request, 'core-templates/privacypolicy_and_termsandconditions.html')
+
 # Deprecated - Buy Now now handled in customer.views.buy_now_checkout
 # @login_required
 # def single_product_checkout(request, slug):

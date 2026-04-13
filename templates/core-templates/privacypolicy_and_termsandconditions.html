@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{% if request.user.is_authenticated %}{{ request.user.theme_preference }}{% else %}light{% endif %}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CORE STORE | Legal & Compliance</title>
+    
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData && themeData.trim().toLowerCase() === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
+    <script>
+        window.tailwind = {
+            config: {
+                darkMode: 'class'
+            }
+        };
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap");
+      
+:root {
+        --primary-light: #0f172a;
+        --primary-dark: #ffffff;
+        --bg-light: #ffffff;
+        --bg-dark: #0f172a;
+        --bg-secondary-light: #f8fafc;
+        --bg-secondary-dark: #1e293b;
+        --border-light: #e2e8f0;
+        --border-dark: #334155;
+        --text-light: #64748b;
+        --text-dark: #cbd5e1;
+        --accent: #2563eb;
+      }
+
+body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-secondary-light);
+        color: var(--primary-light);
+        overflow-x: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      html.dark body {
+        background-color: var(--bg-dark);
+        color: var(--primary-dark);
+      }
+
+      /* Use project theme-card class */
+      .glass {
+        background-color: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+      html.dark .glass {
+        background-color: var(--bg-secondary-dark);
+        border-color: var(--border-dark);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Legal Typography Formatting */
+      .legal-content h2 {
+          font-weight: 800;
+          font-size: 1.25rem;
+          margin-top: 2.5rem;
+          margin-bottom: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+      }
+      .legal-content h3 {
+          font-weight: 700;
+          font-size: 1rem;
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+      }
+      .legal-content p {
+          margin-bottom: 1.25rem;
+          line-height: 1.7;
+      }
+      .legal-content ul {
+          list-style-type: disc;
+          padding-left: 1.5rem;
+          margin-bottom: 1.25rem;
+          line-height: 1.7;
+      }
+      .legal-content li {
+          margin-bottom: 0.5rem;
+      }
+
+      /* Sidebar Active State */
+      .legal-nav-btn.active {
+          background-color: var(--accent);
+          color: white;
+          border-color: var(--accent);
+      }
+      html.dark .legal-nav-btn.active {
+          background-color: var(--accent);
+      }
+      
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+  </head>
+  <body class="overflow-x-hidden transition-colors duration-300">
+
+    {% include 'core-templates/navbar.html' %}
+
+<div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-slate-50 dark:via-slate-200 dark:to-slate-50 border-b border-blue-400/20 dark:border-blue-500/30 py-16 shadow-lg transition-all duration-300">
+      <div class="container mx-auto px-4 md:px-8">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic transition-colors">
+          Legal <span class="text-blue-400">Protocols</span>
+        </h1>
+        <p class="text-blue-200/60 mt-2 text-xs font-bold uppercase tracking-[0.3em] transition-colors">
+          Compliance, Privacy, and Terms of Service
+        </p>
+      </div>
+    </div>
+
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <div class="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12">
+            
+            <div class="lg:col-span-3 sticky top-24 h-fit z-30">
+                <div class="glass p-6 shadow-sm transition-colors">
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-4 transition-colors">
+                        Directory
+                    </h3>
+                    
+                    <nav class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar">
+                        <button onclick="switchTab('privacy')" id="btn-privacy" class="legal-nav-btn active flex items-center justify-between p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 border border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all text-left whitespace-nowrap shrink-0">
+                            <span><i class="fa-solid fa-shield-halved mr-2"></i> Privacy Policy</span>
+                        </button>
+                        
+                        <button onclick="switchTab('terms')" id="btn-terms" class="legal-nav-btn flex items-center justify-between p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 border border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all text-left whitespace-nowrap shrink-0">
+                            <span><i class="fa-solid fa-file-contract mr-2"></i> Terms & Conditions</span>
+                        </button>
+
+                        <button onclick="switchTab('cookies')" id="btn-cookies" class="legal-nav-btn flex items-center justify-between p-3.5 rounded-sm text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 border border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all text-left whitespace-nowrap shrink-0">
+                            <span><i class="fa-solid fa-cookie-bite mr-2"></i> Cookie Policy</span>
+                        </button>
+                    </nav>
+
+                    <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700 text-center transition-colors">
+                        <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Last Updated</p>
+                        <p class="text-xs font-black text-slate-900 dark:text-white mt-1 transition-colors">April 15, 2026</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-9">
+                <div class="glass p-8 md:p-12 shadow-sm transition-colors reveal active min-h-[600px]">
+                    
+                    <div id="content-privacy" class="legal-content text-slate-600 dark:text-slate-300 transition-colors animate__animated animate__fadeIn">
+                        <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">Privacy Policy</h1>
+                        <p class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-10 transition-colors">Data Protection Protocol v2.1</p>
+
+                        <p>At CORE STORE, we are committed to protecting your personal data and respecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">1. Information We Collect</h2>
+                        <p>We may collect information about you in a variety of ways. The information we may collect on the Site includes:</p>
+                        <ul>
+                            <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, shipping address, email address, and telephone number, that you voluntarily give to us when you register with the Site or when you choose to participate in various activities related to the Site.</li>
+                            <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</li>
+                            <li><strong>Financial Data:</strong> Financial information, such as data related to your payment method (e.g., valid credit card number, card brand, expiration date) that we may collect when you purchase, order, return, exchange, or request information about our services from the Site.</li>
+                        </ul>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">2. Use of Your Information</h2>
+                        <p>Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site to:</p>
+                        <ul>
+                            <li>Create and manage your account.</li>
+                            <li>Process and manage purchases, orders, payments, and other transactions.</li>
+                            <li>Email you regarding your account or order.</li>
+                            <li>Fulfill and manage purchases, orders, payments, and other transactions related to the Site.</li>
+                            <li>Monitor and analyze usage and trends to improve your experience with the Site.</li>
+                        </ul>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">3. Security of Your Information</h2>
+                        <p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">4. Contact Us</h2>
+                        <p>If you have questions or comments about this Privacy Policy, please contact us at:</p>
+                        <p class="font-mono bg-slate-50 dark:bg-slate-900 p-4 rounded-sm border border-slate-200 dark:border-slate-700 mt-4 transition-colors">
+                            CORE STORE Legal Department<br>
+                            compliance@corestore.com<br>
+                            +1 800-CORE-DEP
+                        </p>
+                    </div>
+
+                    <div id="content-terms" class="legal-content text-slate-600 dark:text-slate-300 transition-colors animate__animated animate__fadeIn hidden">
+                        <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">Terms & Conditions</h1>
+                        <p class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-10 transition-colors">Service Agreement Protocol v3.0</p>
+
+                        <p>These Terms and Conditions constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and CORE STORE ("we," "us" or "our"), concerning your access to and use of our website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">1. Intellectual Property Rights</h2>
+                        <p>Unless otherwise indicated, the Site is our proprietary property and all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics on the Site (collectively, the “Content”) and the trademarks, service marks, and logos contained therein (the “Marks”) are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">2. User Representations</h2>
+                        <p>By using the Site, you represent and warrant that:</p>
+                        <ul>
+                            <li>All registration information you submit will be true, accurate, current, and complete.</li>
+                            <li>You will maintain the accuracy of such information and promptly update such registration information as necessary.</li>
+                            <li>You have the legal capacity and you agree to comply with these Terms and Conditions.</li>
+                            <li>You will not use the Site for any illegal or unauthorized purpose.</li>
+                        </ul>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">3. Products and Purchases</h2>
+                        <p>We make every effort to display as accurately as possible the colors, features, specifications, and details of the products available on the Site. However, we do not guarantee that the colors, features, specifications, and details of the products will be accurate, complete, reliable, current, or free of other errors.</p>
+                        <p>All products are subject to availability, and we cannot guarantee that items will be in stock. We reserve the right to discontinue any products at any time for any reason.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">4. Governing Law</h2>
+                        <p>These Terms shall be governed by and defined following the laws of the jurisdiction in which CORE STORE operates. CORE STORE and yourself irrevocably consent that the courts of the jurisdiction shall have exclusive jurisdiction to resolve any dispute which may arise in connection with these terms.</p>
+                    </div>
+
+                    <div id="content-cookies" class="legal-content text-slate-600 dark:text-slate-300 transition-colors animate__animated animate__fadeIn hidden">
+                        <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white mb-2 transition-colors">Cookie Policy</h1>
+                        <p class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-10 transition-colors">Tracking & Storage Protocol v1.2</p>
+
+                        <p>This Cookie Policy explains how CORE STORE uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">1. What are cookies?</h2>
+                        <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners in order to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
+
+                        <h2 class="text-slate-900 dark:text-white transition-colors">2. Why do we use cookies?</h2>
+                        <p>We use first and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our Websites to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our Online Properties.</p>
+                        <ul>
+                            <li><strong>Essential Cookies:</strong> Required to provide you with services available through our website and to use some of its features, such as access to secure areas.</li>
+                            <li><strong>Performance and Functionality Cookies:</strong> Used to enhance the performance and functionality of our website but are non-essential to their use.</li>
+                            <li><strong>Analytics and Customization Cookies:</strong> Collect information that is used either in aggregate form to help us understand how our website is being used or to help us customize our website for you.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'core-templates/footer.html' %}
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all content divs
+            document.getElementById('content-privacy').classList.add('hidden');
+            document.getElementById('content-terms').classList.add('hidden');
+            document.getElementById('content-cookies').classList.add('hidden');
+            
+            // Remove active class from all buttons
+            document.getElementById('btn-privacy').classList.remove('active');
+            document.getElementById('btn-terms').classList.remove('active');
+            document.getElementById('btn-cookies').classList.remove('active');
+            
+            // Show selected content and highlight button
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+            
+            // Scroll to top of content on mobile
+            if(window.innerWidth < 1024) {
+                document.getElementById('content-' + tabId).scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        }
+
+        // Scroll Reveal Animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                if (reveals[i].getBoundingClientRect().top < window.innerHeight - 50) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // Bulletproof Real-time Theme Sync
+        function applyTheme() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            if (theme && theme.trim().toLowerCase() === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'data-theme') {
+                    applyTheme();
+                }
+            });
+        });
+        observer.observe(document.documentElement, { attributes: true });
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
+</body>
+</html>
