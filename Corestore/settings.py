@@ -64,7 +64,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 # --- Allauth Specific Settings ---
-SITE_ID = int(os.getenv('SITE_ID', '1'))
+SITE_ID = int(os.getenv('SITE_ID', '2'))
 
 # User behavior
 ACCOUNT_UNIQUE_EMAIL = True
@@ -151,27 +151,41 @@ WSGI_APPLICATION = 'Corestore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DB_ENGINE = os.getenv('DATABASE_ENGINE', 'django.db.backends.sqlite3')
-DB_NAME = os.getenv('DATABASE_NAME', str(BASE_DIR / 'db.sqlite3'))
+# DB_ENGINE = os.getenv('DATABASE_ENGINE', 'django.db.backends.sqlite3')
+# DB_NAME = os.getenv('DATABASE_NAME', str(BASE_DIR / 'db.sqlite3'))
 
-if 'sqlite' in DB_ENGINE:
-    DATABASES = {
-        'default': {
-            'ENGINE': DB_ENGINE,
-            'NAME': BASE_DIR / DB_NAME if not DB_NAME.startswith('/') and not DB_NAME.startswith('\\') else DB_NAME,
+# if 'sqlite' in DB_ENGINE:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': DB_ENGINE,
+#             'NAME': BASE_DIR / DB_NAME if not DB_NAME.startswith('/') and not DB_NAME.startswith('\\') else DB_NAME,
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': DB_ENGINE,
+#             'NAME': DB_NAME,
+#             'USER': os.getenv('DATABASE_USER', ''),
+#             'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+#             'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
+#             'PORT': os.getenv('DATABASE_PORT', ''),
+#         }
+#     }
+
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': DB_ENGINE,
-            'NAME': DB_NAME,
-            'USER': os.getenv('DATABASE_USER', ''),
-            'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
-            'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-            'PORT': os.getenv('DATABASE_PORT', ''),
-        }
-    }
+}
 
 
 # Password validation

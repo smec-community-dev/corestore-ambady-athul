@@ -1,72 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archived Vault | CORE STORE</title>
+    
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
-            --brand-primary: #4F7D88;
-            --brand-primary-light: #f0f5f6;
-            --brand-dark: #2C3E50;
-            --surface: #FFFFFF;
-            /* Precise Professional Radii */
-            --radius-sm: 10px;
-            --radius-md: 4px;
-            --radius-lg: 8px;
+            --bg-main: #ffffff;
+            --surface: #ffffff;
+            --text-primary: #0f172a;
+            --accent: #2563eb;
+            --border: #e2e8f0;
+        }
+
+        html.dark {
+            --bg-main: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f8fafc;
+            --border: #334155;
         }
 
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #fcfcfc; 
-            color: var(--brand-dark);
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--text-primary);
+            transition: background-color 0.3s ease;
             overflow-x: hidden;
         }
 
-        /* Consistent Sidebar Styling */
+        /* Sidebar Styling */
         .sidebar-bg { 
             background-color: var(--surface); 
-            border-right: 1px solid #eef2f3;
+            border-right: 1px solid var(--border);
         }
         
         .nav-item {
             color: #64748b;
             transition: all 0.2s ease;
-            border-radius: var(--radius-sm);
+            border-radius: 2px;
             margin: 0.15rem 1rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.05em;
         }
 
         .nav-item:hover {
-            color: var(--brand-primary);
-            background: var(--brand-primary-light);
+            color: var(--accent);
+            background: rgba(37, 99, 235, 0.05);
         }
 
         .nav-item.active {
-            background: var(--brand-primary);
+            background: #0f172a;
             color: #FFFFFF;
-            box-shadow: 0 4px 6px -1px rgba(79, 125, 136, 0.2);
+        }
+        .dark .nav-item.active {
+            background: var(--accent);
         }
 
         /* Vault Card Design */
         .vault-card {
-            background: white;
-            border: 1px solid #eef2f3;
-            border-radius: var(--radius-sm);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .vault-card:hover {
-            border-color: var(--brand-primary);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
         }
 
         .image-overlay {
-            background: linear-gradient(to top, rgba(44, 62, 80, 0.6) 0%, transparent 50%);
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.8) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -77,90 +105,98 @@
 
         .grayscale-img {
             filter: grayscale(100%);
-            opacity: 0.6;
-            transition: all 0.4s ease;
+            opacity: 0.5;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .vault-card:hover .grayscale-img {
             filter: grayscale(0%);
             opacity: 1;
+            transform: scale(1.05);
         }
 
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .btn-restore {
+            background: #0f172a;
+            transition: all 0.3s;
+        }
+        .dark .btn-restore { background: var(--accent); }
+        .btn-restore:hover { background: var(--accent); }
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen">
-        <div class="p-6 flex items-center gap-3">
-            <div class="bg-[#4F7D88] p-2 rounded-sm text-white">
+    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen transition-colors">
+        <div class="p-8 flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-sm text-white">
                 <i class="fa-solid fa-bolt-lightning text-lg"></i>
             </div>
-            <span class="font-extrabold tracking-tight text-xl hidden lg:block text-[#2C3E50]">CORE<span class="text-[#4F7D88]">STORE</span></span>
+            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase">CORE<span class="text-blue-600">STORE</span></span>
         </div>
         
         <nav class="flex-1 space-y-1 mt-4 overflow-y-auto custom-scroll">
-            <a href="/sellerdashboard/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-chart-pie text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Dashboard</span>
+            <a href="/sellerdashboard/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-chart-pie text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Dashboard</span>
             </a>
 
-            <a href="/sellerhome/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-layer-group text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Inventory</span>
+            <a href="/sellerhome/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-layer-group text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Inventory</span>
             </a>
 
-            <a href="/sellerorder/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-receipt text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Orders</span>
+            <a href="/sellerorder/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-receipt text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Orders</span>
             </a>
             
-            <a href="/sellerinactive/" class="nav-item active flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-box-archive text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Vault</span>
+            <a href="/sellerinactive/" class="nav-item active flex items-center gap-4 px-4 py-4 shadow-lg">
+                <i class="fa-solid fa-box-archive text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Vault</span>
             </a>
 
-            <a href="/sellerreturn/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-truck-ramp-box text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Returns</span>
+            <a href="/sellerreturn/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-truck-ramp-box text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Returns</span>
             </a>
         </nav>
 
-        <div class="p-4 mt-auto border-t border-gray-100">
-            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-gray-50 transition-all rounded-sm">
-                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover grayscale-[0.5]">
+        <div class="p-6 mt-auto border-t border-slate-100 dark:border-slate-800">
+            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all rounded-sm">
+                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover border border-slate-200 dark:border-slate-700">
                 <div class="hidden lg:block overflow-hidden">
-                    <p class="text-xs font-bold text-[#2C3E50] truncate">{{seller.user.username}}</p>
-                    <p class="text-[10px] text-[#4F7D88] font-semibold uppercase">Vault Admin</p>
+                    <p class="text-[10px] font-black uppercase text-slate-900 dark:text-white truncate">{{seller.user.username}}</p>
+                    <p class="text-[9px] text-blue-600 font-black uppercase tracking-widest">Vault Admin</p>
                 </div>
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 p-6 md:p-8 lg:px-10 overflow-y-auto custom-scroll">
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-6 border-b border-gray-100">
+    <main class="flex-1 p-6 md:p-12 overflow-y-auto custom-scroll">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12 pb-8 border-b border-slate-100 dark:border-slate-800">
             <div>
-                <h1 class="text-2xl font-bold text-[#2C3E50] tracking-tight uppercase">
-                    Archived <span class="text-[#4F7D88]">Vault</span>
+                <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
+                    Archived <span class="text-blue-600">Vault</span>
                 </h1>
-                <p class="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mt-1">Status: Offline &bull; Hidden from Storefront</p>
+                <p class="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] mt-3">Status: Offline &bull; Hidden from Storefront</p>
             </div>
             
-            <div class="bg-white px-5 py-2 border border-gray-100 rounded-sm flex items-center gap-4">
+            <div class="bg-white dark:bg-slate-900 px-6 py-4 border border-slate-100 dark:border-slate-800 rounded-sm flex items-center gap-6 shadow-sm">
                 <div class="text-right">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">Archived Items</p>
-                    <p class="text-lg font-extrabold text-[#4F7D88]">{{products|length}}</p>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Vaulted Assets</p>
+                    <p class="text-2xl font-black text-blue-600">{{products|length}}</p>
                 </div>
-                <div class="h-6 w-[1px] bg-gray-100"></div>
-                <i class="fa-solid fa-warehouse text-gray-200 text-lg"></i>
+                <div class="h-8 w-px bg-slate-100 dark:bg-slate-800"></div>
+                <i class="fa-solid fa-warehouse text-slate-200 dark:text-slate-700 text-xl"></i>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {% for i in products %}
             <div class="vault-card p-4 flex flex-col">
-                <div class="relative rounded-sm overflow-hidden bg-gray-50 aspect-square mb-4 border border-gray-50 p-1">
+                <div class="relative rounded-sm overflow-hidden bg-slate-50 dark:bg-slate-800 aspect-square mb-5 border border-slate-100 dark:border-slate-700 p-1">
                     {% with i.variants.first as variant %}
                         {% if variant %}
                             {% for img in variant.images.all %}
@@ -169,60 +205,60 @@
                                 {% endif %}
                             {% endfor %}
                         {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-gray-300">
-                                <i class="fa-solid fa-box-open text-3xl"></i>
+                            <div class="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
+                                <i class="fa-solid fa-box-open text-4xl"></i>
                             </div>
                         {% endif %}
                     {% endwith %}
                     
-                    <div class="image-overlay absolute inset-0 rounded-sm flex items-end p-3">
-                        <span class="text-[9px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                            <i class="fa-solid fa-lock text-[8px]"></i> Vaulted SKU
+                    <div class="image-overlay absolute inset-0 flex items-end p-4">
+                        <span class="text-[9px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                            <i class="fa-solid fa-lock text-[8px] text-blue-400"></i> Vaulted SKU
                         </span>
                     </div>
 
-                    <div class="absolute top-3 left-3">
-                        <span class="bg-white/95 text-[#2C3E50] text-[9px] font-bold px-2 py-1 rounded-sm border border-gray-100 shadow-sm uppercase">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-slate-900/90 text-white text-[9px] font-black px-3 py-1 rounded-sm border border-white/10 shadow-xl uppercase tracking-widest">
                             Inactive
                         </span>
                     </div>
                 </div>
 
                 <div class="px-1 flex-1">
-                    <h3 class="text-xs font-bold text-[#2C3E50] line-clamp-1 leading-tight mb-1">{{i.name}}</h3>
-                    <div class="flex items-center justify-between mt-2">
-                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-tight">Model: {{i.model_number}}</p>
-                        <p class="text-xs font-extrabold text-[#4F7D88]">${{i.variants.first.price}}</p>
+                    <h3 class="text-[11px] font-black text-slate-900 dark:text-white line-clamp-1 uppercase tracking-tight mb-2">{{i.name}}</h3>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">REF: {{i.model_number}}</p>
+                        <p class="text-[11px] font-black text-blue-600 tracking-widest">${{i.variants.first.price}}</p>
                     </div>
                 </div>
 
-                <div class="mt-6 space-y-1.5">
+                <div class="mt-8 space-y-2">
                     <a href="/togglestatus/{{i.slug}}" 
-                       class="w-full py-3 bg-[#2C3E50] hover:bg-[#4F7D88] text-white rounded-sm text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 transition-all active:scale-[0.98]">
+                       class="btn-restore w-full py-4 text-white rounded-sm text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-lg active:scale-[0.98]">
                         <i class="fa-solid fa-rotate-left"></i>
-                        Restore Item
+                        Restore Asset
                     </a>
                     
-                    <div class="grid grid-cols-2 gap-1.5">
-                        <a href="/sellerproductupdate/{{i.id}}" class="py-2.5 border border-gray-100 hover:bg-[#f0f5f6] rounded-sm text-center text-[9px] font-bold uppercase text-gray-500 hover:text-[#4F7D88] transition-all">
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="/sellerproductupdate/{{i.id}}" class="py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-sm text-center text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-blue-600 transition-all">
                             Edit Data
                         </a>
-                        <a href="/sellerimage/{{i.id}}" class="py-2.5 border border-gray-100 hover:bg-[#f0f5f6] rounded-sm text-center text-[9px] font-bold uppercase text-gray-500 hover:text-[#4F7D88] transition-all">
+                        <a href="/sellerimage/{{i.id}}" class="py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-sm text-center text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-blue-600 transition-all">
                             Media
                         </a>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="col-span-full py-24 text-center border-2 border-dashed border-gray-100 rounded-sm">
-                <i class="fa-solid fa-folder-open text-5xl text-gray-100 mb-4"></i>
-                <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">No archived items in vault</p>
+            <div class="col-span-full py-32 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-sm">
+                <i class="fa-solid fa-folder-open text-6xl text-slate-100 dark:text-slate-800 mb-6"></i>
+                <p class="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px]">No archived assets in secure storage</p>
             </div>
             {% endfor %}
         </div>
 
-        <footer class="mt-20 pb-10 text-center border-t border-gray-50 pt-10">
-            <p class="text-[9px] font-bold uppercase tracking-[0.4em] text-gray-300">CORE VAULT TERMINAL &bull; SECURE STORAGE</p>
+        <footer class="mt-24 py-12 text-center border-t border-slate-100 dark:border-slate-800">
+            <p class="text-[9px] font-black uppercase tracking-[0.5em] text-slate-300 dark:text-slate-700">CORE VAULT TERMINAL &bull; SECURE_STORAGE_ESTABLISHED &bull; 2026</p>
         </footer>
     </main>
 </body>

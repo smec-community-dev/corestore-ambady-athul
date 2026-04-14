@@ -1,68 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product | StudioPro Merchant</title>
+    <title>Add Product | CORE STORE Merchant</title>
+    
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
-            --brand-teal: #4F7D88;
-            --brand-teal-light: #f0f5f6;
-            --text-main: #2C3E50;
+            --bg-main: #ffffff;
+            --surface: #ffffff;
+            --text-primary: #0f172a;
+            --accent: #2563eb;
+            --border: #e2e8f0;
+        }
+
+        html.dark {
+            --bg-main: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f8fafc;
+            --border: #334155;
         }
 
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #f8fafb; 
-            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--text-primary);
+            transition: background-color 0.3s ease;
         }
 
         .card-container { 
-            background: white; 
-            border: 1px solid #eef2f3; 
-            border-radius: 1.25rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            border-radius: 4px;
         }
 
         .input-box { 
-            background: #ffffff; 
-            border: 1.5px solid #e2e8f0; 
-            border-radius: 0.75rem; 
+            background: transparent; 
+            border: 1px solid var(--border); 
+            border-radius: 2px; 
             padding: 0.75rem 1rem; 
-            font-size: 13px; 
+            font-size: 12px; 
             font-weight: 600; 
             width: 100%; 
             transition: all 0.2s ease; 
-            color: var(--text-main);
+            color: var(--text-primary);
         }
 
         .input-box:focus { 
             outline: none; 
-            border-color: var(--brand-teal); 
-            box-shadow: 0 0 0 3px rgba(79, 125, 136, 0.1);
+            border-color: var(--accent); 
+            box-shadow: 0 0 0 1px var(--accent);
         }
 
         .label-sm { 
-            font-size: 11px; 
-            font-weight: 700; 
+            font-size: 9px; 
+            font-weight: 900; 
             text-transform: uppercase; 
-            letter-spacing: 0.05em; 
+            letter-spacing: 0.15em; 
             color: #64748b; 
-            margin-bottom: 6px; 
+            margin-bottom: 8px; 
             display: block; 
         }
 
         .section-divider { 
-            font-size: 12px; 
-            font-weight: 800; 
+            font-size: 10px; 
+            font-weight: 900; 
             text-transform: uppercase; 
-            letter-spacing: 0.1em; 
-            color: var(--brand-teal); 
-            margin: 2.5rem 0 1.5rem 0; 
+            letter-spacing: 0.2em; 
+            color: var(--accent); 
+            margin: 3rem 0 1.5rem 0; 
             display: flex; 
             align-items: center; 
             gap: 1rem; 
@@ -72,119 +99,148 @@
             content: ""; 
             flex: 1; 
             height: 1px; 
-            background: #eef2f3; 
+            background: var(--border); 
         }
 
-        /* Toggle Switch Styling */
-        .toggle-checkbox:checked + .toggle-label { background-color: var(--brand-teal); }
+        .toggle-checkbox:checked + .toggle-label { background-color: var(--accent); }
         .toggle-checkbox:checked + .toggle-label .toggle-dot { transform: translateX(100%); }
+        
+        .btn-primary {
+            background-color: #0f172a;
+            color: white;
+            transition: all 0.3s;
+        }
+        .dark .btn-primary { background-color: var(--accent); }
+        .btn-primary:hover { background-color: var(--accent); transform: translateY(-1px); }
+
+        /* Notification Animation */
+        #notification-toast {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen relative overflow-x-hidden">
 
-    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-gray-100">
+    <div id="notification-toast" class="fixed top-6 right-6 z-[100] transform translate-x-[120%]">
+        <div class="bg-slate-900 dark:bg-blue-600 text-white px-6 py-4 rounded-sm shadow-2xl flex items-center gap-4 border-l-4 border-blue-500 dark:border-white">
+            <div class="bg-white/20 p-2 rounded-sm">
+                <i class="fa-solid fa-check-double text-xs"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black uppercase tracking-[0.2em]">System Update</p>
+                <p id="notification-message" class="text-[11px] font-bold uppercase tracking-tight opacity-90">Product Published Successfully</p>
+            </div>
+            <button onclick="hideNotification()" class="ml-4 opacity-50 hover:opacity-100">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800 transition-colors">
         <div class="flex items-center gap-6">
-            <a href="/sellerhome/" class="flex items-center gap-2 text-gray-400 hover:text-[#4F7D88] transition-colors group">
-                <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover:border-[#4F7D88]">
+            <a href="/sellerhome/" class="flex items-center gap-2 text-slate-400 hover:text-blue-600 transition-colors group">
+                <div class="w-8 h-8 rounded-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center group-hover:border-blue-600">
                     <i class="fa-solid fa-arrow-left text-xs"></i>
                 </div>
-                <span class="text-xs font-bold uppercase tracking-widest">Inventory</span>
+                <span class="text-[9px] font-black uppercase tracking-widest">Inventory</span>
             </a>
-            <div class="h-6 w-px bg-gray-100 hidden sm:block"></div>
+            <div class="h-6 w-px bg-slate-100 dark:bg-slate-800 hidden sm:block"></div>
             <div class="flex items-center gap-2">
-                <span class="font-extrabold tracking-tighter text-lg">Studio<span class="text-[#4F7D88]">Pro</span></span>
+                <span class="font-black tracking-tighter text-xl uppercase">CORE<span class="text-blue-600">STORE</span></span>
             </div>
         </div>
-        <div class="flex items-center gap-4">
-            <span class="hidden md:block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Draft Auto-saved</span>
-            <a href="/sellerhome/" class="text-[10px] font-black uppercase text-red-400 hover:text-red-600 transition">Discard</a>
+        <div class="flex items-center gap-6">
+            <span class="hidden md:block text-[9px] font-black text-slate-400 uppercase tracking-widest">Terminal Active</span>
+            <a href="/sellerhome/" class="text-[9px] font-black uppercase text-red-500 hover:text-red-700 transition tracking-widest">Discard</a>
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto p-6 lg:p-12">
-        <header class="mb-10">
-            <h1 class="text-3xl font-black text-[#2C3E50] tracking-tight">Create <span class="text-[#4F7D88]">Product</span></h1>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">Inventory Management &bull; Asset Deployment</p>
+        <header class="mb-12">
+            <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
+                Deploy <span class="text-blue-600">Product</span>
+            </h1>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mt-3">Product Provisioning • SKU Initialization</p>
         </header>
 
-        <form class="grid grid-cols-1 lg:grid-cols-12 gap-8" method="POST">
+        <form id="productForm" class="grid grid-cols-1 lg:grid-cols-12 gap-8" method="POST">
             {% csrf_token %}
             
             <div class="lg:col-span-4 space-y-6">
-                <div class="card-container p-6 space-y-6">
-                    <h3 class="text-[11px] font-black text-[#2C3E50] uppercase tracking-widest border-b border-gray-50 pb-4">Lifecycle Rules</h3>
+                <div class="card-container p-6 space-y-6 shadow-sm">
+                    <h3 class="text-[9px] font-black text-slate-900 dark:text-white uppercase tracking-widest border-b border-slate-50 dark:border-slate-800 pb-4">Lifecycle Rules</h3>
                     
                     <div class="flex items-center justify-between py-2">
                         <div>
-                            <p class="text-[12px] font-bold text-[#2C3E50]">Allow Cancellation</p>
-                            <p class="text-[10px] font-medium text-gray-400">Before fulfillment</p>
+                            <p class="text-[11px] font-black uppercase tracking-tight text-slate-900 dark:text-white">Cancellation</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">Pre-fulfillment</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_cancellable" class="sr-only toggle-checkbox" checked>
-                            <div class="w-11 h-6 bg-gray-200 rounded-full toggle-label transition-colors">
-                                <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform toggle-dot"></div>
+                            <div class="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full toggle-label transition-colors">
+                                <div class="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform toggle-dot"></div>
                             </div>
                         </label>
                     </div>
 
                     <div class="flex items-center justify-between py-2">
                         <div>
-                            <p class="text-[12px] font-bold text-[#2C3E50]">Allow Returns</p>
-                            <p class="text-[10px] font-medium text-gray-400">Policy-based logistics</p>
+                            <p class="text-[11px] font-black uppercase tracking-tight text-slate-900 dark:text-white">Returns</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">Logistics Enabled</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_returnable" class="sr-only toggle-checkbox" checked>
-                            <div class="w-11 h-6 bg-gray-200 rounded-full toggle-label transition-colors">
-                                <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform toggle-dot"></div>
+                            <div class="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full toggle-label transition-colors">
+                                <div class="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform toggle-dot"></div>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <div class="bg-[#2C3E50] rounded-[1.25rem] p-6 text-white shadow-lg">
-                    <i class="fa-solid fa-circle-info text-[#4F7D88] mb-4 text-xl"></i>
-                    <h4 class="text-xs font-bold uppercase tracking-wider mb-2">Listing Quality</h4>
-                    <p class="text-[11px] text-gray-400 leading-relaxed">Ensure SKU and Category data are accurate to prevent fulfillment delays.</p>
+                <div class="bg-slate-900 dark:bg-blue-600 rounded-sm p-6 text-white shadow-xl">
+                    <i class="fa-solid fa-shield-halved text-white/50 mb-4 text-xl"></i>
+                    <h4 class="text-[10px] font-black uppercase tracking-widest mb-2">Quality Protocol</h4>
+                    <p class="text-[10px] text-white/70 leading-relaxed font-medium uppercase tracking-tighter">Verified SKU data ensures zero-latency fulfillment across the Core Store network.</p>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-6">
-                <div class="card-container p-8 lg:p-10">
+                <div class="card-container p-8 lg:p-10 shadow-sm">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="md:col-span-2">
-                            <label class="label-sm">Official Product Name</label>
-                            <input type="text" name="name" class="input-box" placeholder="e.g. Professional Studio Monitor" required>
+                            <label class="label-sm">Product Name</label>
+                            <input type="text" name="name" class="input-box" placeholder="SYSTEM DESIGNATION" required>
                         </div>
                         <div>
-                            <label class="label-sm">Brand Entity</label>
-                            <input type="text" name="brand" class="input-box" placeholder="Manufacturer name">
+                            <label class="label-sm">Manufacturer / Brand</label>
+                            <input type="text" name="brand" class="input-box" placeholder="ENTITY NAME">
                         </div>
                         <div>
                             <label class="label-sm">Model Number</label>
-                            <input type="text" name="model_number" class="input-box" placeholder="MN-00X">
+                            <input type="text" name="model_number" class="input-box" placeholder="REF_CODE_01">
                         </div>
                     </div>
 
                     <div class="section-divider">Inventory Matrix</div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label class="label-sm">SKU Identifier</label>
-                            <input type="text" name="sku_code" placeholder="SKU-XXXX" class="input-box" required>
+                            <label class="label-sm">Unique SKU Code</label>
+                            <input type="text" name="sku_code" placeholder="SKU-000-000" class="input-box" required>
                         </div>
                         <div>
-                            <label class="label-sm">Stock Units</label>
+                            <label class="label-sm">In-Stock Units</label>
                             <input type="number" name="stock_quantity" class="input-box" placeholder="0" required>
                         </div>
                         <div>
                             <label class="label-sm">Categorization</label>
                             <div class="relative">
-                                <select name="subcategory" class="input-box appearance-none cursor-pointer">
+                                <select name="subcategory" class="input-box appearance-none cursor-pointer bg-transparent">
                                     {% for i in sub %}
-                                    <option value="{{i.id}}">{{i.name}}</option>
+                                    <option value="{{i.id}}" class="bg-white dark:bg-slate-900">{{i.name}}</option>
                                     {% endfor %}
                                 </select>
-                                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none"></i>
+                                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
                             </div>
                         </div>
                     </div>
@@ -192,11 +248,11 @@
                     <div class="section-divider">Financial Architecture</div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div>
-                            <label class="label-sm">List Price (MRP)</label>
+                            <label class="label-sm">MRP (Gross)</label>
                             <input type="number" step="0.01" name="mrp" class="input-box" placeholder="0.00">
                         </div>
                         <div>
-                            <label class="label-sm">Sale Price</label>
+                            <label class="label-sm">Selling Price</label>
                             <input type="number" step="0.01" name="selling_price" class="input-box" placeholder="0.00">
                         </div>
                         <div>
@@ -204,49 +260,49 @@
                             <input type="number" step="0.01" name="cost_price" class="input-box" placeholder="0.00">
                         </div>
                         <div>
-                            <label class="label-sm">GST / Tax (%)</label>
+                            <label class="label-sm">Tax (%)</label>
                             <input type="number" step="0.1" name="tax_percentage" class="input-box" placeholder="18.0">
                         </div>
                     </div>
 
-                    <div class="section-divider">Logistics & Shipping</div>
+                    <div class="section-divider">Logistics Specs</div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div>
-                            <label class="label-sm">Weight (kg)</label>
+                            <label class="label-sm">Mass (kg)</label>
                             <input type="number" step="0.01" name="weight" class="input-box" placeholder="0.00">
                         </div>
                         <div>
-                            <label class="label-sm">Length (cm)</label>
+                            <label class="label-sm">L (cm)</label>
                             <input type="number" step="0.01" name="length" class="input-box" placeholder="0">
                         </div>
                         <div>
-                            <label class="label-sm">Width (cm)</label>
+                            <label class="label-sm">W (cm)</label>
                             <input type="number" step="0.01" name="width" class="input-box" placeholder="0">
                         </div>
                         <div>
-                            <label class="label-sm">Height (cm)</label>
+                            <label class="label-sm">H (cm)</label>
                             <input type="number" step="0.01" name="height" class="input-box" placeholder="0">
                         </div>
                     </div>
 
-                    <div class="section-divider">Specifications</div>
+                    <div class="section-divider">Narrative Data</div>
                     <div class="grid grid-cols-1 gap-6">
                         <div class="md:w-1/3">
                             <label class="label-sm">Return Window (Days)</label>
                             <input type="number" name="return_days" value="7" class="input-box">
                         </div>
                         <div>
-                            <label class="label-sm">Product Narrative / Description</label>
-                            <textarea name="description" rows="5" class="input-box" placeholder="Detail the features and benefits..."></textarea>
+                            <label class="label-sm">Technical Description</label>
+                            <textarea name="description" rows="5" class="input-box" placeholder="DEPLOYMENT SPECS AND FEATURES..."></textarea>
                         </div>
                     </div>
 
-                    <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
-                        <button type="submit" class="flex-1 bg-[#4F7D88] text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#3d626b] transition-all shadow-md active:scale-[0.98]">
+                    <div class="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="flex-1 btn-primary py-4 rounded-sm text-[11px] font-black uppercase tracking-[0.2em] shadow-lg active:scale-[0.98]">
                             Publish Listing
                         </button>
-                        <button type="button" class="px-10 py-4 bg-white border border-gray-200 text-gray-500 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-gray-50 transition-all">
-                            Save as Draft
+                        <button type="button" class="px-10 py-4 bg-transparent border border-slate-200 dark:border-slate-700 text-slate-500 rounded-sm text-[11px] font-black uppercase tracking-[0.2em] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                            Save Draft
                         </button>
                     </div>
                 </div>
@@ -254,9 +310,41 @@
         </form>
     </main>
 
-    <footer class="py-12 text-center">
-        <p class="text-[9px] font-black uppercase tracking-[0.6em] text-gray-300">STUDIOPRO SECURED NODE &copy; 2026</p>
+    <footer class="py-16 text-center">
+        <p class="text-[9px] font-black uppercase tracking-[0.6em] text-slate-300 dark:text-slate-700">CORE STORE TERMINAL &copy; 2026 &bull; SECURE_CONNECTION_ESTABLISHED</p>
     </footer>
 
+    <script>
+        // Notification Logic
+        function showNotification(message) {
+            const toast = document.getElementById('notification-toast');
+            const msgElement = document.getElementById('notification-message');
+            if(message) msgElement.innerText = message;
+            
+            toast.classList.remove('translate-x-[120%]');
+            
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+
+        function hideNotification() {
+            const toast = document.getElementById('notification-toast');
+            toast.classList.add('translate-x-[120%]');
+        }
+
+        // Intercept form submission to show feedback
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            showNotification('INITIALIZING ASSET DEPLOYMENT...');
+        });
+
+        // Optional: Trigger if page loads with a success param
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                showNotification('PRODUCT SUCCESSFULLY PUBLISHED');
+            }
+        });
+    </script>
 </body>
 </html>

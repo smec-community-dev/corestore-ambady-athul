@@ -1,167 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ user_theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Returns Terminal | CORE STORE</title>
+    
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        
-        :root {
-            --brand-primary: #4F7D88;
-            --brand-primary-light: #f0f5f6;
-            --brand-dark: #2C3E50;
-            --surface: #FFFFFF;
-            /* Professional Radii */
-            --radius-sm: 10px;
-            --radius-md: 4px;
-            --radius-lg: 8px;
-        }
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+      
+      :root {
+        --primary: #0f172a; 
+        --accent: #2563eb; 
+        --bg-main: #ffffff; 
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
+        --sidebar-bg: #ffffff;
+      }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #fcfcfc; 
-            color: var(--brand-dark);
-            overflow-x: hidden;
-        }
+      html.dark {
+        --bg-main: #0f172a;
+        --primary: #f8fafc;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --sidebar-bg: #020617; 
+      }
 
-        /* Consistent Sidebar Styling */
-        .sidebar-bg { 
-            background-color: var(--surface); 
-            border-right: 1px solid #eef2f3;
-        }
-        
-        .nav-item {
-            color: #64748b;
-            transition: all 0.2s ease;
-            border-radius: var(--radius-sm);
-            margin: 0.15rem 1rem;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-main);
+        color: var(--primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
 
-        .nav-item:hover {
-            color: var(--brand-primary);
-            background: var(--brand-primary-light);
-        }
+      /* Sidebar & Nav Styling */
+      .sidebar-bg { 
+        background-color: var(--sidebar-bg); 
+        border-right: 1px solid var(--border);
+      }
 
-        .nav-item.active {
-            background: var(--brand-primary);
-            color: #FFFFFF;
-            box-shadow: 0 4px 6px -1px rgba(79, 125, 136, 0.2);
-        }
+      .nav-item {
+        color: #64748b;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        margin: 0.15rem 1rem;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+      }
 
-        /* Returns Specific Styling */
-        .return-card {
-            background: white;
-            border: 1px solid #eef2f3;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s ease;
-        }
+      .nav-item:hover {
+        color: var(--accent);
+        background: rgba(37, 99, 235, 0.05);
+      }
 
-        .return-card:hover {
-            border-color: var(--brand-primary);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.04);
-        }
+      .nav-item.active {
+        background: #0f172a;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
 
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
-            color: #64748b;
-        }
+      html.dark .nav-item.active {
+        background: var(--accent);
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
+      }
 
-        .reason-box {
-            background: #f8fafc;
-            border-left: 3px solid var(--brand-primary);
-            border-radius: var(--radius-sm);
-        }
+      .pro-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .pro-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
 
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      .status-badge {
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        padding: 2px 8px;
+        font-size: 8px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .custom-scroll::-webkit-scrollbar { width: 4px; }
+      .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen">
-        <div class="p-6 flex items-center gap-3">
-            <div class="bg-[#4F7D88] p-2 rounded-sm text-white">
+    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen transition-colors">
+        <div class="p-8 flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-sm text-white">
                 <i class="fa-solid fa-bolt-lightning text-lg"></i>
             </div>
-            <span class="font-extrabold tracking-tight text-xl hidden lg:block text-[#2C3E50]">CORE<span class="text-[#4F7D88]">STORE</span></span>
+            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase dark:text-white">CORE<span class="text-blue-600">STORE</span></span>
         </div>
         
         <nav class="flex-1 space-y-1 mt-4 overflow-y-auto custom-scroll">
-            <a href="/sellerdashboard/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-chart-pie text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Dashboard</span>
+            <a href="/sellerdashboard/" class="nav-item">
+                <i class="fa-solid fa-chart-pie text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Dashboard</span>
             </a>
 
-            <a href="/sellerhome/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-layer-group text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Inventory</span>
+            <a href="/sellerhome/" class="nav-item">
+                <i class="fa-solid fa-layer-group text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Inventory</span>
             </a>
 
-            <a href="/sellerorder/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-receipt text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Orders</span>
+            <a href="/sellerorder/" class="nav-item">
+                <i class="fa-solid fa-receipt text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Orders</span>
             </a>
             
-            <a href="/sellerinactive/" class="nav-item flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-box-archive text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Vault</span>
+            <a href="/sellerinactive/" class="nav-item">
+                <i class="fa-solid fa-box-archive text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Vault</span>
             </a>
 
-            <a href="/sellerreturn/" class="nav-item active flex items-center gap-4 px-4 py-3">
-                <i class="fa-solid fa-truck-ramp-box text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Returns</span>
+            <a href="/sellerreturn/" class="nav-item active">
+                <i class="fa-solid fa-truck-ramp-box text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Returns</span>
             </a>
         </nav>
 
-        <div class="p-4 mt-auto border-t border-gray-100">
-            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-gray-50 transition-all rounded-sm">
-                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover grayscale-[0.5]">
+        <div class="p-6 mt-auto border-t border-slate-100 dark:border-slate-800">
+            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all rounded-sm">
+                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover border border-slate-200 dark:border-slate-700">
                 <div class="hidden lg:block overflow-hidden">
-                    <p class="text-xs font-bold text-[#2C3E50] truncate">{{seller.user.username}}</p>
-                    <p class="text-[10px] text-[#4F7D88] font-semibold uppercase">Returns Node</p>
+                    <p class="text-[10px] font-black uppercase text-slate-900 dark:text-white truncate">{{seller.user.username}}</p>
+                    <p class="text-[9px] text-blue-600 font-black uppercase tracking-widest">Enterprise</p>
                 </div>
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 p-6 md:p-8 lg:px-10 overflow-y-auto custom-scroll">
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-6 border-b border-gray-100">
+    <main class="flex-1 p-6 md:p-10 overflow-y-auto custom-scroll">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-6 border-b border-slate-100 dark:border-slate-800">
             <div>
-                <h1 class="text-2xl font-bold text-[#2C3E50] tracking-tight uppercase">
-                    Reverse <span class="text-[#4F7D88]">Logistics</span>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
+                    Reverse <span class="text-blue-600">Logistics</span>
                 </h1>
-                <p class="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mt-1">Resolution Center &bull; Refund Management</p>
+                <p class="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Resolution Center / Claims Queue</p>
             </div>
             
-            <div class="bg-white px-5 py-2 border border-gray-100 rounded-sm flex items-center gap-4">
+            <div class="pro-card px-5 py-3 flex items-center gap-4">
                 <div class="text-right">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">Open Claims</p>
-                    <p class="text-lg font-extrabold text-[#4F7D88]">{{returns|length}}</p>
+                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Open Claims</p>
+                    <p class="text-xl font-black text-blue-600">{{returns|length}}</p>
                 </div>
-                <div class="h-6 w-[1px] bg-gray-100"></div>
-                <i class="fa-solid fa-rotate-left text-gray-200 text-lg"></i>
+                <div class="h-8 w-[1px] bg-slate-100 dark:border-slate-800"></div>
+                <i class="fa-solid fa-rotate-left text-slate-300 dark:text-slate-600 text-lg"></i>
             </div>
         </header>
 
-        <div class="max-w-6xl space-y-4">
+        <div class="max-w-5xl space-y-6">
             {% for r in returns %}
-            <div class="return-card p-6 lg:p-8">
+            <div class="pro-card p-6 lg:p-8">
                 <div class="flex flex-col lg:flex-row gap-8">
-                    <div class="w-full lg:w-40 shrink-0">
-                        <div class="aspect-square rounded-sm bg-gray-50 border border-gray-100 overflow-hidden p-1">
+                    <div class="w-full lg:w-32 shrink-0">
+                        <div class="aspect-square rounded-sm bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 overflow-hidden p-1">
                             {% for img in r.order_item.variant.images.all %}
                                 {% if img.is_primary %}
-                                    <img src="{{ img.image.url }}" class="w-full h-full object-cover rounded-sm">
+                                    <img src="{{ img.image.url }}" class="w-full h-full object-cover rounded-sm grayscale-[0.2]">
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -170,74 +198,82 @@
                     <div class="flex-1">
                         <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
                             <div>
-                                <h3 class="text-lg font-bold text-[#2C3E50] tracking-tight">{{ r.order_item.variant.product.name }}</h3>
+                                <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{{ r.order_item.variant.product.name }}</h3>
                                 <div class="flex items-center gap-3 mt-1">
-                                    <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">ORDER #{{ r.order_item.order.order_number }}</span>
-                                    <span class="w-1 h-1 rounded-full bg-gray-200"></span>
-                                    <span class="text-[9px] font-bold text-[#4F7D88] uppercase tracking-widest">Verified Transaction</span>
+                                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">ORDER #{{ r.order_item.order.order_number }}</span>
+                                    <span class="w-1 h-1 rounded-full bg-blue-600"></span>
+                                    <span class="text-[8px] font-black text-blue-600 uppercase tracking-widest">SKU: {{ r.order_item.variant.sku|default:"N/A" }}</span>
                                 </div>
                             </div>
-                            <span class="status-pill">
+                            <span class="status-badge">
                                 {{ r.status }}
                             </span>
                         </div>
 
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6 border-y border-gray-50 py-4">
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-6 border-y border-slate-50 dark:border-slate-800/50 py-4">
                             <div>
-                                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Quantity</p>
-                                <p class="text-xs font-bold text-[#2C3E50]">{{ r.order_item.quantity }} <span class="text-[9px] text-gray-300">UNITS</span></p>
+                                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Quantity</p>
+                                <p class="text-xs font-black">{{ r.order_item.quantity }} Units</p>
                             </div>
                             <div>
-                                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Value</p>
-                                <p class="text-xs font-bold text-[#4F7D88]">₹{{ r.order_item.price_at_purchase }}</p>
+                                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Refund Value</p>
+                                <p class="text-xs font-black text-blue-600">₹{{ r.order_item.price_at_purchase }}</p>
                             </div>
                             <div>
-                                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Logged Date</p>
-                                <p class="text-xs font-bold text-[#2C3E50]">{{ r.created_at|date:"M d, Y" }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1">Return SKU</p>
-                                <p class="text-xs font-bold text-[#2C3E50]">{{ r.order_item.variant.sku|default:"N/A" }}</p>
+                                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Logged Date</p>
+                                <p class="text-xs font-black uppercase">{{ r.created_at|date:"M d, Y" }}</p>
                             </div>
                         </div>
 
-                        <div class="reason-box p-4 mb-6">
-                            <p class="text-[8px] font-bold text-[#4F7D88] uppercase tracking-widest mb-1">
-                                Customer Reason
-                            </p>
-                            <p class="text-xs text-gray-500 italic leading-relaxed">
+                        <div class="bg-slate-50 dark:bg-slate-900/50 border-l-2 border-blue-600 p-4 mb-6">
+                            <p class="text-[8px] font-black text-blue-600 uppercase tracking-widest mb-1">Customer Reason</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium italic">
                                 "{{ r.reason }}"
                             </p>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-3">
-                            <button class="bg-[#2C3E50] hover:bg-[#4F7D88] text-white px-6 py-3 rounded-sm text-[9px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 active:scale-95">
-                                <i class="fa-solid fa-check"></i> Authorize Refund
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-sm text-[9px] font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-600/10">
+                                Authorize Refund
                             </button>
-                            <button class="bg-white border border-gray-200 hover:border-red-400 hover:text-red-500 text-gray-400 px-6 py-3 rounded-sm text-[9px] font-bold uppercase tracking-widest transition-all">
-                                Decline Claim
+                            <button class="bg-transparent border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-red-500 hover:border-red-500 px-6 py-2.5 rounded-sm text-[9px] font-black uppercase tracking-widest transition-all">
+                                Decline
                             </button>
-                            <button class="ml-auto w-10 h-10 rounded-sm border border-gray-100 flex items-center justify-center text-gray-300 hover:text-[#4F7D88] hover:bg-gray-50 transition-all">
-                                <i class="fa-solid fa-message"></i>
+                            <button class="ml-auto w-10 h-10 rounded-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-all">
+                                <i class="fa-solid fa-message text-[10px]"></i>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="bg-white py-24 text-center border border-dashed border-gray-200 rounded-sm">
-                <div class="w-16 h-16 bg-gray-50 rounded-sm flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-shield-check text-gray-200 text-xl"></i>
+            <div class="pro-card py-20 text-center border-dashed">
+                <div class="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-sm flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-shield-check text-slate-200 dark:text-slate-700 text-xl"></i>
                 </div>
-                <h3 class="text-sm font-bold text-[#2C3E50] uppercase tracking-tight mb-1">Queue Clear</h3>
-                <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">No pending return requests found</p>
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Queue Clear</h3>
+                <p class="text-[9px] text-slate-300 dark:text-slate-600 font-black uppercase mt-1">No pending return requests found</p>
             </div>
             {% endfor %}
         </div>
 
-        <footer class="mt-20 pb-10 text-center border-t border-gray-50 pt-10">
-            <p class="text-[9px] font-bold uppercase tracking-[0.4em] text-gray-300">CORE LOGISTICS &bull; SECURE RETURNS TERMINAL</p>
+        <footer class="mt-16 py-8 border-t border-slate-100 dark:border-slate-800">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] text-center md:text-left">
+                CORE STORE Management Terminal &bull; 2026 &bull; Secure Logistics Session
+            </p>
         </footer>
     </main>
+
+    <script>
+        function applyTheme() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
 </body>
 </html>
