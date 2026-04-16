@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from core.models import User,Category,SubCategory
 from .models import SellerProfile,Product,ProductVariant,ProductImage,Attribute,AttributeOption,VariantAttributeBridge,ReturnRequest
-from customer.models import OrderItem,Order
+from customer.models import OrderItem,Order,Review,ReviewImage
 from django.utils.text import slugify
 from django.contrib.auth import authenticate, login ,logout
 from core.decorator import seller_required
@@ -300,3 +300,39 @@ def sellerdashboard(request):
             active_orders += 1    
 
     return render(request, "seller/sellerdashboard.html",{"total_revenue":total_revenue,"total_products":total_products,"total_returns":total_returns,"active_orders":active_orders,"activelisting":activelisting,"seller":seller})
+
+
+
+
+
+def seller_reviews(request):
+    seller = SellerProfile.objects.get(user=request.user)
+
+    reviews = Review.objects.filter(
+        product__seller=seller
+    ).select_related('product', 'user').prefetch_related('images')
+
+    return render(request, 'seller/reviews.html', {
+        'reviews': reviews ,"seller":seller
+    })
+
+
+def update_order_status(request):
+    if request.method == "POST":
+        order_id = request.POST.get("order_id")
+        status = request.POST.get("status")
+
+        try:
+            order = Order.objects.get(id=order_id)
+
+            
+            if not order.items.filter(seller__user=request.user).exists():
+                return redirect("/sellerorder/")
+
+            order.order_status = status
+            order.save()
+
+        except Order.DoesNotExist:
+            pass
+
+    return redirect("/sellerorder/")  

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ user_theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews | CORE STORE</title>
+    
+    <script>
+        (function() {
+            const themeData = document.documentElement.getAttribute('data-theme');
+            if (themeData === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+      
+      :root {
+        --primary: #0f172a; 
+        --accent: #2563eb; 
+        --bg-main: #f8fafc; 
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
+        --sidebar-bg: #ffffff;
+      }
+
+      html.dark {
+        --bg-main: #0f172a;
+        --primary: #f8fafc;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --sidebar-bg: #020617; 
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-main);
+        color: var(--primary);
+        transition: background-color 0.3s ease;
+      }
+
+      .sidebar-bg { 
+        background-color: var(--sidebar-bg); 
+        border-right: 1px solid var(--border);
+      }
+
+      .nav-item {
+        color: #64748b;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        margin: 0.15rem 1rem;
+        border-radius: 2px;
+      }
+      .nav-item:hover {
+        color: var(--accent);
+        background: rgba(37, 99, 235, 0.05);
+      }
+      .nav-item.active {
+        background: #0f172a;
+        color: #ffffff !important;
+      }
+      .dark .nav-item.active {
+        background: var(--accent);
+      }
+
+      .pro-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+      }
+
+      .label-mini {
+        font-size: 8px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #64748b;
+        display: block;
+      }
+
+      .custom-scroll::-webkit-scrollbar { width: 4px; }
+      .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+      
+      .review-animate {
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+
+    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen transition-colors">
+        <div class="p-8 flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-sm text-white">
+                <i class="fa-solid fa-bolt-lightning text-lg"></i>
+            </div>
+            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase dark:text-white">CORE<span class="text-blue-600">STORE</span></span>
+        </div>
+        
+        <nav class="flex-1 space-y-1 mt-4 overflow-y-auto custom-scroll">
+            <a href="/sellerdashboard/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-chart-pie text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Dashboard</span>
+            </a>
+
+            <a href="/sellerhome/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-layer-group text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Inventory</span>
+            </a>
+
+            <a href="/sellerorder/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-receipt text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Orders</span>
+            </a>
+
+            <a href="#" class="nav-item active flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-star text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Reviews</span>
+            </a>
+            
+            <a href="/sellerinactive/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-box-archive text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Vault</span>
+            </a>
+
+            <a href="/sellerreturn/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-truck-ramp-box text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Returns</span>
+            </a>
+        </nav>
+
+        <div class="p-6 mt-auto border-t border-slate-100 dark:border-slate-800">
+            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all rounded-sm">
+                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover border border-slate-200 dark:border-slate-700">
+                <div class="hidden lg:block overflow-hidden">
+                    <p class="text-[10px] font-black uppercase text-slate-900 dark:text-white truncate">{{seller.user.username}}</p>
+                    <p class="text-[9px] text-blue-600 font-black uppercase tracking-widest">Enterprise</p>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-10 overflow-y-auto custom-scroll">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-6 border-b border-slate-100 dark:border-slate-800">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
+                    Customer <span class="text-blue-600">Reviews</span>
+                </h1>
+                <p class="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Manage Feedback and Build Trust</p>
+            </div>
+            
+            <div class="flex gap-4">
+                <div class="pro-card px-6 py-3 text-center min-w-[120px]">
+                    <span class="label-mini !mb-1">Store Rating</span>
+                    <p class="text-xl font-black dark:text-white">4.0 <i class="fa-solid fa-star text-blue-600 text-sm"></i></p>
+                </div>
+                <div class="pro-card px-6 py-3 text-center min-w-[120px]">
+                    <span class="label-mini !mb-1">Total Reviews</span>
+                    <p class="text-xl font-black dark:text-white">{{ reviews|length }}</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="space-y-6">
+            {% for review in reviews %}
+            <div class="pro-card p-6 flex flex-col md:flex-row gap-8 opacity-0 translate-y-4 review-animate">
+                
+                <div class="w-32 shrink-0">
+                    <div class="aspect-square bg-slate-100 dark:bg-slate-900 rounded-sm overflow-hidden mb-3 border border-slate-200 dark:border-slate-800">
+                        {% with review.product.variants.first as variant %}
+                            {% if variant and variant.images.first %}
+                                <img src="{{ variant.images.first.images.url }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-slate-200 dark:bg-slate-800">
+                                    <i class="fa-solid fa-box text-slate-400"></i>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <span class="label-mini !text-[7px]">Purchased Item</span>
+                    <p class="text-[10px] font-black uppercase truncate dark:text-white">{{ review.product.name }}</p>
+                </div>
+
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-600 font-black text-xs">
+                                {{ review.user.username|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <p class="text-xs font-black uppercase dark:text-white">{{ review.user.username }}</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                    {{ review.created_at|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 dark:bg-blue-600 text-white px-3 py-1 text-[9px] font-black rounded-sm">
+                            <i class="fa-solid fa-star mr-1"></i> {{ review.rating }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="text-xs font-black uppercase mb-1 dark:text-white">Comment</h4>
+                        <p class="text-[11px] font-medium text-slate-600 dark:text-slate-400 leading-relaxed italic">
+                            "{{ review.comment }}"
+                        </p>
+                    </div>
+
+                    {% if review.images.all %}
+                    <div class="flex gap-2 mb-6">
+                        {% for img in review.images.all %}
+                            <div class="w-16 h-16 rounded-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                                <img src="{{ img.image.url }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all cursor-zoom-in">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="bg-slate-50 dark:bg-slate-900/60 p-4 border-l-4 border-blue-600 rounded-r-sm">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-reply text-blue-600 text-[10px]"></i>
+                            <span class="label-mini">Your Reply</span>
+                        </div>
+                        <p class="text-[11px] font-bold dark:text-slate-300">
+                            "Thank you for your valuable feedback"
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="py-20 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-sm">
+                <i class="fa-solid fa-comment-slash text-slate-300 dark:text-slate-700 text-4xl mb-4"></i>
+                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">No customer reviews found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reviews = document.querySelectorAll('.review-animate');
+            reviews.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

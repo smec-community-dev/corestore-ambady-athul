@@ -77,7 +77,6 @@
             background: var(--accent);
         }
 
-        /* Table & Cards */
         .stat-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -86,23 +85,30 @@
         }
         .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 
-        .status-badge {
-            padding: 4px 10px;
+        /* STATUS SELECT STYLING */
+        .status-select {
+            appearance: none;
+            padding: 6px 30px 6px 12px;
             border-radius: 2px;
             font-size: 9px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='4' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 10px;
+            transition: all 0.2s ease;
         }
 
-        /* High Contrast Status Colors */
-        .status-processing { background: #0f172a; color: white; }
-        .dark .status-processing { background: #334155; }
-        .status-shipped { background: #2563eb; color: white; }
-        .status-delivered { background: #10b981; color: white; }
+        .select-processing { background-color: #0f172a; color: white; }
+        .dark .select-processing { background-color: #475569; }
+        .select-shipped { background-color: #2563eb; color: white; }
+        .select-delivered { background-color: #10b981; color: white; }
+        .select-cancelled { background-color: #ef4444; color: white; }
 
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -123,7 +129,7 @@
             <div class="bg-blue-600 p-2 rounded-sm text-white">
                 <i class="fa-solid fa-bolt-lightning text-lg"></i>
             </div>
-            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase">CORE<span class="text-blue-600">STORE</span></span>
+            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase dark:text-white">CORE<span class="text-blue-600">STORE</span></span>
         </div>
         
         <nav class="flex-1 space-y-1 mt-4 overflow-y-auto custom-scroll">
@@ -140,6 +146,11 @@
             <a href="/sellerorder/" class="nav-item active flex items-center gap-4 px-4 py-4 shadow-lg">
                 <i class="fa-solid fa-receipt text-lg w-6 text-center"></i>
                 <span class="text-[10px] hidden lg:block">Orders</span>
+            </a>
+
+            <a href="/reviews/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-star text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Reviews</span>
             </a>
             
             <a href="/sellerinactive/" class="nav-item flex items-center gap-4 px-4 py-4">
@@ -252,10 +263,16 @@
                                 <span class="text-[11px] font-black text-slate-900 dark:text-white tracking-widest">${{i.order.total_amount}}</span>
                             </td>
                             <td class="px-8 py-6">
-                                <span class="status-badge status-processing">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-                                    {{i.order.order_status}}
-                                </span>
+                                <form method="POST" action="{% url 'update_order_status' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="order_id" value="{{ i.order.id }}">
+                                    <select name="status" onchange="updateStatusColor(this); this.form.submit()" class="status-select">
+                                        <option value="processing" class="bg-white dark:bg-slate-800 text-black dark:text-white" {% if i.order.order_status == "processing" %}selected{% endif %}>Processing</option>
+                                        <option value="shipped" class="bg-white dark:bg-slate-800 text-black dark:text-white" {% if i.order.order_status == "shipped" %}selected{% endif %}>Shipped</option>
+                                        <option value="delivered" class="bg-white dark:bg-slate-800 text-black dark:text-white" {% if i.order.order_status == "delivered" %}selected{% endif %}>Delivered</option>
+                                        <option value="cancelled" class="bg-white dark:bg-slate-800 text-black dark:text-white" {% if i.order.order_status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
@@ -277,5 +294,21 @@
             <p class="text-[9px] font-black uppercase tracking-[0.5em] text-slate-300 dark:text-slate-700 text-center">CORE STORE LOGISTICS TERMINAL &bull; 2026 &bull; SECURE_ACCESS_GRANTED</p>
         </footer>
     </main>
+
+    <script>
+        function updateStatusColor(selectElement) {
+            // Clear current classes
+            selectElement.classList.remove('select-processing', 'select-shipped', 'select-delivered', 'select-cancelled');
+            // Add class based on new value
+            selectElement.classList.add('select-' + selectElement.value);
+        }
+
+        // Run once on load to color existing statuses
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.status-select').forEach(select => {
+                updateStatusColor(select);
+            });
+        });
+    </script>
 </body>
 </html>

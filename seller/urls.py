@@ -17,5 +17,8 @@ urlpatterns =[
     path("sellerinactive/",views.sellerinactive),
     path("sellerreturn/",views.sellerreturns),
     path("sellerdashboard/",views.sellerdashboard),
+    path("reviews/",views.seller_reviews),
+    path('update-order-status/', views.update_order_status, name='update_order_status'),
+
 
 ]

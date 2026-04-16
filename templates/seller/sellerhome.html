@@ -41,7 +41,7 @@
         --primary: #f8fafc;
         --card-bg: #1e293b;
         --border: #334155;
-        --sidebar-bg: #020617; /* Deep terminal navy */
+        --sidebar-bg: #020617; 
       }
 
       body {
@@ -51,7 +51,6 @@
         transition: background-color 0.3s ease, color 0.3s ease;
       }
 
-      /* UPDATED Sidebar & Nav Styling */
       .sidebar-bg { 
         background-color: var(--sidebar-bg); 
         border-right: 1px solid var(--border);
@@ -80,7 +79,6 @@
         box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
       }
 
-      /* Pro-Card Inventory Styling */
       .pro-card {
         background: var(--card-bg);
         border: 1px solid var(--border);
@@ -111,7 +109,6 @@
         border-radius: 2px;
       }
 
-      /* Scrollbar */
       .custom-scroll::-webkit-scrollbar { width: 4px; }
       .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
@@ -140,6 +137,11 @@
             <a href="/sellerorder/" class="nav-item flex items-center gap-4 px-4 py-4">
                 <i class="fa-solid fa-receipt text-lg w-6 text-center"></i>
                 <span class="text-[10px] hidden lg:block">Orders</span>
+            </a>
+
+            <a href="/reviews/" class="nav-item flex items-center gap-4 px-4 py-4">
+                <i class="fa-solid fa-star text-lg w-6 text-center"></i>
+                <span class="text-[10px] hidden lg:block">Reviews</span>
             </a>
             
             <a href="/sellerinactive/" class="nav-item flex items-center gap-4 px-4 py-4">
