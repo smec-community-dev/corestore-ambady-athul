@@ -39,7 +39,7 @@
 
         .nav-link {
             display: flex;
-            items-center: center;
+            align-items: center;
             gap: 12px;
             padding: 12px 24px;
             color: #718096;
@@ -140,6 +140,9 @@
             <a href="/subcategories/" class="nav-link">
                 <i class="fa-solid fa-indent w-5"></i> Subcategories
             </a>
+            <a href="/admincustomers/" class="nav-link">
+                <i class="fa-solid fa-indent w-5"></i> Customers
+            </a>
         </nav>
 
         <div class="p-6 border-t border-gray-100">
@@ -149,7 +152,9 @@
                     <p class="text-[11px] font-bold text-gray-700">Administrator</p>
                     <p class="text-[9px] text-gray-400 font-medium">Root Access</p>
                 </div>
-                <a href="/logout/" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-power-off text-sm"></i></a>
+                <a href="{% url 'admin_logout' %}" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-power-off text-sm"></i>
+                </a>
             </div>
         </div>
     </aside>

@@ -336,3 +336,31 @@ def update_order_status(request):
             pass
 
     return redirect("/sellerorder/")  
+
+def update_stock(request, product_id):
+    seller = SellerProfile.objects.get(user=request.user)
+
+    try:
+        product = Product.objects.get(id=product_id, seller=seller)
+        variant = product.variants.first() 
+    except Product.DoesNotExist:
+        return redirect("/sellerhome/")
+
+    
+    if request.method == "POST":
+        stock = request.POST.get("stock_quantity")
+
+        if stock:
+            try:
+                stock = max(0, int(stock))  # prevent negative
+                variant.stock_quantity = stock
+                variant.save()
+            except ValueError:
+                pass
+
+        return redirect("/sellerhome/")
+
+    return render(request, "seller/updatestock.html", {
+        "product": product,
+        "variant": variant
+    })

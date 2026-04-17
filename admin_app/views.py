@@ -8,6 +8,7 @@ from customer.models import OrderItem
 from django.db.models import Prefetch
 from django.db.models import Q, Min, Sum 
 from core.models import Category, SubCategory, Banner
+from core.decorator import admin_required
 
 
 
@@ -44,7 +45,7 @@ def adminlogin(request):
 
 
 
-
+@admin_required
 def adminhome(request):
     total_sellers = SellerProfile.objects.filter(status="APPROVED").count()
 
@@ -73,7 +74,7 @@ def adminhome(request):
 
 
 
-
+@admin_required
 def adminsellerapproval(request):
     sellers = SellerProfile.objects.filter(status='PENDING').select_related('user')
     return render(request,"admin-templates/adminsellerapproaval.html",{
@@ -82,6 +83,7 @@ def adminsellerapproval(request):
 
 
 
+@admin_required
 
 def approve_seller(request, id):
     if request.method == "POST":
@@ -96,6 +98,7 @@ def approve_seller(request, id):
 
 
 
+@admin_required
 
 def reject_seller(request, id):
     if request.method == "POST":
@@ -109,6 +112,7 @@ def reject_seller(request, id):
 
 
 
+@admin_required
 
 def product(request):
     products = Product.objects.filter(
@@ -122,6 +126,7 @@ def product(request):
 
 
 
+@admin_required
 
 def approve_product(request, id):
     if request.method == "POST":
@@ -134,6 +139,7 @@ def approve_product(request, id):
 
 
 
+@admin_required
 
 def reject_product(request, id):
     if request.method == "POST":
@@ -145,6 +151,7 @@ def reject_product(request, id):
 
 
 
+@admin_required
 
 def approved_products(request):
     search = request.GET.get("search")
@@ -181,6 +188,7 @@ def approved_products(request):
 
 
 
+@admin_required
 
 def approved_sellers(request):
     search = request.GET.get("search")
@@ -209,6 +217,7 @@ def approved_sellers(request):
    
 
   
+@admin_required
 
 def rejected_sellers(request):
     search = request.GET.get("search")
@@ -227,6 +236,7 @@ def rejected_sellers(request):
     }
 
     return render(request, "admin-templates/rejectedsellers.html", context)
+@admin_required
 
 def reapprove_seller(request,id):
     seller = SellerProfile.objects.get(id=id)
@@ -241,6 +251,7 @@ def reapprove_seller(request,id):
     return redirect('/rejectedsellers/')
 
 
+@admin_required
 
 def rejected_products(request):
     search = request.GET.get("search")
@@ -271,6 +282,7 @@ def rejected_products(request):
 
     return render(request, "admin-templates/rejectedproducts.html", context)
 
+@admin_required
 
 def reapprove_product(request, id):
     updated = Product.objects.get(id=id)
@@ -284,6 +296,7 @@ def reapprove_product(request, id):
 
     return redirect("/rejectedproducts/")
 
+@admin_required
 
 def rejectseller(request, id):
     if request.method == "POST":
@@ -294,6 +307,7 @@ def rejectseller(request, id):
             seller.save()
 
     return redirect('/approvedsellers/')
+@admin_required
 
 def category_view(request):
     if request.method == "POST":
@@ -309,6 +323,7 @@ def category_view(request):
         return redirect('/category/')
     categories = Category.objects.all().order_by('-created_at')
     return render(request, 'admin-templates/category.html', {'categories': categories})
+@admin_required
 
 def toggle_category_status(request, id):
     category = Category.objects.get(id=id)
@@ -317,12 +332,14 @@ def toggle_category_status(request, id):
         category.is_active = not category.is_active
         category.save()
     return redirect('/category/')
+@admin_required
 
 def delete_category(request, id):
     category = Category.objects.get(id=id)
     if category:
         category.delete()
     return redirect('/category/')
+@admin_required
 
 def subcategory_management(request):
     categories = Category.objects.all()
@@ -379,3 +396,19 @@ def banner_management(request):
 def delete_banner(request, id):
     Banner.objects.filter(id=id).delete()
     return redirect('banner_management')
+
+from django.shortcuts import render
+from core.models import User
+@admin_required
+
+def admin_customers(request):
+    customers = User.objects.filter(role="CUSTOMER")
+
+    return render(request, "admin-templates/customers.html", {
+        "customers": customers
+    })    
+
+
+def admin_logout(request):
+    logout(request)  
+    return redirect('/login/')    

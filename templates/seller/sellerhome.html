@@ -102,7 +102,7 @@
       html.dark .image-box { background: #0f172a; }
 
       .status-pill {
-        font-size: 8px;
+        font-size: 7px; /* Shrunk from 8px */
         font-weight: 900;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -182,7 +182,7 @@
             </a>
         </header>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productGrid">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4" id="productGrid">
             {% for i in products %}
             <div class="pro-card flex flex-col h-full opacity-0 translate-y-4 transition-all duration-500">
                 
@@ -203,45 +203,49 @@
                     {% endwith %}
                     
                     <div class="absolute inset-0 bg-slate-950/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
-                        <a href="/sellerproductview/{{i.slug}}" class="bg-white w-12 h-12 rounded-sm text-slate-900 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center shadow-xl">
-                            <i class="fa-solid fa-eye text-sm"></i>
+                        <a href="/sellerproductview/{{i.slug}}" class="bg-white w-10 h-10 rounded-sm text-slate-900 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center shadow-xl">
+                            <i class="fa-solid fa-eye text-xs"></i>
                         </a>
                     </div>
 
-                    <div class="absolute top-4 left-4">
+                    <div class="absolute top-3 left-3">
                         {% if i.is_active %}
-                            <div class="status-pill bg-emerald-500 text-white px-3 py-1.5 flex items-center gap-2 shadow-lg">
-                                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> LIVE
+                            <div class="status-pill bg-emerald-500 text-white px-2 py-1 flex items-center gap-1.5 shadow-lg">
+                                <span class="w-1 h-1 bg-white rounded-full animate-pulse"></span> LIVE
                             </div>
                         {% else %}
-                            <div class="status-pill bg-slate-800 text-slate-400 px-3 py-1.5 flex items-center gap-2 shadow-lg">
-                                <span class="w-1.5 h-1.5 bg-slate-500 rounded-full"></span> ARCHIVED
+                            <div class="status-pill bg-slate-800 text-slate-400 px-2 py-1 flex items-center gap-1.5 shadow-lg">
+                                <span class="w-1 h-1 bg-slate-500 rounded-full"></span> ARCHIVED
                             </div>
                         {% endif %}
                     </div>
                 </div>
 
-                <div class="p-5 flex-1 flex flex-col transition-colors">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[8px] font-black text-blue-600 uppercase tracking-widest">{{i.subcategory.name}}</span>
-                        <span class="text-[8px] font-black text-slate-400 tracking-tighter uppercase">ID: {{i.model_number}}</span>
+                <div class="p-4 flex-1 flex flex-col transition-colors">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-[7px] font-black text-blue-600 uppercase tracking-widest">{{i.subcategory.name}}</span>
+                        <span class="text-[7px] font-black text-slate-400 tracking-tighter uppercase">ID: {{i.model_number}}</span>
                     </div>
-                    <h3 class="text-[13px] font-black text-slate-800 dark:text-slate-100 uppercase leading-snug tracking-tight line-clamp-2 hover:text-blue-600 cursor-pointer transition-colors">{{i.name}}</h3>
+                    <h3 class="text-[11px] font-black text-slate-800 dark:text-slate-100 uppercase leading-snug tracking-tight line-clamp-2 hover:text-blue-600 cursor-pointer transition-colors">{{i.name}}</h3>
                     
-                    <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
-                        <a href="/sellerproductupdate/{{i.id}}" class="flex items-center justify-center gap-2 py-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-900 dark:hover:bg-blue-600 hover:text-white text-slate-600 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest transition-all rounded-sm">
+                    <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
+                        <a href="/sellerproductupdate/{{i.id}}" class="flex items-center justify-center gap-1.5 py-2.5 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-900 dark:hover:bg-blue-600 hover:text-white text-slate-600 dark:text-slate-400 text-[8px] font-black uppercase tracking-widest transition-all rounded-sm">
                             <i class="fa-solid fa-pen-nib"></i> Edit
                         </a>
-                        <a href="/sellerimage/{{i.id}}" class="flex items-center justify-center gap-2 py-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-900 dark:hover:bg-blue-600 hover:text-white text-slate-600 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest transition-all rounded-sm">
+                        <a href="/sellerimage/{{i.id}}" class="flex items-center justify-center gap-1.5 py-2.5 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-900 dark:hover:bg-blue-600 hover:text-white text-slate-600 dark:text-slate-400 text-[8px] font-black uppercase tracking-widest transition-all rounded-sm">
                             <i class="fa-solid fa-photo-film"></i> Media
                         </a>
+
+                        <a href="{% url 'update_stock' i.id %}" class="col-span-2 flex items-center justify-center gap-2 py-2.5 bg-slate-900 text-white dark:bg-slate-700 hover:bg-blue-600 dark:hover:bg-blue-600 text-[8px] font-black uppercase tracking-widest transition-all rounded-sm shadow-md">
+                            <i class="fa-solid fa-boxes-stacked"></i> Update Stock
+                        </a>
                         
-                        <a href="/togglestatus/{{i.slug}}" class="col-span-2 py-3.5 text-center text-[10px] font-black uppercase tracking-[0.15em] transition-all rounded-sm
+                        <a href="/togglestatus/{{i.slug}}" class="col-span-2 py-3 text-center text-[8px] font-black uppercase tracking-[0.1em] transition-all rounded-sm
                             {% if i.is_active %} bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-red-500 hover:text-white {% else %} bg-blue-600 text-white hover:bg-slate-900 {% endif %}">
                             {% if i.is_active %}
-                                <i class="fa-solid fa-power-off mr-2"></i> Take Offline
+                                <i class="fa-solid fa-power-off mr-1"></i> Offline
                             {% else %}
-                                <i class="fa-solid fa-rocket mr-2"></i> Activate SKU
+                                <i class="fa-solid fa-rocket mr-1"></i> Activate
                             {% endif %}
                         </a>
                     </div>

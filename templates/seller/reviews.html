@@ -41,7 +41,7 @@
         --primary: #f8fafc;
         --card-bg: #1e293b;
         --border: #334155;
-        --sidebar-bg: #020617; 
+        --sidebar-bg: #1e293b; 
       }
 
       body {
@@ -126,7 +126,7 @@
                 <span class="text-[10px] hidden lg:block">Orders</span>
             </a>
 
-            <a href="#" class="nav-item active flex items-center gap-4 px-4 py-4">
+            <a href="/reviews/" class="nav-item active flex items-center gap-4 px-4 py-4 shadow-lg">
                 <i class="fa-solid fa-star text-lg w-6 text-center"></i>
                 <span class="text-[10px] hidden lg:block">Reviews</span>
             </a>
@@ -244,7 +244,7 @@
             {% empty %}
             <div class="py-20 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-sm">
                 <i class="fa-solid fa-comment-slash text-slate-300 dark:text-slate-700 text-4xl mb-4"></i>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">No customer reviews found.</p>
+                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">No customer reviews found in the registry.</p>
             </div>
             {% endfor %}
         </div>

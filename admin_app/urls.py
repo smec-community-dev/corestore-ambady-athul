@@ -26,5 +26,8 @@ urlpatterns = [
     # path('subcategoriesedit/<uuid:id>/', views.edit_subcategory, name='edit_subcategory'),
     path('banners/', views.banner_management, name='banner_management'),
     path('bannerdelete/<uuid:id>/', views.delete_banner, name='delete_banner'),
+    path("admincustomers/", views.admin_customers, name="admin_customers"),
+    path('adminlogout/', views.admin_logout, name='admin_logout'),
+
 
 ]

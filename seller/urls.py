@@ -19,6 +19,5 @@ urlpatterns =[
     path("sellerdashboard/",views.sellerdashboard),
     path("reviews/",views.seller_reviews),
     path('update-order-status/', views.update_order_status, name='update_order_status'),
-
-
-]
+    path("update-stock/<int:product_id>/", views.update_stock, name="update_stock"),
+    ]
